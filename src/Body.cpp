@@ -1,9 +1,9 @@
 #include "Body.h"
 
 
-Body::Body(Semantic type)
+Body::Body(Semantic semantic)
 {
-	this->type = type;
+	this->semantic = semantic;
 	this->posX = rand()%800;
 	this->posY = rand()%800;
 }
@@ -39,14 +39,14 @@ std::vector<float> Body::GetPosition()
 	return ret;
 }
 	
-void Body::SetSemantic(Semantic type)
+void Body::SetSemantic(Semantic semantic)
 {
-	this->type = type;
+	this->semantic = semantic;
 }
 
 Semantic* Body::GetSemantic()
 {
-	return &this->type;
+	return &this->semantic;
 }
 
 Body::~Body(void)
