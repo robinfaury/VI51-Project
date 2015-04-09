@@ -19,8 +19,6 @@ public:
     ProblemState(int id);
     ~ProblemState();
 
-	std::vector<std::string>* getPossibleActions();
-
 	int getId();
 
 protected:

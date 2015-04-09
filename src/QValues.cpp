@@ -30,7 +30,7 @@ void QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 			currentState = problem.getRandomState();
 
 		// Getting possible actions for this state
-		std::vector<std::string>* possibleActions = currentState->getPossibleActions();
+		std::vector<std::string>* possibleActions = problem.getPossibleActions(currentState);
 
 		std::string action;
 		// Randomly chosing wheter to act randomly, or select the best action

@@ -12,24 +12,28 @@ Problem::~Problem()
 
 ProblemState* Problem::getState(int stateId)
 {
-	//TODO: implement that
-	return NULL;
+	return m_problemStates[stateId];
 }
 
 ProblemState* Problem::getRandomState()
 {
-	//TODO: implement that
-	return NULL;
+	int randomIndex = rand() % m_problemStates.size();
+	return m_problemStates[randomIndex];
 }
 
 ProblemStore* Problem::getProblemStore()
+{
+	return &this->m_problemStore;
+}
+
+// Returns the resulting state of doing action pAction in state originalState
+ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAction, float& reward)	
 {
 	//TODO: implement that
 	return NULL;
 }
 
-// Returns the resulting state of doing action pAction in state originalState
-ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAction, float& reward)	
+std::vector<std::string>* Problem::getPossibleActions(ProblemState* state)
 {
 	//TODO: implement that
 	return NULL;

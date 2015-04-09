@@ -9,6 +9,7 @@
  */
 
 #include "ProblemState.h"
+#include <map>
 
 class ProblemStore
 {
@@ -20,14 +21,15 @@ public:
 	std::string getBestAction(ProblemState* problemState);  // Override
 
     float getQValue(int stateId, std::string action);    // For this state and action, return the associated QValue
-	float getQValue(ProblemState* problemState, std::string action);    // Ovveride
+	float getQValue(ProblemState* problemState, std::string action);    // Override
 
     void updateQValue(int stateId, std::string action, float newQValue);
 	void updateQValue(ProblemState* problemState, std::string action, float newQValue);
 	
 
     //Getters / Setters
-
+protected:
+	std::map < int, std::map<std::string, float> > m_QValues;
 };
 
 #endif // PROBLEMSTORE_H
