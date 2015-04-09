@@ -11,7 +11,7 @@ private:
 	Body(void) {}
 
 public:
-	Body(Semantic type);
+	Body(Semantic semantic);
 
 	std::vector<PhysicalObject*>* GetPerception();
 	void SetIntention(float dx, float dy, float velocity);
@@ -20,7 +20,7 @@ public:
 	virtual void GetPosition(float &x, float &y);
 	virtual std::vector<float> GetPosition();
 	
-	virtual void SetSemantic(Semantic type);
+	virtual void SetSemantic(Semantic semantic);
 	virtual Semantic* GetSemantic();
 
 	~Body(void);

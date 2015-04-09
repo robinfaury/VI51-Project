@@ -8,20 +8,20 @@
 class PhysicalObject
 {
 protected:
-	Semantic type;
+	Semantic semantic;
 	float posX;
 	float posY;
 
 	PhysicalObject(void) {}
 
 public:
-	PhysicalObject(Semantic type);
+	PhysicalObject(Semantic semantic);
 
 	virtual void SetPosition(float x, float y) = 0;
 	virtual void GetPosition(float &x, float &y) = 0;
 	virtual std::vector<float> GetPosition() = 0;
 	
-	virtual void SetSemantic(Semantic type) = 0;
+	virtual void SetSemantic(Semantic semantic) = 0;
 	virtual Semantic* GetSemantic() = 0;
 
 	~PhysicalObject(void);
