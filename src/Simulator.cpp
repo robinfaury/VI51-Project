@@ -30,12 +30,10 @@ void Simulator::Run()
 		eventID = this->SFMLView.CheckEvent();
 
 		int nbAgents = static_cast<int>(agents.size());
-		tbb::parallel_for(0, nbAgents, 
-			[&](int i) 
-			{
-				this->agents[i].Life();
-			}
-		);
+		for (int i = 0 ; i < nbAgents ; ++i)
+		{
+            this->agents[i].Life();
+		}
 
 		this->SFMLView.Draw();
 

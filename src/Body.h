@@ -2,6 +2,7 @@
 #define BODY_H_
 
 #include <vector>
+#include <stdlib.h>
 
 #include "PhysicalObject.h"
 
@@ -19,7 +20,7 @@ public:
 	virtual void SetPosition(float x, float y);
 	virtual void GetPosition(float &x, float &y);
 	virtual std::vector<float> GetPosition();
-	
+
 	virtual void SetSemantic(Semantic semantic);
 	virtual Semantic* GetSemantic();
 
