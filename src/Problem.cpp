@@ -1,4 +1,4 @@
-#include "problem.h"
+#include "Problem.h"
 
 Problem::Problem()
 {
@@ -35,6 +35,5 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 
 std::vector<std::string>* Problem::getPossibleActions(ProblemState* state)
 {
-	//TODO: implement that
-	return NULL;
+	return this->getProblemStore()->getPossibleActions(state);
 }

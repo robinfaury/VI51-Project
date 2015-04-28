@@ -10,6 +10,21 @@ ProblemStore::~ProblemStore()
 
 }
 
+std::vector<std::string>* ProblemStore::getPossibleActions(int stateId)
+{
+	std::vector<std::string> actions;
+	for (std::map<std::string, float>::iterator it = m_QValues[stateId].begin(); it != m_QValues[stateId].end(); ++it)
+	{
+		actions.push_back(it->first);
+	}
+	return &actions;
+}
+
+std::vector<std::string>* ProblemStore::getPossibleActions(ProblemState* state)
+{
+	return getPossibleActions(state->getId());
+}
+
 // Gest best action based on the qvalues of the given state
 std::string ProblemStore::getBestAction(int stateId)
 {

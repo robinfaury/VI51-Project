@@ -17,7 +17,10 @@ public:
     ProblemStore();
     ~ProblemStore();
 
-	std::string getBestAction(int stateId);  // Gest best action based on the qvalues of the given state
+	std::vector<std::string>* getPossibleActions(int stateId); // get all possible actions from the given state
+	std::vector<std::string>* getPossibleActions(ProblemState* problemState);
+
+	std::string getBestAction(int stateId);  // Get best action based on the qvalues of the given state
 	std::string getBestAction(ProblemState* problemState);  // Override
 
     float getQValue(int stateId, std::string action);    // For this state and action, return the associated QValue
@@ -29,7 +32,7 @@ public:
 
     //Getters / Setters
 protected:
-	std::map < int, std::map<std::string, float> > m_QValues;
+	std::map < int, std::map<std::string, float> > m_QValues; // array indexed by state ids containing arrays of q-values indexed by actions
 };
 
 #endif // PROBLEMSTORE_H
