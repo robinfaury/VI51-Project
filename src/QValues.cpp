@@ -1,4 +1,4 @@
-#include "Qvalues.h"
+#include "QValues.h"
 
 QValues::QValues()
 {
@@ -54,7 +54,7 @@ void QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 			problem.getProblemStore()->getBestAction(newState));	// Getting best q value of the new state
 
 		// QLearning
-		qValue = (1 - learningRate) * qValue 
+		qValue = (1 - learningRate) * qValue
 			+ learningRate * (reward + discountRate * maxQValue);
 
 		problem.getProblemStore()->updateQValue(currentState, action, qValue);
@@ -98,6 +98,6 @@ std::string QValues::getOneOf(std::vector<std::string>* possibleActions)
 	if (possibleActions->empty())
 		return NULL;
 
-	//TODO: 
+	//TODO:
 	return (*possibleActions)[rand() % possibleActions->size()];
 }

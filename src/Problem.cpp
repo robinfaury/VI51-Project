@@ -27,7 +27,7 @@ ProblemStore* Problem::getProblemStore()
 }
 
 // Returns the resulting state of doing action pAction in state originalState
-ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAction, float& reward)	
+ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAction, float& reward)
 {
 	//TODO: implement that
 	return NULL;
