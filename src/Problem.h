@@ -20,6 +20,8 @@ public:
 
 	ProblemState* takeAction(ProblemState* pOriginalState, std::string pAction, float& reward);	// Returns the resulting state of doing action pAction in state originalState, giving the appropriate reward
 
+	ProblemState* convertPerceptToState(Perception percept);
+
 protected:
 	ProblemStore m_problemStore;
 	std::vector<ProblemState*> m_problemStates;

@@ -32,7 +32,8 @@ public:
 
     //Getters / Setters
 protected:
-	std::map < int, std::map<std::string, float> > m_QValues; // array indexed by state ids containing arrays of q-values indexed by actions
+	std::map <int, std::map<std::string, float> > m_QValues; // array indexed by ProblemState ids containing arrays of q-values indexed by actions
+
 };
 
 #endif // PROBLEMSTORE_H
