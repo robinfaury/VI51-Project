@@ -5,13 +5,26 @@ GraphicView::GraphicView(void)
 {
 }
 
-void GraphicView::Init(int height, int width)
+void GraphicView::init(int height, int width)
 {
-	this->window = new sf::RenderWindow(sf::VideoMode(height, width), "VI51 - Simulator of Lemming");
+	this->window = new sf::RenderWindow(sf::VideoMode(height, width), "VI51 - Lemmings");
 	this->window->setVerticalSyncEnabled(true);
+
+	// Textures loading
+	if (!lemmingTexture.loadFromFile(LEMMINGTEX_PATH))
+	{
+        std::cout << "ERROR : couldn't load lemming texture from " << LEMMINGTEX_PATH << endl;
+	}
+	lemmingSprite.setTexture(lemmingTexture);
+
+	if (!terrainTexture.loadFromFile(TERRAINTEX_PATH))
+	{
+        std::cout << "ERROR : couldn't load terrain texture from " << TERRAINTEX_PATH << endl;
+	}
+	terrainSprite.setTexture(terrainTexture);
 }
 
-int GraphicView::CheckEvent()
+int GraphicView::checkEvent()
 {
 	sf::Event event;
     while (this->window->pollEvent(event))
@@ -25,32 +38,38 @@ int GraphicView::CheckEvent()
 	return 0;
 }
 
-void GraphicView::Draw()
+void GraphicView::draw()
 {
 	window->clear(sf::Color::Black);
 
-	std::vector<Body*>* listOfBodys = this->world->GetListOfBodys();
-	if (this->bodyShape.size() != listOfBodys->size())
+	int x, y;
+	// For each cell of the map
+	for (std::map<std::pair<int, int>, Cell*>::iterator it = currentMap->begin(); it != currentMap->end(); ++it)
 	{
-		this->bodyShape.clear();
-		for (int i=0; i<listOfBodys->size(); ++i)
-		{
-			this->bodyShape.push_back(sf::CircleShape(2));
-			this->bodyShape.at(this->bodyShape.size()-1).setFillColor(sf::Color(255, 255, 255));
-		}
+        PhysicalObject* object = it->second->getWorldObject();
+        // If world object isn't NULL, draw it
+        if (object != NULL)
+        {
+            x = it->first.first;
+            y = it->first.second;
+            // If it's a terrain, draw it with mapSprite
+            if (setTextureRectFromSemantic(object->getSemantic()))
+            {
+                this->terrainSprite.setPosition(x*TILE_SIZE, y*TILE_SIZE);
+                window->draw(terrainSprite);
+            }
+            else
+            {
+                // Else, draw the lemming
+                this->lemmingSprite.setPosition(x*TILE_SIZE, y*TILE_SIZE);
+                window->draw(lemmingSprite);
+            }
+        }
 	}
-
-	for (int idCurrentBody=0; idCurrentBody<listOfBodys->size(); ++idCurrentBody)
-	{
-		std::vector<float> pos = listOfBodys->at(idCurrentBody)->GetPosition();
-		this->bodyShape[idCurrentBody].setPosition(pos[0], pos[1]);
-		window->draw(this->bodyShape[idCurrentBody]);
-	}
-
 	window->display();
 }
 
-void GraphicView::SetWorld(World* world)
+void GraphicView::setWorld(World* world)
 {
 	this->world = world;
 }
@@ -59,4 +78,23 @@ GraphicView::~GraphicView(void)
 {
 	this->window->clear();
 	delete this->window;
+}
+
+//Private functions
+
+bool GraphicView::setTextureRectFromSemantic(Semantic* semantic)
+{
+    // If its a type of terrain, set textureRect, then return true
+    if (typeid(*semantic) == typeid(T_Rock))
+    {
+        terrainSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
+        return true;
+    }
+    if (typeid(*semantic) == typeid(T_Dirt))
+    {
+        terrainSprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, 2*TILE_SIZE, TILE_SIZE));
+        return true;
+    }
+    // Else, its the lemming : return false
+    return false;
 }

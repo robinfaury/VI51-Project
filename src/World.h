@@ -2,26 +2,59 @@
 #define WORLD_H_
 
 #include <vector>
+#include <list>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <glm.hpp>
+#include <typeinfo>
 
-#include "Body.h"
-#include "BasicAgent.h"
+#include "PhysicalObject.h"
+#include "BodyLemming.h"
+#include "Event.h"
+#include "B_Lemming.h"
+#include "T_Dirt.h"
+#include "T_Rock.h"
+#include "PerceptionCircle.h"
 
 class World
 {
 private:
-	std::vector<PhysicalObject*> listOfPhysicalObjects;
-	std::vector<Body*> listOfBodys;
+    Map* m_map; // current map
+
+    std::vector<PhysicalObject*> m_objects;    // All PhysicalObjects (which aren't bodies)
+	std::vector<Body*> m_bodies;    // All bodies in the world
+	std::vector<ACTIONS> m_influences;    // All influences of the bodies
+
+    bool isDiggable(Semantic* semantic);    // For a given semantic, returns true if the lemming can dig it
+    void setBodyPerception(Body* body);
 
 public:
 	World(void);
-
-	Body* CreateBody();
-	void CreateWall();
-
-	std::vector<PhysicalObject*>* GetListOfPhysicalObjects();
-	std::vector<Body*>* GetListOfBodys();
-
 	~World(void);
+
+    // Map creation function
+	void createMap();
+
+	// Loading/saving level
+	//TODO: save level
+	void loadLevel();
+
+    // Create a body at position x / y
+	Body* createBody(int x, int y);
+
+    // Influence stuff
+	void collectInfluences();    //TODO: clean
+	void resolveInfluences();
+
+    // General getters & setters
+	std::vector<Body*>* getBodies();
+
+    // Run the world for one tick
+	void update();
+
+	// Set the perceptions of all bodies
+	void setPerceptions();
 };
 
 #endif

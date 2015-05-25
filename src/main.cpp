@@ -1,8 +1,8 @@
 #include "Simulator.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char* argv[]) 
 {
-	Simulator simulatorOfLemming(500);
+	Simulator simulatorOfLemming(1);
 	simulatorOfLemming.CreateWorld();
 	simulatorOfLemming.Run();
 

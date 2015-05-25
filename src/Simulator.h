@@ -2,6 +2,7 @@
 #define SIMULATOR_H_
 
 #include <vector>
+#include <thread>
 #include <chrono>
 #include <iostream>
 

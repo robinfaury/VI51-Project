@@ -1,54 +1,59 @@
 #include "Body.h"
 
 
-Body::Body(Semantic semantic)
+Body::Body(Semantic* type) : PhysicalObject(type)
 {
-	this->semantic = semantic;
-	this->posX = rand()%800;
-	this->posY = rand()%800;
+
 }
 
-std::vector<PhysicalObject*>* Body::GetPerception()
+void Body::setPerception(Perception* newPerception)
 {
-	return NULL;
+    delete(m_perception);
+    m_perception = newPerception;
 }
 
-void Body::SetIntention(float dx, float dy, float velocity)
+void Body::setInfluence(ACTIONS influence)
 {
-	this->posX += dx * velocity;
-	this->posY += dy * velocity;
+	this->m_influence = influence;
 }
 
-void Body::SetPosition(float x, float y)
+ACTIONS Body::getInfluence()
+{
+	return m_influence;
+}
+
+void Body::setPosition(int x, int y)
 {
 	this->posX = x;
 	this->posY = y;
 }
 
-void Body::GetPosition(float &x, float &y)
+void Body::getPosition(int &x, int &y)
 {
 	x = this->posX;
 	y = this->posY;
 }
 
-std::vector<float> Body::GetPosition()
+std::vector<int> Body::getPosition()
 {
-	std::vector<float> ret;
+	std::vector<int> ret;
 	ret.push_back(this->posX);
 	ret.push_back(this->posY);
 	return ret;
 }
-	
-void Body::SetSemantic(Semantic semantic)
+
+void Body::setSemantic(Semantic* type)
 {
-	this->semantic = semantic;
+    delete (this->type);
+	this->type = type;
 }
 
-Semantic* Body::GetSemantic()
+Semantic* Body::getSemantic()
 {
-	return &this->semantic;
+	return this->type;
 }
 
 Body::~Body(void)
 {
+
 }
