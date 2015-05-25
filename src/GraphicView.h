@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#define TILE_SIZE 16
+#define TILE_SIZE 32
 #define LEMMINGTEX_PATH "res/lemming.png"
 #define TERRAINTEX_PATH "res/terrain.png"
 
@@ -24,12 +24,12 @@ private:
 
 	std::map<std::pair<int, int>, Cell*>* currentMap;
 
-	bool setTextureRectFromSemantic(Semantic* semantic);
+	bool setTextureRectFromSemantic(SEMANTIC semantic);
 
 public:
 	GraphicView(void);
 
-	void init(int height, int width);
+	void init(int height, int width, std::map<std::pair<int, int>, Cell*>* map);
 	int checkEvent();
 	void checkWorldEvents();
 	void draw();

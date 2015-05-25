@@ -1,14 +1,12 @@
 #ifndef SEMANTIC_H_
 #define SEMANTIC_H_
 
-class Semantic
+enum SEMANTIC
 {
-private:
-	
-public:
-	Semantic(void);
-
-	~Semantic(void);
+	T_DIRT,
+	T_ROCK,
+	T_EXIT,
+	B_LEMMING
 };
 
 #endif

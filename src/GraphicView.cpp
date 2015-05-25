@@ -5,8 +5,9 @@ GraphicView::GraphicView(void)
 {
 }
 
-void GraphicView::init(int height, int width)
+void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell*>* map)
 {
+	this->currentMap = map;
 	this->window = new sf::RenderWindow(sf::VideoMode(height, width), "VI51 - Lemmings");
 	this->window->setVerticalSyncEnabled(true);
 
@@ -22,6 +23,8 @@ void GraphicView::init(int height, int width)
         std::cout << "ERROR : couldn't load terrain texture from " << TERRAINTEX_PATH << endl;
 	}
 	terrainSprite.setTexture(terrainTexture);
+
+	std::cout << "Graphics initialised" << endl;
 }
 
 int GraphicView::checkEvent()
@@ -41,6 +44,7 @@ int GraphicView::checkEvent()
 void GraphicView::draw()
 {
 	window->clear(sf::Color::Black);
+	
 
 	int x, y;
 	// For each cell of the map
@@ -82,19 +86,23 @@ GraphicView::~GraphicView(void)
 
 //Private functions
 
-bool GraphicView::setTextureRectFromSemantic(Semantic* semantic)
+bool GraphicView::setTextureRectFromSemantic(SEMANTIC semantic)
 {
     // If its a type of terrain, set textureRect, then return true
-    if (typeid(*semantic) == typeid(T_Rock))
-    {
-        terrainSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
-        return true;
-    }
-    if (typeid(*semantic) == typeid(T_Dirt))
-    {
-        terrainSprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, 2*TILE_SIZE, TILE_SIZE));
-        return true;
-    }
-    // Else, its the lemming : return false
-    return false;
+	switch (semantic)
+	{
+	case SEMANTIC::T_DIRT :
+		terrainSprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+		break;
+	case SEMANTIC::T_EXIT :
+		terrainSprite.setTextureRect(sf::IntRect(2*TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+		break;
+	case SEMANTIC::T_ROCK :
+		terrainSprite.setTextureRect(sf::IntRect(0*TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+		break;
+	default :
+		// Lemming
+		return false;
+	}
+	return true;
 }

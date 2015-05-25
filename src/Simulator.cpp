@@ -4,12 +4,14 @@
 Simulator::Simulator(int numberOfAgents)
 {
 	this->numberOfAgents = numberOfAgents;
-	this->SFMLView.init(30*27, 30*30);
+	this->SFMLView.init(30*27, 30*30, this->world.getMap()->getMap());
 }
 
 void Simulator::CreateWorld()
 {
 	this->world.createMap();
+
+	std::cout << "Map created" << endl;
 
 	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
 		this->agents.push_back(Agent((*currentBody)));
@@ -22,6 +24,8 @@ void Simulator::Run()
 	std::chrono::system_clock::time_point start_time, end_time;
 	int eventID = 0;
 
+
+	std::cout << "Starting program loop" << endl;
 	while(eventID != 1)
 	{
 		start_time = std::chrono::high_resolution_clock::now();
@@ -32,10 +36,11 @@ void Simulator::Run()
 			(*currentAgent).live();
 
     //TODO: fix that
-		//this->world.collectInfluence();
+		this->world.collectInfluences();
 		this->world.resolveInfluences();
 
 		this->SFMLView.draw();
+
 
 		end_time = std::chrono::high_resolution_clock::now();
 		std::cout <<"frame time : "<< std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() << std::endl;

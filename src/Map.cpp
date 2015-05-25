@@ -154,6 +154,13 @@ bool Map::isCellCreated(std::pair<int, int> cell)
     return (m_map.find(cell) != m_map.end());
 }
 
+bool Map::isCellEmpty(int x, int y)	// If cell is created and empty, returns true. Else, false
+{
+	if (isCellCreated(x, y) && getCell(x, y)->getWorldObject() == NULL)
+		return true;
+	return false;
+}
+
 Cell* Map::getCell(int x, int y)
 {
     return getCell(std::pair<int, int>(x, y));
@@ -161,5 +168,35 @@ Cell* Map::getCell(int x, int y)
 
 Cell* Map::getCell(std::pair<int, int> cell)
 {
-    return (m_map.find(cell)->second);
+	std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.find(cell);    
+	if (it == this->m_map.end())
+		return NULL;
+	return (it->second);
+}
+
+
+bool Map::addWorldObject(int x, int y, PhysicalObject* object)
+{
+	Cell* cell = getCell(x,y);
+	if (cell != NULL)
+	{
+		if (cell->getWorldObject() == NULL)
+		{
+			//Cell empty, can add
+			cell->setWorldObject(object);
+			return true;
+		}
+		else
+		{
+			// Cell already occupied
+			cout << "ERROR : Map::addWorldObject : can't add object to cell " << x << ", " << y << " : cell already occupied" << endl;
+			return false;
+		}
+	}
+	else
+	{
+		// Create cell, and add object
+		createCell(x, y, object);
+		return true;
+	}
 }

@@ -18,8 +18,6 @@ private:
 	World world;
 	std::vector<Agent> agents;
 
-	Simulator(void) {}
-
 public:
 	Simulator(int numberOfAgents);
 

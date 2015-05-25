@@ -3,6 +3,7 @@
 
 World::World(void)
 {
+	this->m_map = new Map();
 }
 
 World::~World(void)
@@ -20,21 +21,99 @@ void World::createMap()
 		(*currentBody)->setMap(this->m_map->getMap());
 }
 
-void World::loadLevel()
+void World::loadLevel(std::string path)
 {
-// TODO: clean
+	if (path.compare("Default") == 0)	// Identical
+	{
+		// Default, hardcoded map
+		for (int i = 0; i < 10; ++i)
+		{
+			for (int j = 0; j < 10; ++j)
+			{
+				if (i == 1 && j == 1)
+				{
+					// Lemming start
+					createBody(i, j);
+				}
+				else if (i == 8 && j == 8)
+				{
+					// Exit
+					createObject(i, j, SEMANTIC::T_EXIT);
+				}
+				else if (i == 0 || i == 9 || j == 0 || j == 9)
+				{
+					// Rocks
+					createObject(i, j, SEMANTIC::T_ROCK);
+				}
+				else
+				{
+					// Dirt
+					createObject(i, j, SEMANTIC::T_DIRT);
+				}
+			}
+		}
+	}
 
+	//TODO: implement level loading from pugixml
 }
 
 Body* World::createBody(int x, int y)
 {
-	Body* b = new BodyLemming(new B_Lemming());
-	b->setPosition(x, y);
-	b->setMap(m_map->getMap());
-	this->m_bodies.push_back(b);
-	return b;
+	// Cell exists and isn't null : can't add
+	if (this->m_map->isCellCreated(x, y) && !this->m_map->isCellEmpty(x, y))
+	{
+		std::cout << "ERROR : World::createBody : can't add on cell " << x << ", " << y << " : cell already occupied" << endl;
+		return NULL;
+	}
+		
+
+	Body* b = new BodyLemming(SEMANTIC::B_LEMMING);
+
+	// Adding body to map
+	if (this->m_map->addWorldObject(x, y, b))
+	{
+		// Insertion successfull
+		b->setPosition(x, y);
+		b->setMap(m_map->getMap());
+		this->m_bodies.push_back(b);
+		return b;
+	}
+	else
+	{
+		// Insertion failed : clean
+		delete(b);
+		std::cout << "ERROR : World::createBody : couldn't insert body in the map" << endl;
+		return NULL;
+	}
 }
 
+PhysicalObject* World::createObject(int x, int y, SEMANTIC type)
+{
+	// Cell exists and isn't null : can't add
+	if (this->m_map->isCellCreated(x, y) && !this->m_map->isCellEmpty(x, y))
+	{
+		std::cout << "ERROR : World::createObject : can't add on cell " << x << ", " << y << " : cell already occupied" << endl;
+		return NULL;
+	}
+
+	PhysicalObject* o = new Terrain(type);
+
+	// Adding object to map
+	if (this->m_map->addWorldObject(x, y, o))
+	{
+		// Insertion successfull
+		o->setPosition(x, y);
+		this->m_objects.push_back(o);
+		return o;
+	}
+	else
+	{
+		// Insertion failed : clean
+		delete(o);
+		std::cout << "ERROR : World::createObject : couldn't insert object in the map" << endl;
+		return NULL;
+	}
+}
 
 void World::collectInfluences()
 {
@@ -133,6 +212,11 @@ std::vector<Body*>* World::getBodies()
 	return &this->m_bodies;
 }
 
+Map* World::getMap()
+{
+	return this->m_map;
+}
+
 void World::update()
 {
     this->collectInfluences();
@@ -150,9 +234,9 @@ void World::setPerceptions()
 
 //Private functions
 
-bool World::isDiggable(Semantic* semantic)
+bool World::isDiggable(SEMANTIC semantic)
 {
-    if (typeid(*semantic) == typeid(T_Dirt))
+    if (semantic == SEMANTIC::T_DIRT)
         return true;
     return false;
 }

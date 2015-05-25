@@ -12,10 +12,8 @@
 #include "PhysicalObject.h"
 #include "BodyLemming.h"
 #include "Event.h"
-#include "B_Lemming.h"
-#include "T_Dirt.h"
-#include "T_Rock.h"
 #include "PerceptionCircle.h"
+#include "Terrain.h"
 
 class World
 {
@@ -26,7 +24,7 @@ private:
 	std::vector<Body*> m_bodies;    // All bodies in the world
 	std::vector<ACTIONS> m_influences;    // All influences of the bodies
 
-    bool isDiggable(Semantic* semantic);    // For a given semantic, returns true if the lemming can dig it
+	bool isDiggable(SEMANTIC semantic);    // For a given semantic, returns true if the lemming can dig it
     void setBodyPerception(Body* body);
 
 public:
@@ -38,17 +36,19 @@ public:
 
 	// Loading/saving level
 	//TODO: save level
-	void loadLevel();
+	void loadLevel(std::string path = "Default");
 
     // Create a body at position x / y
 	Body* createBody(int x, int y);
+	PhysicalObject* createObject(int x, int y, SEMANTIC type);
 
     // Influence stuff
-	void collectInfluences();    //TODO: clean
-	void resolveInfluences();
+	void collectInfluences();	//TODO: clean
+	void resolveInfluences();	
 
     // General getters & setters
 	std::vector<Body*>* getBodies();
+	Map* getMap();
 
     // Run the world for one tick
 	void update();

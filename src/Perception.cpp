@@ -1,7 +1,43 @@
 #include "Perception.h"
 
-
-void Perception::setPercievedObjects(std::vector<PhysicalObject*> percievedObjects)
+Perception::Perception()
 {
-    this->percievedObjects = percievedObjects;
+
+}
+
+std::vector<PhysicalObject*>* Perception::getPercievedObjects()
+{
+	return &this->percievedObjects;
+}
+
+void Perception::getLemmingPos(int& x, int& y)
+{
+	x = this->lemmingX;
+	y = this->lemmingY;
+}
+
+int Perception::getLemmingX()
+{
+	return this->lemmingX;
+}
+
+int Perception::getLemmingY()
+{
+	return this->lemmingY;
+}
+
+void Perception::getExitPos(int& x, int& y)
+{
+	x = this->exitX;
+	y = this->exitY;
+}
+
+int Perception::getExitX()
+{
+	return this->exitX;
+}
+
+int Perception::getExitY()
+{
+	return this->exitY;
 }
