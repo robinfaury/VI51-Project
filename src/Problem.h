@@ -2,14 +2,19 @@
 #define PROBLEM_H
 
 #include <vector>
+
+#include "PerceptionCross.h"
 #include "Perception.h"
 #include "ProblemStore.h"
+#include "Body.h"
+#include "World.h"
 
 
 class Problem
 {
 public:
-    Problem();
+	Problem();
+    Problem(Body* body, World* world);
     ~Problem();
 
 	std::vector<std::string>* getPossibleActions(ProblemState* state);
@@ -24,6 +29,8 @@ public:
 	ProblemState* convertPerceptionToState(Perception* perception);
 
 protected:
+	Body* m_body;
+	World* m_world;
 	ProblemStore m_problemStore;
 	std::vector<ProblemState*> m_problemStates;
 

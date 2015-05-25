@@ -5,6 +5,12 @@ Problem::Problem()
 
 }
 
+Problem::Problem(Body* body, World* world)
+{
+	m_body = body;
+	m_world = world;
+}
+
 Problem::~Problem()
 {
 
@@ -29,11 +35,37 @@ ProblemStore* Problem::getProblemStore()
 // Returns the resulting state of doing action pAction in state originalState
 ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAction, float& reward)
 {
-	//TODO: implement that
-	return NULL;
+	ACTIONS influence;
+	if (pAction == "down")
+	{
+		influence = ACTIONS::DOWN;
+	}
+	else if (pAction == "left")
+	{
+		influence = ACTIONS::LEFT;
+	}
+	else if (pAction == "right")
+	{
+		influence = ACTIONS::RIGHT;
+	}
+	else
+	{
+		influence = ACTIONS::NONE;
+	}
+
+	m_body->setInfluence(influence);
+
+	// TODO: process influences, resolve actions and send back new perception
+
+	Perception* newPerception = new PerceptionCross();
+	ProblemState* newState = convertPerceptionToState(newPerception);
+
+	// TODO: calculate and set reward
+
+	return newState;
 }
 
-ProblemState*  Problem::convertPerceptionToState(Perception* perception)
+ProblemState* Problem::convertPerceptionToState(Perception* perception)
 {
 	std::vector<PhysicalObject*>* objects = perception->getPerceivedObjects();
 
