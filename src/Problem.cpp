@@ -35,87 +35,72 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 
 ProblemState*  Problem::convertPerceptionToState(Perception* perception)
 {
-	/*
+	std::vector<PhysicalObject*>* objects = perception->getPerceivedObjects();
 
-	int stateId = 0;
-	int leftVal = 0, rightVal = 0, bottomVal = 0;
-
-	PhysicalObject[8] objects = perception.getPerceivedObjects();
-
-	goalPos = perception.getExit();
-	actualPos = perception.getLemmingPos();
+	int goalPosX = perception->getExitX();
+	int actualPosX = perception->getLemmingX();
 
 	// process goal direction
 	DIRECTION goalDir;
-	if (actualPos.x > goalPos.x)
+	if (actualPosX > goalPosX)
 	{
-		goalDir = DIRECTION.LEFT;
+		goalDir = DIRECTION::LEFT;
 	}
-	else if(actualPos.x < goalPos.x)
+	else if (actualPosX < goalPosX)
 	{
-		goalDir = DIRECTION.RIGHT
+		goalDir = DIRECTION::RIGHT;
 	}
 	else
 	{
-		goalDir = DIRECTION.DOWN;
+		goalDir = DIRECTION::DOWN;
 	}
-	int goalPoss = 2;  // total number of possible values for the goal direction (goalDir)
+	int goalPoss = 3;  // total number of possible values for the goal direction
 
 	// process tile on the left
-	switch (tiles[3].getType())
+	TILE_TYPE leftTile;
+	switch (objects->at(3)->getSemantic())
 	{
-		case TILE_TYPE.EMPTY:
-		case TILE_TYPE.DIGGABLE:
-			leftVal = 0;
+		case SEMANTIC::T_ROCK:
+		case SEMANTIC::B_LEMMING: 
+			leftTile = TILE_TYPE::UNDIGGABLE;
 			break;
-		case TILE_TYPE.UNDIGGABLE:
-			leftVal = 1;
+		default:
+			leftTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
 			break;
-		//case TILE_TYPE.DANGEROUS:
-			//leftVal = 2;
-			//break;
 	}
-	int leftPoss = 2;  // total number of possible values for the left tile (leftVal)
+	int leftPoss = 2;  // total number of possible values for the left tile
 
 	// process tile on the right
-	switch (tiles[4].getType())
+	TILE_TYPE rightTile;
+	switch (objects->at(4)->getSemantic())
 	{
-		case TILE_TYPE.EMPTY:
-		case TILE_TYPE.DIGGABLE:
-			rightVal = 0;
+		case SEMANTIC::T_ROCK:
+		case SEMANTIC::B_LEMMING:
+			rightTile = TILE_TYPE::UNDIGGABLE;
 			break;
-		case TILE_TYPE.UNDIGGABLE:
-			rightVal = 1;
+		default:
+			rightTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
 			break;
-		//case TILE_TYPE.DANGEROUS:
-			//rightVal = 2;
-			//break;
 	}
-	int rightPoss = 2; // total number of possible values for right tile (rightVal)
+	int rightPoss = 2; // total number of possible values for right tile
 
 	// process tile below
-	switch (tiles[6].getType())
+	TILE_TYPE bottomTile;
+	switch (objects->at(6)->getSemantic())
 	{
-		case TILE_TYPE.EMPTY:
-			bottomVal = 0;
+		case SEMANTIC::T_ROCK:
+		case SEMANTIC::B_LEMMING:
+			bottomTile = TILE_TYPE::UNDIGGABLE;
 			break;
-		case TILE_TYPE.DIGGABLE:
-			bottomVal = 1;
+		default:
+			bottomTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
 			break;
-		case TILE_TYPE.UNDIGGABLE:
-			bottomVal = 2;
-			break;
-		//case TILE_TYPE.DANGEROUS:
-			//bottomVal = 3;
-			//break;
 	}
-	int bottomPoss = 3; // total number of possible values for the bottom tile (bottomVal)
 
-	stateId = bottomVal + rightVal * bottomPoss + leftVal * rightPoss * bottomPoss + goalDir * leftPoss * rightPoss * bottomPoss;
+	// calculate unique state id
+	int stateId = goalDir + leftTile * goalPoss + rightTile * (goalPoss + leftPoss) + bottomTile * (goalPoss * leftPoss * rightPoss); 
 
 	return m_problemStates.at(stateId);
-	*/
-	return NULL;
 }
 
 std::vector<std::string>* Problem::getPossibleActions(ProblemState* state)

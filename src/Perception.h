@@ -11,7 +11,7 @@
 class Perception
 {
 protected:
-    std::vector<PhysicalObject*> percievedObjects;
+    std::vector<PhysicalObject*> perceivedObjects;
 
 	int lemmingX;
 	int lemmingY;
@@ -20,10 +20,10 @@ protected:
 
 public:
 	Perception();
-	Perception(std::vector<PhysicalObject*> percievedObjects);
+	Perception(std::vector<PhysicalObject*> perceivedObjects);
 
-    virtual std::vector<PhysicalObject*>* getPercievedObjects();
-    virtual void setPercievedObjects(std::vector<PhysicalObject*> percievedObjects) = 0;
+    virtual std::vector<PhysicalObject*>* getPerceivedObjects();
+    virtual void setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects) = 0;
 	
 	void getLemmingPos(int& x, int& y);
 	int getLemmingX();

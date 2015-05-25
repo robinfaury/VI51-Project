@@ -19,8 +19,8 @@ private:
 
 public:
 	PerceptionCross();
-	PerceptionCross(std::vector<PhysicalObject*> percievedObjects);
-	virtual void setPercievedObjects(std::vector<PhysicalObject*> percievedObjects);
+	PerceptionCross(std::vector<PhysicalObject*> perceivedObjects);
+	virtual void setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects);
 };
 
 #endif

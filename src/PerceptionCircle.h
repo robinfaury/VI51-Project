@@ -19,9 +19,9 @@ private:
 
 public:
     PerceptionCircle();
-	PerceptionCircle(std::vector<PhysicalObject*> percievedObjects);
+	PerceptionCircle(std::vector<PhysicalObject*> perceivedObjects);
 
-	virtual void setPercievedObjects(std::vector<PhysicalObject*> percievedObjects);
+	virtual void setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects);
 };
 
 #endif

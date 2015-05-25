@@ -4,17 +4,17 @@ PerceptionCross::PerceptionCross()
 {
 }
 
-PerceptionCross::PerceptionCross(std::vector<PhysicalObject*> percievedObjects)
+PerceptionCross::PerceptionCross(std::vector<PhysicalObject*> perceivedObjects)
 {
-	setPercievedObjects(percievedObjects);
+	setPerceivedObjects(perceivedObjects);
 }
 
-void PerceptionCross::setPercievedObjects(std::vector<PhysicalObject*> percievedObjects)
+void PerceptionCross::setPerceivedObjects(std::vector<PhysicalObject*> percievedObjects)
 {
-	this->percievedObjects.clear();
+	this->perceivedObjects.clear();
 
-	this->percievedObjects.push_back(percievedObjects.at(1));
-	this->percievedObjects.push_back(percievedObjects.at(3));
-	this->percievedObjects.push_back(percievedObjects.at(4));
-	this->percievedObjects.push_back(percievedObjects.at(6));
+	this->perceivedObjects.push_back(percievedObjects.at(1));
+	this->perceivedObjects.push_back(percievedObjects.at(3));
+	this->perceivedObjects.push_back(percievedObjects.at(4));
+	this->perceivedObjects.push_back(percievedObjects.at(6));
 }

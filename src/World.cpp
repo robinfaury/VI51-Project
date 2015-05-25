@@ -249,7 +249,7 @@ void World::setBodyPerception(Body* body)
     Perception* newPerception = new PerceptionCircle();
     Cell* cell;
 
-    std::vector<PhysicalObject*> percievedObjects;
+    std::vector<PhysicalObject*> perceivedObjects;
 
     //topleft
     for (int i = -1 ; i <= 1; ++i)
@@ -264,10 +264,10 @@ void World::setBodyPerception(Body* body)
             {
                 cell = this->m_map->getCell(x+j,y+i);
                 if (cell != NULL)
-                    percievedObjects.push_back(cell->getWorldObject());
+                    perceivedObjects.push_back(cell->getWorldObject());
             }
         }
     }
-    newPerception->setPercievedObjects(percievedObjects);
+    newPerception->setPerceivedObjects(perceivedObjects);
     body->setPerception(newPerception);
 }

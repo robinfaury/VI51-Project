@@ -3,15 +3,14 @@
 
 enum DIRECTION
 {
-	LEFT = 0,
+	LEFT,
 	RIGHT,
 	DOWN
 };
 
-enum TYLE_TYPE
+enum TILE_TYPE
 {
-	EMPTY = 0,
-	DIGGABLE,
+	EMPTY_OR_DIGGABLE,
 	UNDIGGABLE
 };
 

@@ -5,9 +5,9 @@ Perception::Perception()
 
 }
 
-std::vector<PhysicalObject*>* Perception::getPercievedObjects()
+std::vector<PhysicalObject*>* Perception::getPerceivedObjects()
 {
-	return &this->percievedObjects;
+	return &this->perceivedObjects;
 }
 
 void Perception::getLemmingPos(int& x, int& y)

@@ -4,13 +4,13 @@ PerceptionCircle::PerceptionCircle()
 {
 }
 
-PerceptionCircle::PerceptionCircle(std::vector<PhysicalObject*> percievedObjects)
+PerceptionCircle::PerceptionCircle(std::vector<PhysicalObject*> perceivedObjects)
 {
-	setPercievedObjects(percievedObjects);
+	setPerceivedObjects(perceivedObjects);
 }
 
-void PerceptionCircle::setPercievedObjects(std::vector<PhysicalObject*> percievedObjects)
+void PerceptionCircle::setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects)
 {
-	this->percievedObjects.clear();
-	this->percievedObjects = percievedObjects;
+	this->perceivedObjects.clear();
+	this->perceivedObjects = perceivedObjects;
 }
