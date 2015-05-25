@@ -1,9 +1,9 @@
 #include "PhysicalObject.h"
 
 
-PhysicalObject::PhysicalObject(Semantic semantic)
+PhysicalObject::PhysicalObject(Semantic* type)
 {
-	this->semantic = semantic;
+	this->type = type;
 }
 
 

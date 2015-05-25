@@ -1,28 +1,47 @@
 #ifndef BODY_H_
 #define BODY_H_
 
-#include <vector>
-#include <stdlib.h>
+#include <map>
+#include <glm.hpp>
 
 #include "PhysicalObject.h"
+#include "Perception.h"
+#include "Map.h"
+
+enum ACTIONS
+{
+    NONE,
+    RIGHT,
+    LEFT,
+    DOWN
+};
 
 class Body:  public PhysicalObject
 {
-private:
+protected:
 	Body(void) {}
+	int m_x;
+	int m_y;
+	ACTIONS m_influence;
+	std::map<std::pair<int,int>, Cell*>* m_map;
+	Perception* m_perception;
 
 public:
-	Body(Semantic semantic);
+	Body(Semantic* type);
 
-	std::vector<PhysicalObject*>* GetPerception();
-	void SetIntention(float dx, float dy, float velocity);
+	virtual Perception* getPerception() = 0;
+	virtual void setPerception(Perception* newPerception);
+	void setInfluence(ACTIONS influence);
+	ACTIONS getInfluence();
 
-	virtual void SetPosition(float x, float y);
-	virtual void GetPosition(float &x, float &y);
-	virtual std::vector<float> GetPosition();
+	virtual void setPosition(int x, int y);
+	virtual void getPosition(int &x, int &y);
+	virtual std::vector<int> getPosition();
 
-	virtual void SetSemantic(Semantic semantic);
-	virtual Semantic* GetSemantic();
+	virtual void setSemantic(Semantic* type);
+	virtual Semantic* getSemantic();
+
+	void setMap(std::map<std::pair<int,int>, Cell*>* pMap) {this->m_map = pMap;}
 
 	~Body(void);
 };

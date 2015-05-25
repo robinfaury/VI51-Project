@@ -4,6 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#define TILE_SIZE 16
+#define LEMMINGTEX_PATH "res/lemming.png"
+#define TERRAINTEX_PATH "res/terrain.png"
+
 #include "World.h"
 
 class GraphicView
@@ -11,16 +15,26 @@ class GraphicView
 private:
 	sf::RenderWindow* window;
 	World* world;
-	std::vector<sf::CircleShape> bodyShape;
+
+	sf::Texture terrainTexture;
+	sf::Texture lemmingTexture;
+
+	sf::Sprite terrainSprite;
+	sf::Sprite lemmingSprite;
+
+	std::map<std::pair<int, int>, Cell*>* currentMap;
+
+	bool setTextureRectFromSemantic(Semantic* semantic);
 
 public:
 	GraphicView(void);
 
-	void Init(int height, int width);
-	int CheckEvent();
-	void Draw();
+	void init(int height, int width);
+	int checkEvent();
+	void checkWorldEvents();
+	void draw();
 
-	void SetWorld(World* world);
+	void setWorld(World* world);
 
 	~GraphicView(void);
 };

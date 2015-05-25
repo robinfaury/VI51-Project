@@ -4,18 +4,17 @@
 Simulator::Simulator(int numberOfAgents)
 {
 	this->numberOfAgents = numberOfAgents;
-	this->SFMLView.Init(800, 800);
+	this->SFMLView.init(30*27, 30*30);
 }
 
 void Simulator::CreateWorld()
 {
-	for (int i=0; i<this->numberOfAgents; ++i)
-	{
-		Body* body = this->world.CreateBody();
-		this->agents.push_back(Agent(body));
-	}
+	this->world.createMap();
 
-	this->SFMLView.SetWorld(&this->world);
+	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
+		this->agents.push_back(Agent((*currentBody)));
+
+	this->SFMLView.setWorld(&this->world);
 }
 
 void Simulator::Run()
@@ -27,18 +26,20 @@ void Simulator::Run()
 	{
 		start_time = std::chrono::high_resolution_clock::now();
 
-		eventID = this->SFMLView.CheckEvent();
+		eventID = this->SFMLView.checkEvent();
 
-		int nbAgents = static_cast<int>(agents.size());
-		for (int i = 0 ; i < nbAgents ; ++i)
-		{
-            this->agents[i].Life();
-		}
+		for (std::vector<Agent>::iterator currentAgent = this->agents.begin(); currentAgent != this->agents.end(); ++currentAgent)
+			(*currentAgent).live();
 
-		this->SFMLView.Draw();
+    //TODO: fix that
+		//this->world.collectInfluence();
+		this->world.resolveInfluences();
+
+		this->SFMLView.draw();
 
 		end_time = std::chrono::high_resolution_clock::now();
 		std::cout <<"frame time : "<< std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() << std::endl;
+		//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 }
 
