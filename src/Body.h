@@ -19,7 +19,6 @@ enum ACTIONS
 class Body:  public PhysicalObject
 {
 protected:
-	Body(void) {}
 	int m_x;
 	int m_y;
 	ACTIONS m_influence;
@@ -27,22 +26,16 @@ protected:
 	Perception* m_perception;
 
 public:
-	Body(Semantic* type);
+	Body(SEMANTIC type);
 
 	virtual Perception* getPerception() = 0;
 	virtual void setPerception(Perception* newPerception);
 	void setInfluence(ACTIONS influence);
 	ACTIONS getInfluence();
 
-	virtual void setPosition(int x, int y);
-	virtual void getPosition(int &x, int &y);
-	virtual std::vector<int> getPosition();
+	void setMap(std::map<std::pair<int, int>, Cell*>* pMap);
 
-	virtual void setSemantic(Semantic* type);
-	virtual Semantic* getSemantic();
-
-	void setMap(std::map<std::pair<int,int>, Cell*>* pMap) {this->m_map = pMap;}
-
+	virtual void destroy();
 	~Body(void);
 };
 

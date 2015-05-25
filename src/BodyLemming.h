@@ -9,7 +9,7 @@ private:
 
 
 public :
-    BodyLemming(Semantic* type);
+	BodyLemming(SEMANTIC type);
 
     virtual Perception* getPerception();
 };

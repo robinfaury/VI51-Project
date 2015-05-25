@@ -36,9 +36,12 @@ public:
 
 	bool isCellCreated(int x, int y);   // Returns true if cell x/y has been created already
 	bool isCellCreated(std::pair<int, int> cell);   // Overload
+	bool isCellEmpty(int x, int y);	// If cell is created and empty, returns true. Else, false.
 
 	Cell* getCell(int x, int y);
 	Cell* getCell(std::pair<int, int> cell);
+
+	bool addWorldObject(int x, int y, PhysicalObject* object);	// Adds object to the map. If cell doesn't exist, create it. If cell exists but is already occupied, return false and do nothing
 
 
 

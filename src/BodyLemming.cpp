@@ -1,6 +1,6 @@
 #include "BodyLemming.h"
 
-BodyLemming::BodyLemming(Semantic* type) : Body(type)
+BodyLemming::BodyLemming(SEMANTIC type) : Body(type)
 {
 }
 
