@@ -46,7 +46,3 @@ ADD_DEFINITIONS(${GLM_DEFINITIONS})
 if(GLM_FOUND)
 	TARGET_LINK_LIBRARIES(${EXE_NAME} ${GLM_LIBRARY})
 endif()
-
-INCLUDE_DIRECTORIES(C:/Edrevan/Lib/tbb43_20150316oss/include)
-LINK_DIRECTORIES(C:/Edrevan/Lib/tbb43_20150316oss/lib/intel64/vc11)
-TARGET_LINK_LIBRARIES(${EXE_NAME} C:/Edrevan/Lib/tbb43_20150316oss/lib/intel64/vc11/tbb.lib C:/Edrevan/Lib/tbb43_20150316oss/lib/intel64/vc11/tbb_debug.lib)

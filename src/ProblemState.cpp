@@ -10,11 +10,6 @@ ProblemState::~ProblemState()
 
 }
 
-std::vector<std::string>* ProblemState::getPossibleActions()
-{
-	return &m_possibleActions;
-}
-
 int ProblemState::getId()
 {
 	return m_id;

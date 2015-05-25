@@ -9,6 +9,7 @@
  */
 
 #include "ProblemState.h"
+#include <map>
 
 class ProblemStore
 {
@@ -16,18 +17,22 @@ public:
     ProblemStore();
     ~ProblemStore();
 
-	std::string getBestAction(int stateId);  // Gest best action based on the qvalues of the given state
+	std::vector<std::string>* getPossibleActions(int stateId); // get all possible actions from the given state
+	std::vector<std::string>* getPossibleActions(ProblemState* problemState);
+
+	std::string getBestAction(int stateId);  // Get best action based on the qvalues of the given state
 	std::string getBestAction(ProblemState* problemState);  // Override
 
     float getQValue(int stateId, std::string action);    // For this state and action, return the associated QValue
-	float getQValue(ProblemState* problemState, std::string action);    // Ovveride
+	float getQValue(ProblemState* problemState, std::string action);    // Override
 
     void updateQValue(int stateId, std::string action, float newQValue);
 	void updateQValue(ProblemState* problemState, std::string action, float newQValue);
 	
 
     //Getters / Setters
-
+protected:
+	std::map < int, std::map<std::string, float> > m_QValues; // array indexed by state ids containing arrays of q-values indexed by actions
 };
 
 #endif // PROBLEMSTORE_H
