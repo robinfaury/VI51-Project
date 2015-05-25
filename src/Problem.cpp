@@ -33,10 +33,11 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 	return NULL;
 }
 
-ProblemState*  Problem::convertPerceptToState(Perception percept)
+ProblemState*  Problem::convertPerceptionToState(Perception* perception)
 {
-	Tile[8] tiles = percept.getTiles();
-	DIRECTION goalDir = percept.getGoalDirection();
+	/*
+	Tile[8] tiles = perception.getTiles();
+	DIRECTION goalDir = perception.getGoalDirection();
 
 	int stateId = 0;
 	int leftVal = 0, rightVal = 0, bottomVal = 0, goalVal = 0;
@@ -105,6 +106,8 @@ ProblemState*  Problem::convertPerceptToState(Perception percept)
 	stateId = leftPoss * rightPoss * bottomPoss * goalVal + rightPoss * bottomPoss * leftVal + bottomPoss * rightVal + bottomVal;
 
 	return m_problemStates.at(stateId);
+	*/
+	return NULL;
 }
 
 std::vector<std::string>* Problem::getPossibleActions(ProblemState* state)

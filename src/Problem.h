@@ -2,6 +2,7 @@
 #define PROBLEM_H
 
 #include <vector>
+#include "Perception.h"
 #include "ProblemStore.h"
 
 
@@ -20,7 +21,7 @@ public:
 
 	ProblemState* takeAction(ProblemState* pOriginalState, std::string pAction, float& reward);	// Returns the resulting state of doing action pAction in state originalState, giving the appropriate reward
 
-	ProblemState* convertPerceptToState(Perception percept);
+	ProblemState* convertPerceptionToState(Perception* perception);
 
 protected:
 	ProblemStore m_problemStore;
