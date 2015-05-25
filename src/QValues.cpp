@@ -73,22 +73,22 @@ void QValues::checkParameterValues(float* learningRate, float* discountRate, flo
 {
 	if (*learningRate < 0.0f || *learningRate > 1.0f)
 	{
-		//TODO: raise error
+		std::cout << "error: learning rate out of range" << std::endl;
 		*learningRate = PARAMETER_LEARNING;
 	}
 	if (*discountRate < 0.0f || *discountRate > 1.0f)
 	{
-		//TODO: raise error
+		std::cout << "error: discount rate out of range" << std::endl;
 		*discountRate = PARAMETER_DISCOUNT;
 	}
 	if (*actionRandomness < 0.0f || *actionRandomness > 1.0f)
 	{
-		//TODO: raise error
+		std::cout << "error: action randomness rate out of range" << std::endl;
 		*actionRandomness = PARAMETER_RANDOMNESS;
 	}
 	if (*walkLength < 0.0f || *walkLength > 1.0f)
 	{
-		//TODO: raise error
+		std::cout << "error: walk length rate out of range" << std::endl;
 		*walkLength = PARAMETER_WALK;
 	}
 }
@@ -98,6 +98,5 @@ std::string QValues::getOneOf(std::vector<std::string>* possibleActions)
 	if (possibleActions->empty())
 		return NULL;
 
-	//TODO:
 	return (*possibleActions)[rand() % possibleActions->size()];
 }

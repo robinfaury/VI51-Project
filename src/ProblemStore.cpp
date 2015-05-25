@@ -12,13 +12,12 @@ ProblemStore::~ProblemStore()
 
 std::vector<std::string>* ProblemStore::getPossibleActions(int stateId)
 {
-    //TODO: INCOMMING SEGFAULT - change that!
-	std::vector<std::string> actions;
+	std::vector<std::string>* actions = new std::vector<std::string>();
 	for (std::map<std::string, float>::iterator it = m_QValues[stateId].begin(); it != m_QValues[stateId].end(); ++it)
 	{
-		actions.push_back(it->first);
+		actions->push_back(it->first);
 	}
-	return &actions;
+	return actions;
 }
 
 std::vector<std::string>* ProblemStore::getPossibleActions(ProblemState* state)

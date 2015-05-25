@@ -36,11 +36,30 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 ProblemState*  Problem::convertPerceptionToState(Perception* perception)
 {
 	/*
-	Tile[8] tiles = perception.getTiles();
-	DIRECTION goalDir = perception.getGoalDirection();
 
 	int stateId = 0;
-	int leftVal = 0, rightVal = 0, bottomVal = 0, goalVal = 0;
+	int leftVal = 0, rightVal = 0, bottomVal = 0;
+
+	PhysicalObject[8] objects = perception.getPerceivedObjects();
+
+	goalPos = perception.getExit();
+	actualPos = perception.getLemmingPos();
+
+	// process goal direction
+	DIRECTION goalDir;
+	if (actualPos.x > goalPos.x)
+	{
+		goalDir = DIRECTION.LEFT;
+	}
+	else if(actualPos.x < goalPos.x)
+	{
+		goalDir = DIRECTION.RIGHT
+	}
+	else
+	{
+		goalDir = DIRECTION.DOWN;
+	}
+	int goalPoss = 2;  // total number of possible values for the goal direction (goalDir)
 
 	// process tile on the left
 	switch (tiles[3].getType())
@@ -92,18 +111,7 @@ ProblemState*  Problem::convertPerceptionToState(Perception* perception)
 	}
 	int bottomPoss = 3; // total number of possible values for the bottom tile (bottomVal)
 
-	// process goal direction
-	switch (goalDir)
-	{
-		case DIRECTION.LEFT:
-			goalVal = 0;
-			break;
-		case DIRECTION.RIGHT:
-			goalVal = 1;
-			break;
-	}
-
-	stateId = leftPoss * rightPoss * bottomPoss * goalVal + rightPoss * bottomPoss * leftVal + bottomPoss * rightVal + bottomVal;
+	stateId = bottomVal + rightVal * bottomPoss + leftVal * rightPoss * bottomPoss + goalDir * leftPoss * rightPoss * bottomPoss;
 
 	return m_problemStates.at(stateId);
 	*/

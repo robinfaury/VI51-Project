@@ -1,6 +1,20 @@
 #ifndef PROBLEMSTATE_H
 #define PROBLEMSTATE_H
 
+enum DIRECTION
+{
+	LEFT = 0,
+	RIGHT,
+	DOWN
+};
+
+enum TYLE_TYPE
+{
+	EMPTY = 0,
+	DIGGABLE,
+	UNDIGGABLE
+};
+
 /*
  * ProblemState represents one state of the problem. There will be as many instances of this class per problem that there
  * are states per problem. One state stores :
