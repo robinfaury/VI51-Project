@@ -2,10 +2,12 @@
 #define AGENTLEMMINGTEST_H_
 
 #include "Agent.h"
+#include "NeuronalNetwork/NeuronalNetworkMonocouche.h"
 
 class AgentLemmingTest : public Agent
 {
 private:
+	NeuronalNetworkMonocouche ArtificialInteligence;
 
 public:
 	AgentLemmingTest(Body* body);

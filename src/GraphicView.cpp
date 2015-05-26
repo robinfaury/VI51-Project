@@ -49,13 +49,13 @@ void GraphicView::draw()
             // If it's a terrain, draw it with mapSprite
             if (setTextureRectFromSemantic(object->getSemantic()))
             {
-                this->terrainSprite.setPosition(x*TILE_SIZE, y*TILE_SIZE);
+                this->terrainSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
                 window->draw(terrainSprite);
             }
             else
             {
                 // Else, draw the lemming
-                this->lemmingSprite.setPosition(x*TILE_SIZE, y*TILE_SIZE);
+                this->lemmingSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
                 window->draw(lemmingSprite);
             }
         }

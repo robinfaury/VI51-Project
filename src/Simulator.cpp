@@ -53,7 +53,7 @@ void Simulator::Run()
 			this->SFMLView.draw();
 
 			end_time = std::chrono::high_resolution_clock::now();
-			int time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+			__int64 time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
 			std::cout << "frame time : " << time << " ms, waiting " << 1000 - time << " ms" << std::endl;
 
 			std::cout << "Simulator::Run : FRAME ENDED" << endl;
@@ -63,7 +63,7 @@ void Simulator::Run()
 			checkEvents();	// Checking for user input
 
 			end_time = std::chrono::high_resolution_clock::now();
-			int time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+			__int64 time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
 
 			if (play)
 			{
@@ -115,7 +115,7 @@ void Simulator::checkEvents()
 		sf::Vector2i pixelPos = sf::Mouse::getPosition(*this->window);
 		sf::Vector2f worldPos = this->window->mapPixelToCoords(pixelPos);
 		int x, y;
-		this->SFMLView.convertCoordinates_worldToTiles(worldPos.x, worldPos.y, x, y);
+		this->SFMLView.convertCoordinates_worldToTiles(static_cast<int>(worldPos.x), static_cast<int>(worldPos.y), x, y);
 
 		applyUserAction(this->SFMLView.getUserAction(), x, y);
 	}

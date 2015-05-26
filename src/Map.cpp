@@ -233,10 +233,12 @@ bool Map::moveWorldObject(int oldX, int oldY, int newX, int newY)
 	else if (oldCell->getWorldObject() == NULL)
 	{
 		std::cout << "ERROR : Map::moveWorldObject : oldCell is empty" << endl;
+		return false;
 	}
 	else if (newCell->getWorldObject() != NULL)
 	{
 		std::cout << "ERROR : Map::moveWorldObject : newCell isn't empty" << endl;
+		return false;
 	}
 	else
 	{

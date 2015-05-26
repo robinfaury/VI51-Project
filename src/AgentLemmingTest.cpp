@@ -1,8 +1,9 @@
 #include "AgentLemmingTest.h"
 
-AgentLemmingTest::AgentLemmingTest(Body* body) : Agent(body)
+AgentLemmingTest::AgentLemmingTest(Body* body) : Agent(body), ArtificialInteligence("res/learn.txt")
 {
-
+	ArtificialInteligence.learning();
+	ArtificialInteligence.testing();
 }
 
 void AgentLemmingTest::live()
