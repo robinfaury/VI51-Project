@@ -44,7 +44,6 @@ int GraphicView::checkEvent()
 void GraphicView::draw()
 {
 	window->clear(sf::Color::Black);
-	
 
 	int x, y;
 	// For each cell of the map

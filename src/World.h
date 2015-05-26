@@ -24,14 +24,16 @@ private:
 	std::vector<Body*> m_bodies;    // All bodies in the world
 	std::vector<ACTIONS> m_influences;    // All influences of the bodies
 
-	bool isDiggable(SEMANTIC semantic);    // For a given semantic, returns true if the lemming can dig it
-    void setBodyPerception(Body* body);
+	bool isDiggable(SEMANTIC semantic);		// For a given semantic, returns true if the lemming can dig it
+    void setBodyPerception(Body* body);		// Sets the perception of given body
+
+	std::string currentLevelPath;
 
 public:
 	World(void);
 	~World(void);
 
-    // Map creation function
+    // Initialise the map (first time init)
 	void createMap();
 
 	// Loading/saving level
@@ -41,9 +43,10 @@ public:
     // Create a body at position x / y
 	Body* createBody(int x, int y);
 	PhysicalObject* createObject(int x, int y, SEMANTIC type);
+	void removeObject(PhysicalObject* object);	// Completely removes given object from the map and the object container
 
     // Influence stuff
-	void collectInfluences();	//TODO: clean
+	void collectInfluences();
 	void resolveInfluences();	
 
     // General getters & setters
@@ -55,6 +58,10 @@ public:
 
 	// Set the perceptions of all bodies
 	void setPerceptions();
+
+	//Reset the current level
+	void reset();
+
 };
 
 #endif

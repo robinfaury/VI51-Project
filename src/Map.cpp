@@ -200,3 +200,86 @@ bool Map::addWorldObject(int x, int y, PhysicalObject* object)
 		return true;
 	}
 }
+
+// Returns true if given object has been removed from the map. Else, returns false.
+bool Map::removeWorldObject(PhysicalObject* object)
+{	
+	std::map<std::pair<int, int>, Cell*>::iterator it = findCell(object);
+	if (it == this->m_map.end())
+	{
+		std::cout << "Map::removeWorldObject : couldn't find object in the map." << endl;
+		return false;
+	}
+	else
+	{
+		it->second->setWorldObject(NULL);
+		//std::cout << "Map::removeWorldObject : removed object at " << it->first.first << "," << it->first.second << endl;
+		return true;
+	}
+}
+
+// Moves object to given cell (if it's empty), and returns true. If move is impossible (cell doesn't exist, or is occupied), return false.
+bool Map::moveWorldObject(int oldX, int oldY, int newX, int newY)
+{
+	//std::cout << "Map::moveWorldObject : moving from " << oldX << "," << oldY << " to " << newX << "," << newY << endl;
+	Cell* oldCell = getCell(oldX, oldY);
+	Cell* newCell = getCell(newX, newY);
+
+	if (oldCell == NULL || newCell == NULL)
+	{
+		std::cout << "ERROR : Map::moveWorldObject : invalid parameters" << endl;
+		return false;
+	}
+	else if (oldCell->getWorldObject() == NULL)
+	{
+		std::cout << "ERROR : Map::moveWorldObject : oldCell is empty" << endl;
+	}
+	else if (newCell->getWorldObject() != NULL)
+	{
+		std::cout << "ERROR : Map::moveWorldObject : newCell isn't empty" << endl;
+	}
+	else
+	{
+		newCell->setWorldObject(oldCell->getWorldObject());
+		oldCell->setWorldObject(NULL);
+		return true;
+	}
+}
+
+
+std::map<std::pair<int, int>, Cell*>::iterator Map::findCell(Cell* cell)
+{
+	for (std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.begin(); it != this->m_map.end(); ++it)
+	{
+		if (it->second == cell)
+		{
+			return it;
+		}
+	}
+	return this->m_map.end();
+}
+
+std::map<std::pair<int, int>, Cell*>::iterator Map::findCell(int x, int y)
+{
+	for (std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.begin(); it != this->m_map.end(); ++it)
+	{
+		if (it->first.first == x && it->first.second == y)
+		{
+			return it;
+		}
+	}
+	return this->m_map.end();
+}
+
+// Returns an iterator to the cell containing the given object. Returns an iterator to end if it can't be found.
+std::map<std::pair<int, int>, Cell*>::iterator Map::findCell(PhysicalObject* object)
+{
+	for (std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.begin(); it != this->m_map.end(); ++it)
+	{
+		if (it->second->getWorldObject() == object)
+		{
+			return it;
+		}
+	}
+	return this->m_map.end();
+}

@@ -41,13 +41,19 @@ public:
 	Cell* getCell(int x, int y);
 	Cell* getCell(std::pair<int, int> cell);
 
+	// Object management
 	bool addWorldObject(int x, int y, PhysicalObject* object);	// Adds object to the map. If cell doesn't exist, create it. If cell exists but is already occupied, return false and do nothing
+	bool removeWorldObject(PhysicalObject* object);	// Returns true if given object has been removed from the map. Else, returns false.
+	bool moveWorldObject(int oldX, int oldY, int newX, int newY);	// Moves object to given cell (if it's empty), and returns true. If move is impossible (cell doesn't exist, or is occupied), return false.
 
-
-
+	std::map<std::pair<int, int>, Cell*>::iterator findCell(Cell* cell);	// Returns an iterator to given cell. Returns an iterator to end if it can't be found.
+	std::map<std::pair<int, int>, Cell*>::iterator findCell(int x, int y);	// Returns an iterator to the cell with given coordinates. Returns an iterator to end if it can't be found.
+	std::map<std::pair<int, int>, Cell*>::iterator findCell(PhysicalObject* object);	// Returns an iterator to the cell containing the given object. Returns an iterator to end if it can't be found.
 protected:
     // The world, represented as a grid of cells
 	std::map<std::pair<int, int>, Cell*> m_map;
+
+	
 };
 
 #endif

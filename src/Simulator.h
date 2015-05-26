@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "GraphicView.h"
-#include "Agent.h"
+#include "AgentLemmingTest.h"
 #include "World.h"
 
 class Simulator
@@ -16,8 +16,10 @@ private:
 	int numberOfAgents;
 	GraphicView SFMLView;
 	World world;
-	std::vector<Agent> agents;
+	std::vector<Agent*> agents;
 
+
+	bool frameFlag;	// flag used to allow window events while waiting next frame
 public:
 	Simulator(int numberOfAgents);
 

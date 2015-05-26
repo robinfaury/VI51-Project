@@ -10,10 +10,10 @@
 
 enum ACTIONS
 {
-    NONE,
-    RIGHT,
-    LEFT,
-    DOWN
+    A_NONE,
+	A_RIGHT,
+	A_LEFT,
+	A_DOWN
 };
 
 class Body:  public PhysicalObject
