@@ -44,6 +44,7 @@ public:
 	Body* createBody(int x, int y);
 	PhysicalObject* createObject(int x, int y, SEMANTIC type);
 	void removeObject(PhysicalObject* object);	// Completely removes given object from the map and the object container
+	void removeObject(int x, int y);	// Completely removes object at given position from the map and the object container
 
     // Influence stuff
 	void collectInfluences();

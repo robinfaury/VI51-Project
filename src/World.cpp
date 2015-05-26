@@ -33,7 +33,7 @@ void World::loadLevel(std::string path)
 		{
 			for (int j = 0; j < 10; ++j)
 			{
-				if (i == 1 && j == 1)
+				if (i == 4 && j == 4)
 				{
 					// Lemming start
 					createBody(i, j);
@@ -56,7 +56,6 @@ void World::loadLevel(std::string path)
 			}
 		}
 	}
-
 	//TODO: implement level loading from pugixml
 }
 
@@ -131,6 +130,18 @@ void World::removeObject(PhysicalObject* object)
 			it = this->m_objects.erase(it);
 			return;
 		}
+	}
+}
+
+// Completely removes object at given position from the map and the object container
+void World::removeObject(int x, int y)
+{
+	if (this->m_map->isCellCreated(x, y))
+	{
+		Cell* cell = this->m_map->getCell(x, y);
+		PhysicalObject* object = cell->getWorldObject();
+		if (object != NULL)
+			removeObject(object);
 	}
 }
 

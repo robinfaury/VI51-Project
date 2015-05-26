@@ -10,6 +10,13 @@
 
 #include "World.h"
 
+enum USER_ACTIONS
+{
+	U_CLEAR,
+	U_DIRT,
+	U_ROCK,
+};
+
 class GraphicView
 {
 private:
@@ -26,17 +33,24 @@ private:
 
 	bool setTextureRectFromSemantic(SEMANTIC semantic);
 
+	USER_ACTIONS userAction;
+
 public:
 	GraphicView(void);
 
 	void init(int height, int width, std::map<std::pair<int, int>, Cell*>* map);
-	int checkEvent();
-	void checkWorldEvents();
+	sf::RenderWindow* getWindow();
 	void draw();
 
 	void setWorld(World* world);
 
 	~GraphicView(void);
+
+	// User interface stuff
+	void setUserAction(USER_ACTIONS action);
+	USER_ACTIONS getUserAction();
+
+	void convertCoordinates_worldToTiles(int px, int py, int& wx, int& wy);
 };
 
 #endif
