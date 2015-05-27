@@ -12,5 +12,8 @@ void AgentLemmingTest::live()
 	if (!isLinked())
 		return;
 
+	Perception* p = this->body->getPerception();
+
+
 	this->body->setInfluence(ACTIONS::A_RIGHT);
 }

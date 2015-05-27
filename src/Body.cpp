@@ -3,7 +3,7 @@
 
 Body::Body(SEMANTIC type) : PhysicalObject(type)
 {
-
+	m_perception = NULL;
 }
 
 Body::~Body()
@@ -13,7 +13,8 @@ Body::~Body()
 
 void Body::setPerception(Perception* newPerception)
 {
-    delete(m_perception);
+	if (m_perception != NULL)
+		delete(m_perception);
     m_perception = newPerception;
 }
 

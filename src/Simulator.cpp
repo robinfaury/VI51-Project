@@ -39,7 +39,7 @@ void Simulator::Run()
 			if (play)
 			{
 				// Updating body perceptions
-
+				this->world.setPerceptions();
 
 				// Running agent
 				for (std::vector<Agent*>::iterator currentAgent = this->agents.begin(); currentAgent != this->agents.end(); ++currentAgent)
