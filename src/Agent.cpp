@@ -1,27 +1,42 @@
 #include "Agent.h"
 
 
-Agent::Agent(Body* body)
+Agent::Agent(Body* body) : linked(false)
 {
-	this->body = body;
-}
-
-void Agent::live()
-{
-    //TODO: redo
-	/*std::vector<int>* FoV = this->body->getPerception();
-
-	if ((*FoV)[1] == PILL)
-		this->body->setInfluence(0, -1, 1);
-	else if ((*FoV)[3] == PILL)
-		this->body->setInfluence(-1, 0, 1);
-	else if ((*FoV)[4] == PILL)
-		this->body->setInfluence(1, 0, 1);
-	else if ((*FoV)[6] == PILL)
-		this->body->setInfluence(0, 1, 1);
-*/
+	linkBody(body);
 }
 
 Agent::~Agent(void)
 {
+}
+
+bool Agent::linkBody(Body* body)
+{
+	unlinkBody();
+
+	if (body != NULL)
+	{
+		// Connect to new body
+		this->body = body;
+		this->linked = true;
+		return true;
+	}
+	return false;
+}
+
+bool Agent::unlinkBody()
+{
+	// If body is currently linked, unlink it
+	if (this->body != NULL)
+		this->body = NULL;
+
+	// Ensure linked flag is correctly set to false
+	this->linked = false;
+	return true;
+}
+
+// Returns true if agent is currently linked to a body. Else, returns false.
+bool Agent::isLinked()
+{
+	return this->linked;
 }

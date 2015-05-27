@@ -6,6 +6,11 @@ Body::Body(SEMANTIC type) : PhysicalObject(type)
 
 }
 
+Body::~Body()
+{
+	delete (this->m_perception);
+}
+
 void Body::setPerception(Perception* newPerception)
 {
     delete(m_perception);
@@ -22,10 +27,6 @@ ACTIONS Body::getInfluence()
 	return m_influence;
 }
 
-Body::~Body(void)
-{
-
-}
 
 void Body::setMap(std::map<std::pair<int, int>, Cell*>* pMap) 
 { 
@@ -34,5 +35,5 @@ void Body::setMap(std::map<std::pair<int, int>, Cell*>* pMap)
 
 void Body::destroy()
 {
-
+	
 }

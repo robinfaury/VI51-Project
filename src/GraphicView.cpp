@@ -27,24 +27,14 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	std::cout << "Graphics initialised" << endl;
 }
 
-int GraphicView::checkEvent()
+sf::RenderWindow* GraphicView::getWindow()
 {
-	sf::Event event;
-    while (this->window->pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-		{
-            this->window->close();
-			return 1;
-		}
-    }
-	return 0;
+	return this->window;
 }
 
 void GraphicView::draw()
 {
 	window->clear(sf::Color::Black);
-	
 
 	int x, y;
 	// For each cell of the map
@@ -59,13 +49,13 @@ void GraphicView::draw()
             // If it's a terrain, draw it with mapSprite
             if (setTextureRectFromSemantic(object->getSemantic()))
             {
-                this->terrainSprite.setPosition(x*TILE_SIZE, y*TILE_SIZE);
+                this->terrainSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
                 window->draw(terrainSprite);
             }
             else
             {
                 // Else, draw the lemming
-                this->lemmingSprite.setPosition(x*TILE_SIZE, y*TILE_SIZE);
+                this->lemmingSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
                 window->draw(lemmingSprite);
             }
         }
@@ -84,6 +74,22 @@ GraphicView::~GraphicView(void)
 	delete this->window;
 }
 
+void GraphicView::setUserAction(USER_ACTIONS action)
+{
+	this->userAction = action;
+}
+
+USER_ACTIONS GraphicView::getUserAction()
+{
+	return this->userAction;
+}
+
+void GraphicView::convertCoordinates_worldToTiles(int px, int py, int& wx, int& wy)
+{
+	wx = px / TILE_SIZE;
+	wy = py / TILE_SIZE;
+}
+
 //Private functions
 
 bool GraphicView::setTextureRectFromSemantic(SEMANTIC semantic)
@@ -91,14 +97,17 @@ bool GraphicView::setTextureRectFromSemantic(SEMANTIC semantic)
     // If its a type of terrain, set textureRect, then return true
 	switch (semantic)
 	{
+	case SEMANTIC::T_ROCK:
+		terrainSprite.setTextureRect(sf::IntRect(0 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+		break;
 	case SEMANTIC::T_DIRT :
-		terrainSprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+		terrainSprite.setTextureRect(sf::IntRect(1 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
 		break;
 	case SEMANTIC::T_EXIT :
-		terrainSprite.setTextureRect(sf::IntRect(2*TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+		terrainSprite.setTextureRect(sf::IntRect(2 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
 		break;
-	case SEMANTIC::T_ROCK :
-		terrainSprite.setTextureRect(sf::IntRect(0*TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+	case SEMANTIC::T_BOUND:
+		terrainSprite.setTextureRect(sf::IntRect(3 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
 		break;
 	default :
 		// Lemming
@@ -106,3 +115,4 @@ bool GraphicView::setTextureRectFromSemantic(SEMANTIC semantic)
 	}
 	return true;
 }
+

@@ -38,19 +38,19 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 	ACTIONS influence;
 	if (pAction == "down")
 	{
-		influence = ACTIONS::DOWN;
+		influence = ACTIONS::A_DOWN;
 	}
 	else if (pAction == "left")
 	{
-		influence = ACTIONS::LEFT;
+		influence = ACTIONS::A_LEFT;
 	}
 	else if (pAction == "right")
 	{
-		influence = ACTIONS::RIGHT;
+		influence = ACTIONS::A_RIGHT;
 	}
 	else
 	{
-		influence = ACTIONS::NONE;
+		influence = ACTIONS::A_NONE;
 	}
 
 	m_body->setInfluence(influence);
