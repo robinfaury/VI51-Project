@@ -322,6 +322,12 @@ void World::setPerceptions()
 	}
 }
 
+// Gets perception from given tile.
+Perception* World::getPerceptionFromTile(int tileX, int tileY)
+{
+	return NULL;
+}
+
 void World::reset()
 {
 	loadLevel(this->currentLevelPath);

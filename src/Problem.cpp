@@ -33,10 +33,8 @@ void Problem::initProblemStates()
 		xPos = (*it).first.first;
 		yPos = (*it).first.second;
 		std::cout << "(" << xPos << ", " << yPos << ")" << std::endl;
-		m_body->setPosition(xPos, yPos);
-		std::cout << "body position set" << std::endl;
-		perception = m_body->getPerception();
-		std::cout << "body perception got" << std::endl;
+		perception = m_world->getPerceptionFromTile(xPos, yPos);
+		std::cout << "perception got" << std::endl;
 		stateId = this->convertPerceptionToStateId(perception);
 		std::cout << "perception converted" << std::endl;
 		ProblemState* state = new ProblemState(stateId);
@@ -129,7 +127,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 
 	// process tile on the left
 	TILE_TYPE leftTile;
-	switch (objects->at(3)->getSemantic())
+	switch (objects->at(1)->getSemantic())
 	{
 	case SEMANTIC::T_ROCK:
 	case SEMANTIC::B_LEMMING:
@@ -145,7 +143,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 
 	// process tile on the right
 	TILE_TYPE rightTile;
-	switch (objects->at(4)->getSemantic())
+	switch (objects->at(2)->getSemantic())
 	{
 	case SEMANTIC::T_ROCK:
 	case SEMANTIC::B_LEMMING:
@@ -161,7 +159,11 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 
 	// process tile below
 	TILE_TYPE bottomTile;
-	switch (objects->at(6)->getSemantic())
+	if (objects->at(3) == NULL)
+	{
+		std::cout << "objects at 3 null !!" << std::endl;
+	}
+	switch (objects->at(3)->getSemantic())
 	{
 	case SEMANTIC::T_ROCK:
 	case SEMANTIC::B_LEMMING:
