@@ -60,6 +60,9 @@ public:
 	// Set the perceptions of all bodies
 	void setPerceptions();
 
+	//TODO: Milan do this
+	Perception* getPerceptionFromTile(int tileX, int tileY);	// Gets perception from given tile.
+
 	//Reset the current level
 	void reset();
 

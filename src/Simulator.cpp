@@ -8,6 +8,11 @@ Simulator::Simulator(int numberOfAgents) : frameFlag(true), play(true), finishSi
 	this->window = this->SFMLView.getWindow();
 }
 
+World* Simulator::getWorld()
+{
+	return &this->world;
+}
+
 void Simulator::CreateWorld()
 {
 	this->world.createMap();

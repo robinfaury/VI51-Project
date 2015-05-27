@@ -27,6 +27,8 @@ private:
 public:
 	Simulator(int numberOfAgents);
 
+	World* getWorld();
+
 	void CreateWorld();
 	void Run();
 	void checkEvents();

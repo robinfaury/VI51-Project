@@ -9,11 +9,40 @@ Problem::Problem(Body* body, World* world)
 {
 	m_body = body;
 	m_world = world;
+	initProblemStates();
 }
 
 Problem::~Problem()
 {
 
+}
+
+void Problem::initProblemStates()
+{
+	std::cout << "init problem states" << std::endl;
+	Map* map = m_world->getMap();
+	std::map<std::pair<int, int>, Cell*>* stdmap = map->getMap();
+	std::map<std::pair<int, int>, Cell*>::iterator it;
+	int xPos, yPos;
+	Perception* perception;
+	int stateId;
+	std::cout << "start parcourt stdmap" << std::endl;
+	for (it = stdmap->begin(); it != stdmap->end(); ++it)
+	{
+		std::cout << "iteration" << std::endl;
+		xPos = (*it).first.first;
+		yPos = (*it).first.second;
+		std::cout << "(" << xPos << ", " << yPos << ")" << std::endl;
+		m_body->setPosition(xPos, yPos);
+		std::cout << "body position set" << std::endl;
+		perception = m_body->getPerception();
+		std::cout << "body perception got" << std::endl;
+		stateId = this->convertPerceptionToStateId(perception);
+		std::cout << "perception converted" << std::endl;
+		ProblemState* state = new ProblemState(stateId);
+		m_problemStates[stateId] = state;
+		std::cout << "(" << xPos << ", " << yPos << ") state " << state->getId() << std::endl;
+	}
 }
 
 ProblemState* Problem::getState(int stateId)
@@ -61,17 +90,24 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 	ProblemState* newState = convertPerceptionToState(newPerception);
 
 	// calculate and set reward using manhattan distance
-	reward = std::abs(newPerception->getExitX - newPerception->getLemmingX) + std::abs(newPerception->getExitX - newPerception->getLemmingY);
+	reward = std::abs(newPerception->getExitX() - newPerception->getLemmingX()) + std::abs(newPerception->getExitX() - newPerception->getLemmingY());
 	
 	return newState;
 }
 
-ProblemState* Problem::convertPerceptionToState(Perception* perception)
+int Problem::convertPerceptionToStateId(Perception* perception)
 {
+	std::cout << "start convert perception" << std::endl;
+	if (perception == NULL)
+	{
+		std::cout << "perception null !!" << std::endl;
+	}
 	std::vector<PhysicalObject*>* objects = perception->getPerceivedObjects();
+	std::cout << "perceived objects got" << std::endl;
 
 	int goalPosX = perception->getExitX();
 	int actualPosX = perception->getLemmingX();
+	std::cout << "X positions got" << std::endl;
 
 	// process goal direction
 	DIRECTION goalDir;
@@ -89,50 +125,66 @@ ProblemState* Problem::convertPerceptionToState(Perception* perception)
 	}
 	int goalPoss = 3;  // total number of possible values for the goal direction
 
+	std::cout << "goal dir processed" << std::endl;
+
 	// process tile on the left
 	TILE_TYPE leftTile;
 	switch (objects->at(3)->getSemantic())
 	{
-		case SEMANTIC::T_ROCK:
-		case SEMANTIC::B_LEMMING: 
-			leftTile = TILE_TYPE::UNDIGGABLE;
-			break;
-		default:
-			leftTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
-			break;
+	case SEMANTIC::T_ROCK:
+	case SEMANTIC::B_LEMMING:
+		leftTile = TILE_TYPE::UNDIGGABLE;
+		break;
+	default:
+		leftTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
+		break;
 	}
 	int leftPoss = 2;  // total number of possible values for the left tile
+
+	std::cout << "left tile processed" << std::endl;
 
 	// process tile on the right
 	TILE_TYPE rightTile;
 	switch (objects->at(4)->getSemantic())
 	{
-		case SEMANTIC::T_ROCK:
-		case SEMANTIC::B_LEMMING:
-			rightTile = TILE_TYPE::UNDIGGABLE;
-			break;
-		default:
-			rightTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
-			break;
+	case SEMANTIC::T_ROCK:
+	case SEMANTIC::B_LEMMING:
+		rightTile = TILE_TYPE::UNDIGGABLE;
+		break;
+	default:
+		rightTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
+		break;
 	}
 	int rightPoss = 2; // total number of possible values for right tile
+
+	std::cout << "right tile processed" << std::endl;
 
 	// process tile below
 	TILE_TYPE bottomTile;
 	switch (objects->at(6)->getSemantic())
 	{
-		case SEMANTIC::T_ROCK:
-		case SEMANTIC::B_LEMMING:
-			bottomTile = TILE_TYPE::UNDIGGABLE;
-			break;
-		default:
-			bottomTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
-			break;
+	case SEMANTIC::T_ROCK:
+	case SEMANTIC::B_LEMMING:
+		bottomTile = TILE_TYPE::UNDIGGABLE;
+		break;
+	default:
+		bottomTile = TILE_TYPE::EMPTY_OR_DIGGABLE;
+		break;
 	}
 
-	// calculate unique state id
-	int stateId = goalDir + leftTile * goalPoss + rightTile * (goalPoss + leftPoss) + bottomTile * (goalPoss * leftPoss * rightPoss); 
+	std::cout << "bottom tile processed" << std::endl;
 
+	// calculate unique state id
+	int stateId = goalDir + leftTile * goalPoss + rightTile * (goalPoss + leftPoss) + bottomTile * (goalPoss * leftPoss * rightPoss);
+
+	std::cout << "bottom tile processed" << std::endl;
+
+	return stateId;
+}
+
+ProblemState* Problem::convertPerceptionToState(Perception* perception)
+{
+	int stateId = this->convertPerceptionToStateId(perception);
 	return m_problemStates.at(stateId);
 }
 
