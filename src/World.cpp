@@ -151,7 +151,7 @@ void World::generateLevel()
 		for (int i=0; i<borne; ++i)
 		{
 			int count = 0;
-			if (createObject(listRock[i].first-1, listRock[i].second, SEMANTIC::T_ROCK) != NULL)
+			if (createObject(listRock[i].first-1, listRock[i].second, SEMANTIC::T_DIRT) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first-1;
@@ -161,7 +161,7 @@ void World::generateLevel()
 			}
 			else
 				++count;
-			if (createObject(listRock[i].first+1, listRock[i].second, SEMANTIC::T_ROCK) != NULL)
+			if (createObject(listRock[i].first+1, listRock[i].second, SEMANTIC::T_DIRT) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first+1;
@@ -171,7 +171,7 @@ void World::generateLevel()
 			}
 			else
 				++count;
-			if (createObject(listRock[i].first, listRock[i].second-1, SEMANTIC::T_ROCK) != NULL)
+			if (createObject(listRock[i].first, listRock[i].second-1, SEMANTIC::T_DIRT) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first;
@@ -181,7 +181,7 @@ void World::generateLevel()
 			}
 			else
 				++count;
-			if (createObject(listRock[i].first, listRock[i].second+1, SEMANTIC::T_ROCK) != NULL)
+			if (createObject(listRock[i].first, listRock[i].second+1, SEMANTIC::T_DIRT) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first;
