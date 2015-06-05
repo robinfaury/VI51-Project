@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 #include "Sample.h"
 
@@ -10,7 +11,7 @@ class Parser
 {
 private:
 	std::vector<Sample> samples;
-	
+
 
 public:
 	Parser(void);

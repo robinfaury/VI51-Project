@@ -168,7 +168,7 @@ Cell* Map::getCell(int x, int y)
 
 Cell* Map::getCell(std::pair<int, int> cell)
 {
-	std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.find(cell);    
+	std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.find(cell);
 	if (it == this->m_map.end())
 		return NULL;
 	return (it->second);
@@ -203,7 +203,7 @@ bool Map::addWorldObject(int x, int y, PhysicalObject* object)
 
 // Returns true if given object has been removed from the map. Else, returns false.
 bool Map::removeWorldObject(PhysicalObject* object)
-{	
+{
 	std::map<std::pair<int, int>, Cell*>::iterator it = findCell(object);
 	if (it == this->m_map.end())
 	{
@@ -284,50 +284,4 @@ std::map<std::pair<int, int>, Cell*>::iterator Map::findCell(PhysicalObject* obj
 		}
 	}
 	return this->m_map.end();
-}
-
-//Load save
-pugi::xml_node Map::serializeMap(pugi::xml_node* mapNode)
-{
-	cout << "Map : serializeMap : begin" << endl;
-
-	cout << "Map : serializeMap : mapInfo" << endl;
-	mapNode->append_attribute("mapSize").set_value(this->m_map.size());
-
-	// saving tiles 
-	cout << "Map : serializeMap : Cells" << endl;
-	pugi::xml_node cells = mapNode->append_child("Cells");
-	pugi::xml_node tempCell;
-	pugi::xml_node tempCellObject;
-
-	// Iterating on every cell
-	int i = 0;
-	for (std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.begin(); it != this->m_map.end(); ++it)
-	{
-		tempCell = cells.append_child("Cell"+i);
-		++i;
-
-		// Setting cell coordinate
-		tempCell.append_attribute("x").set_value(it->first.first);
-		tempCell.append_attribute("y").set_value(it->first.second);
-
-		if (it->second->getWorldObject() == NULL)
-			tempCell.append_attribute("hasChild").set_value(false);
-		else
-		{
-			tempCell.append_attribute("hasChild").set_value(true);
-			tempCellObject = tempCell.append_child("object");
-			it->second->getWorldObject()->serialize(&tempCellObject);
-		}
-		
-	}
-
-	mapNode->set_name("Map");
-
-	cout << "Map : serializeMap : Done" << endl;
-}
-
-void Map::unserializeMap(pugi::xml_node mapNode)
-{
-
 }

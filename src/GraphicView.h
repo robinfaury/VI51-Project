@@ -40,6 +40,8 @@ private:
 
 	USER_ACTIONS userAction;
 
+	bool initialized;
+
 public:
 	GraphicView(void);
 
@@ -47,6 +49,7 @@ public:
     *   Initialises the view
     */
 	void init(int height, int width, std::map<std::pair<int, int>, Cell*>* map);
+	void clear();
 	sf::RenderWindow* getWindow();
 
 	/**

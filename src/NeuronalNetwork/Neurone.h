@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "MathUtils.h"
+#include <stdlib.h>
 
 class Neurone
 {

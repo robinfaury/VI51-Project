@@ -14,6 +14,5 @@ void AgentLemmingTest::live()
 
 	Perception* p = this->body->getPerception();
 
-
 	this->body->setInfluence(ACTIONS::A_RIGHT);
 }

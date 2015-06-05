@@ -9,6 +9,7 @@
 #include "GraphicView.h"
 #include "AgentLemmingTest.h"
 #include "World.h"
+#include "LearningManager.h"
 
 enum SIMULATION_MODE
 {
@@ -27,6 +28,8 @@ private:
 
 	SIMULATION_MODE currentMode;
 
+	LearningManager learningManager;
+
 	sf::RenderWindow* window;
 
 	sf::Clock simulationClock;
@@ -43,6 +46,8 @@ public:
 	void CreateWorld();
 	void Run();
 	void checkEvents();
+
+	void toggleMode(SIMULATION_MODE mode);
 
 	// User actions
 	void applyUserAction(USER_ACTIONS action, int tileX = -1, int tileY = -1);
