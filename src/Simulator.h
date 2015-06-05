@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "GraphicView.h"
-#include "AgentLemmingTest.h"
+#include "NeuronalLemming.h"
 #include "World.h"
 
 enum SIMULATION_MODE

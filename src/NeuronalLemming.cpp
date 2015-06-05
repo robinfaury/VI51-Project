@@ -1,12 +1,16 @@
-#include "AgentLemmingTest.h"
+#include "NeuronalLemming.h"
 
-AgentLemmingTest::AgentLemmingTest(Body* body) : Agent(body), ArtificialInteligence("res/learn.txt")
+NeuronalLemming::NeuronalLemming(Body* body) : Agent(body)
 {
-	ArtificialInteligence.learning();
-	ArtificialInteligence.testing();
+
 }
 
-void AgentLemmingTest::live()
+void NeuronalLemming::setBrain(NeuronalNetworkMonocouche* ArtificialInteligence)
+{
+	this->ArtificialInteligence = ArtificialInteligence;
+}
+
+void NeuronalLemming::live()
 {
 	// If there is no linked body, do nothing
 	if (!isLinked())
@@ -42,7 +46,7 @@ void AgentLemmingTest::live()
 		}
 	}
 
-	std::vector<float> classe = this->ArtificialInteligence.testing(caracteristicVector);
+	std::vector<float> classe = this->ArtificialInteligence->testing(caracteristicVector);
 	float hightScore = classe[0];
 	int id = 0;
 	for (int i=1; i<classe.size(); ++i)

@@ -5,6 +5,7 @@
 
 #include "Neurone.h"
 #include "Parser.h"
+#include "../LearningMethod.h"
 
 class NeuronalNetworkMonocouche
 {
@@ -18,8 +19,10 @@ private:
 public:
 	NeuronalNetworkMonocouche(std::string filenameSamplingData);
 
-	void learning();
+	bool learn();
+
 	void testing();
+
 	std::vector<float> testing(Sample caracteristicVector);
 
 	~NeuronalNetworkMonocouche(void);

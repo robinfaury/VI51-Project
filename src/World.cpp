@@ -23,7 +23,7 @@ void World::createMap()
 /**
 *   This function saves the level in the given filepath, under xml format
 */
-void World::saveLevel(std::string path = "Default")
+void World::saveLevel(std::string path)
 {
 	pugi::xml_document doc;
 	pugi::xml_node levelNode = doc.append_child("Level");
@@ -147,7 +147,7 @@ void World::generateLevel()
 
 	while(nbCaseFree)
 	{
-		int borne = listRock.size();
+		int borne = static_cast<int>(listRock.size());
 		for (int i=0; i<borne; ++i)
 		{
 			if (createObject(listRock[i].first-1, seedsRock.second, SEMANTIC::T_ROCK) != NULL)

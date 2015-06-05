@@ -18,6 +18,7 @@ void LearningManager::init(World* world)
 	{
 		// For each learning method, create it iin this->learningMethods and set corresponding bool to false
 		this->methods.push_back(new QLearning(world));
+		this->methods.push_back(new LearningMethodRNA(world, "res/learn.txt"));
 	}
 	else
 	{

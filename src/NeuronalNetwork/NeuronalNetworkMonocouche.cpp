@@ -17,7 +17,7 @@ NeuronalNetworkMonocouche::NeuronalNetworkMonocouche(std::string filenameSamplin
 	++this->nbNeurones;
 }
 
-void NeuronalNetworkMonocouche::learning()
+bool NeuronalNetworkMonocouche::learn()
 {
 	std::cout<<std::endl<<"LEARNING"<<std::endl;
 	for (unsigned int i=0; i<this->samples.size(); ++i)
@@ -32,7 +32,10 @@ void NeuronalNetworkMonocouche::learning()
 				this->neurones[i]->learn(this->samples[k].getData(), (*this->samples[k].getVectorClasse())[i]);
 		}
 	}
+
+	return true;
 }
+
 
 void NeuronalNetworkMonocouche::testing()
 {

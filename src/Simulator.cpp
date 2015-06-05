@@ -1,7 +1,7 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : frameFlag(true), play(true), finishSimulation(false)
+Simulator::Simulator(int numberOfAgents) : frameFlag(true), play(true), finishSimulation(false), currentMode(SIMULATION_MODE::SIMULATION)
 {
 	this->numberOfAgents = numberOfAgents;
 	this->SFMLView.init(TILE_SIZE*30, TILE_SIZE*30, this->world.getMap()->getMap());
@@ -21,7 +21,7 @@ void Simulator::CreateWorld()
 
 	// For each body, create an agent
 	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
-		this->agents.push_back(new AgentLemmingTest((*currentBody)));
+		this->agents.push_back(new NeuronalLemming((*currentBody)));
 
 	this->SFMLView.setWorld(&this->world);
 }
