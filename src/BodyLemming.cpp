@@ -8,3 +8,8 @@ Perception* BodyLemming::getPerception()
 {
     return m_perception;
 }
+
+void BodyLemming::serialize(pugi::xml_node * node)
+{
+	Body::serialize(node);
+}

@@ -12,6 +12,8 @@ public :
 	BodyLemming(SEMANTIC type);
 
     virtual Perception* getPerception();
+
+	virtual void serialize(pugi::xml_node * node);
 };
 
 #endif

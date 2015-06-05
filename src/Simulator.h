@@ -10,6 +10,13 @@
 #include "AgentLemmingTest.h"
 #include "World.h"
 
+enum SIMULATION_MODE
+{
+	MENU = 0,
+	LEARNING,
+	SIMULATION
+};
+
 class Simulator
 {
 private:
@@ -18,7 +25,11 @@ private:
 	World world;
 	std::vector<Agent*> agents;
 
+	SIMULATION_MODE currentMode;
+
 	sf::RenderWindow* window;
+
+	sf::Clock simulationClock;
 
 	// Simulation flag
 	bool frameFlag;	// flag used to allow window events while waiting next frame
@@ -26,6 +37,8 @@ private:
 	bool finishSimulation;	// flag used to signal the end of the simulation
 public:
 	Simulator(int numberOfAgents);
+
+	World* getWorld();
 
 	void CreateWorld();
 	void Run();

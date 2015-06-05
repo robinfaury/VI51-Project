@@ -8,6 +8,11 @@ Simulator::Simulator(int numberOfAgents) : frameFlag(true), play(true), finishSi
 	this->window = this->SFMLView.getWindow();
 }
 
+World* Simulator::getWorld()
+{
+	return &this->world;
+}
+
 void Simulator::CreateWorld()
 {
 	this->world.createMap();
@@ -23,17 +28,19 @@ void Simulator::CreateWorld()
 
 void Simulator::Run()
 {
-	std::chrono::system_clock::time_point start_time, end_time;
+	this->simulationClock.restart();
 
+	sf::Time startTime, endTime, frameTime;
 
 	std::cout << "Starting program loop" << endl;
 	while(!finishSimulation)
 	{
 		
-		if (this->frameFlag)
+		if (this->currentMode == SIMULATION_MODE::SIMULATION && this->frameFlag)
 		{
 			this->frameFlag = false;
-			start_time = std::chrono::high_resolution_clock::now();
+
+			startTime = this->simulationClock.getElapsedTime();
 			std::cout << endl << "Simulator::Run : STARTING FRAME" << endl;
 
 			if (play)
@@ -52,27 +59,27 @@ void Simulator::Run()
 			// Drawing
 			this->SFMLView.draw();
 
-			end_time = std::chrono::high_resolution_clock::now();
-			__int64 time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-			std::cout << "frame time : " << time << " ms, waiting " << 1000 - time << " ms" << std::endl;
-
+			endTime = this->simulationClock.getElapsedTime();
+			frameTime = endTime - startTime;
+			
+			std::cout << "frame time : " << frameTime.asMilliseconds() << std::endl;
 			std::cout << "Simulator::Run : FRAME ENDED" << endl;
 		}
 		else
 		{
 			checkEvents();	// Checking for user input
 
-			end_time = std::chrono::high_resolution_clock::now();
-			__int64 time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+			endTime = this->simulationClock.getElapsedTime();
+			frameTime = endTime - startTime;
 
 			if (play)
 			{
-				if (time > 1000)
+				if (frameTime.asMilliseconds() > 1000)
 					frameFlag = true;
 			}
 			else
 			{
-				if (time > 100)
+				if (frameTime.asMilliseconds() > 100)
 					frameFlag = true;
 			}
 		}
@@ -99,11 +106,21 @@ void Simulator::checkEvents()
 				else
 					this->play = false;
 			}
-			else if (event.key.code == sf::Keyboard::F1)
+			else if (event.key.code == sf::Keyboard::S)
+			{
+				//TODO: launch simulation
+				this->currentMode = SIMULATION_MODE::SIMULATION;
+			}
+			else if (event.key.code == sf::Keyboard::L)
+			{
+				//TODO: launch learning
+				this->currentMode = SIMULATION_MODE::LEARNING;
+			}
+			else if (event.key.code == sf::Keyboard::A)
 				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
-			else if (event.key.code == sf::Keyboard::F2)
+			else if (event.key.code == sf::Keyboard::Z)
 				this->SFMLView.setUserAction(USER_ACTIONS::U_DIRT);
-			else if (event.key.code == sf::Keyboard::F3)
+			else if (event.key.code == sf::Keyboard::E)
 				this->SFMLView.setUserAction(USER_ACTIONS::U_ROCK);
 		}
 	}

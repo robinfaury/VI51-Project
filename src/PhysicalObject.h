@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "pugi/pugixml.hpp"
 #include "Semantic.h"
 
 class PhysicalObject
@@ -23,6 +24,9 @@ public:
 	virtual SEMANTIC getSemantic();
 
 	virtual void destroy() = 0;
+
+	virtual void serialize(pugi::xml_node * node);
+
 
 	~PhysicalObject(void);
 };
