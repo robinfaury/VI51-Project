@@ -18,11 +18,15 @@
 #include "BodyLemming.h"
 #include "PerceptionCircle.h"
 #include "Terrain.h"
+#include "MapGenerator.h"
+
+class MapGenerator;
 
 class World
 {
 private:
     Map* m_map; // current map
+	MapGenerator* mapGenerator;
 
     std::vector<PhysicalObject*> m_objects;    // All PhysicalObjects (which aren't bodies)
 	std::vector<Body*> m_bodies;    // All bodies in the world

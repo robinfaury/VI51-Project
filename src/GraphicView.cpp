@@ -97,7 +97,7 @@ bool GraphicView::setTextureRectFromSemantic(SEMANTIC semantic)
     // If its a type of terrain, set textureRect, then return true
 	switch (semantic)
 	{
-	case SEMANTIC::T_ROCK:
+	case SEMANTIC::T_BOUND:
 		terrainSprite.setTextureRect(sf::IntRect(0 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
 		break;
 	case SEMANTIC::T_DIRT :
@@ -106,7 +106,7 @@ bool GraphicView::setTextureRectFromSemantic(SEMANTIC semantic)
 	case SEMANTIC::T_EXIT :
 		terrainSprite.setTextureRect(sf::IntRect(2 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
 		break;
-	case SEMANTIC::T_BOUND:
+	case SEMANTIC::T_ROCK:
 		terrainSprite.setTextureRect(sf::IntRect(3 * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
 		break;
 	default :

@@ -15,7 +15,7 @@ void NeuronalLemming::live()
 	// If there is no linked body, do nothing
 	if (!isLinked())
 		return;
-
+	/*
 	Perception* p = this->body->getPerception();
 	std::vector<PhysicalObject*>* objects = p->getPerceivedObjects();
 	Sample caracteristicVector;
@@ -75,5 +75,5 @@ void NeuronalLemming::live()
 	default:
 		this->body->setInfluence(ACTIONS::A_NONE);
 		break;
-	}
+	}*/
 }

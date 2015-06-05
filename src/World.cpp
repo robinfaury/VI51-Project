@@ -14,8 +14,8 @@ World::~World(void)
 void World::createMap()
 {
 //TODO: clean
-	loadLevel();
-	//generateLevel();
+	//loadLevel();
+	generateLevel();
 }
 
 // Loading/saving level
@@ -148,39 +148,55 @@ void World::generateLevel()
 	while(nbCaseFree)
 	{
 		int borne = static_cast<int>(listRock.size());
+
 		for (int i=0; i<borne; ++i)
 		{
-			if (createObject(listRock[i].first-1, seedsRock.second, SEMANTIC::T_ROCK) != NULL)
+			int count = 0;
+			if (createObject(listRock[i].first-1, listRock[i].second, SEMANTIC::T_ROCK) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first-1;
-				positionNewBlock.second = seedsRock.second;
+				positionNewBlock.second = listRock[i].second;
 				listRock.push_back(positionNewBlock);
 				--nbCaseFree;
 			}
-			(createObject(listRock[i].first+1, seedsRock.second, SEMANTIC::T_ROCK) != NULL)? --nbCaseFree:nbCaseFree;
+			else
+				++count;
+			if (createObject(listRock[i].first+1, listRock[i].second, SEMANTIC::T_ROCK) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first+1;
-				positionNewBlock.second = seedsRock.second;
+				positionNewBlock.second = listRock[i].second;
 				listRock.push_back(positionNewBlock);
 				--nbCaseFree;
 			}
-			(createObject(listRock[i].first, seedsRock.second-1, SEMANTIC::T_ROCK) != NULL)? --nbCaseFree:nbCaseFree;
+			else
+				++count;
+			if (createObject(listRock[i].first, listRock[i].second-1, SEMANTIC::T_ROCK) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first;
-				positionNewBlock.second = seedsRock.second-1;
+				positionNewBlock.second = listRock[i].second-1;
 				listRock.push_back(positionNewBlock);
 				--nbCaseFree;
 			}
-			(createObject(listRock[i].first, seedsRock.second+1, SEMANTIC::T_ROCK) != NULL)? --nbCaseFree:nbCaseFree;
+			else
+				++count;
+			if (createObject(listRock[i].first, listRock[i].second+1, SEMANTIC::T_ROCK) != NULL)
 			{
 				std::pair<int, int> positionNewBlock;
 				positionNewBlock.first = listRock[i].first;
-				positionNewBlock.second = seedsRock.second+1;
+				positionNewBlock.second = listRock[i].second+1;
 				listRock.push_back(positionNewBlock);
 				--nbCaseFree;
+			}
+			else
+				++count;
+			if (count == 4)
+			{
+				listRock.erase(listRock.begin()+i);
+				--borne;
+				--i;
 			}
 		}
 	}
@@ -221,7 +237,7 @@ PhysicalObject* World::createObject(int x, int y, SEMANTIC type)
 	// Cell exists and isn't null : can't add
 	if (this->m_map->isCellCreated(x, y) && !this->m_map->isCellEmpty(x, y))
 	{
-		std::cout << "ERROR : World::createObject : can't add on cell " << x << ", " << y << " : cell already occupied" << endl;
+		//std::cout << "ERROR : World::createObject : can't add on cell " << x << ", " << y << " : cell already occupied" << endl;
 		return NULL;
 	}
 
