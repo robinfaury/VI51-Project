@@ -6,6 +6,9 @@
 *   It defines the base methods that must be implemented for the simulator to employ them in the simulation.
 */
 
+#include "Agent.h"
+#include "World.h"
+
 class LearningMethod
 {
 protected:
@@ -18,8 +21,9 @@ protected:
     /**
     * The learn function will be executed once by the Simulator. If it finished correctly, learningComplete will return true.
     * This function can use the World, but can't modify it.
+	* returns true if the learning finished correctly
     */
-    virtual std::string learn() = 0;
+    virtual bool learn() = 0;
 
     //! Returns true if the learning has finished correctly.
     virtual bool learningComplete() = 0;    // Returns true if learning is complete
@@ -34,7 +38,7 @@ protected:
     /**
     *   When the learning is complete, this function creates a report containing information about the result, stats, etc.
     */
-    virtual std::string generateReport();   // Creates a report in string form, to be displayed to the user (with stats and all)
+    virtual std::string generateReport();
 };
 
 #endif

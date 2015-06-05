@@ -17,6 +17,54 @@ void World::createMap()
 	loadLevel();
 }
 
+// Loading/saving level
+//TODO: save level
+/**
+*   This function saves the level in the given filepath, under xml format
+*/
+void World::saveLevel(std::string path = "Default")
+{
+	pugi::xml_document doc;
+	pugi::xml_node levelNode = doc.append_child("Level");
+
+	//Serializing map
+	cout << "Map : serializeMap : begin" << endl;
+
+	cout << "Map : serializeMap : mapInfo" << endl;
+	levelNode.append_attribute("mapSize").set_value(this->getMap()->getMap()->size());
+
+	// saving tiles 
+	cout << "Map : serializeMap : Cells" << endl;
+	pugi::xml_node cells = levelNode.append_child("Cells");
+	pugi::xml_node tempCell;
+	pugi::xml_node tempCellObject;
+
+	// Iterating on every cell
+	int i = 0;
+	for (std::map<std::pair<int, int>, Cell*>::iterator it = this->getMap()->getMap()->begin(); it != this->getMap()->getMap()->end(); ++it)
+	{
+		tempCell = cells.append_child("Cell" + i);
+		++i;
+
+		// Setting cell coordinate
+		tempCell.append_attribute("x").set_value(it->first.first);
+		tempCell.append_attribute("y").set_value(it->first.second);
+
+		if (it->second->getWorldObject() == NULL)
+			tempCell.append_attribute("hasChild").set_value(false);
+		else
+		{
+			tempCell.append_attribute("hasChild").set_value(true);
+			tempCellObject = tempCell.append_child("object");
+			it->second->getWorldObject()->serialize(&tempCellObject);
+		}
+
+	}
+	cout << "Map : serializeMap : Done" << endl;
+	std::string completePath = "Maps/" + path;
+	cout << "Saving result : " << completePath.data() << doc.save_file(completePath.data()) << endl;
+}
+
 void World::loadLevel(std::string path)
 {
 	// Clearing previous objects
@@ -56,8 +104,13 @@ void World::loadLevel(std::string path)
 			}
 		}
 	}
-	//TODO: implement level loading from pugixml
+	else
+	{
+		
+	}
 }
+
+
 
 Body* World::createBody(int x, int y)
 {

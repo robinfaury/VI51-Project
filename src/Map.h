@@ -13,6 +13,7 @@ The Map can serialize and deserialize itself using pugixml nodes.
 #include <map>
 #include <iostream>
 #include "Cell.h"
+#include "pugi/pugixml.hpp"
 
 using namespace std;
 
@@ -49,10 +50,16 @@ public:
 	std::map<std::pair<int, int>, Cell*>::iterator findCell(Cell* cell);	// Returns an iterator to given cell. Returns an iterator to end if it can't be found.
 	std::map<std::pair<int, int>, Cell*>::iterator findCell(int x, int y);	// Returns an iterator to the cell with given coordinates. Returns an iterator to end if it can't be found.
 	std::map<std::pair<int, int>, Cell*>::iterator findCell(PhysicalObject* object);	// Returns an iterator to the cell containing the given object. Returns an iterator to end if it can't be found.
+
+	//Load save
+	pugi::xml_node serializeMap(pugi::xml_node* mapNode);
+	void unserializeMap(pugi::xml_node mapNode);
 protected:
     // The world, represented as a grid of cells
 	std::map<std::pair<int, int>, Cell*> m_map;
 
+
+	
 	
 };
 

@@ -25,8 +25,6 @@ enum ACTIONS
 class Body:  public PhysicalObject
 {
 protected:
-	int m_x;
-	int m_y;
 	ACTIONS m_influence;
 	std::map<std::pair<int,int>, Cell*>* m_map;
 	Perception* m_perception;
@@ -60,6 +58,8 @@ public:
 	*  This function allows the agent to clean up before being removed from the world
 	*/
 	virtual void destroy();
+
+	virtual void serialize(pugi::xml_node * node);
 
 	~Body(void);
 };

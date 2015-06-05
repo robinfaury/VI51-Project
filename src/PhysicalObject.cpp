@@ -41,3 +41,10 @@ SEMANTIC PhysicalObject::getSemantic()
 {
 	return this->type;
 }
+
+void PhysicalObject::serialize(pugi::xml_node * node)
+{
+	node->append_attribute("semantic").set_value(this->type);
+	node->append_attribute("x").set_value(this->posX);
+	node->append_attribute("y").set_value(this->posY);
+}

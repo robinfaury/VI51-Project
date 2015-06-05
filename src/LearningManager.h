@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "World.h"
-#include "LearningMethod.h"
+#include "QLearning.h"
+
 
 /**
 *   The LearningManager is tasked to trigger the learning in the application, and manage it.
@@ -22,8 +22,12 @@ World* world;
 std::vector<LearningMethod*> methods;
 
     public:
-    LearningManager();
+    LearningManager(World* worldo);
     ~LearningManager();
+
+	void init(World* world);
+	void launchLearning();
+	void launchLearning(LEARNING_TYPE type);
 
     void setWorld(World* currentWorld); // Sets current world
     World* getWorld();  // gets current world
@@ -33,4 +37,4 @@ std::vector<LearningMethod*> methods;
     Agent* getAgent(LEARNING_TYPE type);  // When learning is complete, create and return an agent of appropriate type.
 };
 
-#ifndef
+#endif

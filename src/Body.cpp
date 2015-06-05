@@ -38,3 +38,8 @@ void Body::destroy()
 {
 	
 }
+
+void Body::serialize(pugi::xml_node * node)
+{
+	PhysicalObject::serialize(node);
+}

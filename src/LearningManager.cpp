@@ -1,14 +1,46 @@
 #include "LearningManager.h"
 
 
-LearningManager::LearningManager()
+LearningManager::LearningManager(World* world) : world(world)
 {
-    //TODO : init every learning method
+	this->init(this->world);
+
 }
+
 
 LearningManager::~LearningManager()
 {
-    //TODO : remove every learning method
+}
+
+void LearningManager::init(World* world)
+{
+	if (world != NULL)
+	{
+		// For each learning method, create it iin this->learningMethods and set corresponding bool to false
+		this->methods.push_back(new QLearning(world));
+	}
+	else
+	{
+		std::cout << "ERROR : LearningManager::init : can't initialise for NULL world" << std::endl;
+	}
+}
+
+void LearningManager::launchLearning()
+{
+	launchLearning(LEARNING_TYPE::QLEARNING);
+	launchLearning(LEARNING_TYPE::NEURALNETWORK);
+}
+
+void LearningManager::launchLearning(LEARNING_TYPE type)
+{
+	if (this->methods.at(type)->learn())
+	{
+		std::cout << "Learning with method " << type << " complete" << std::endl;
+	}
+	else
+	{
+		std::cout << "ERROR: LearningManager::launchLearning : Learning with method " << type << " didn't execute correctly" << std::endl;
+	}
 }
 
 // Sets current world
@@ -26,11 +58,13 @@ World* LearningManager::getWorld()  // gets current world
 LearningMethod* LearningManager::getMethod(LEARNING_TYPE type)    // Returns a pointer to current learning method
 {
     //TODO: check casting
-    return this->methods.at((int)type);
+    return this->methods.at(type);
 }
 
-Agent* LearningManager::getAgent(LEARNING_TYPE pe)  // When learning is complete, create and return an agent of appropriate type.
+Agent* LearningManager::getAgent(LEARNING_TYPE type)  // When learning is complete, create and return an agent of appropriate type.
 {
     if (this->methods.at(type)->learningComplete())
         return this->methods.at(type)->createAgent();
+
+	return NULL;
 }

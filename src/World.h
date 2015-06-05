@@ -47,6 +47,8 @@ public:
 	/**
 	*   This function saves the level in the given filepath, under xml format
 	*/
+	void saveLevel(std::string path = "Default");
+
 	void loadLevel(std::string path = "Default");
 
     /**
