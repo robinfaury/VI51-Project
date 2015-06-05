@@ -1,6 +1,8 @@
 #ifndef GRAPHICVIEW_H_
 #define GRAPHICVIEW_H_
 
+
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
@@ -17,6 +19,9 @@ enum USER_ACTIONS
 	U_ROCK,
 };
 
+/** \class GraphicView
+*   The GraphicView is the graphics interface. It draws the world everyframe.
+*/
 class GraphicView
 {
 private:
@@ -38,8 +43,15 @@ private:
 public:
 	GraphicView(void);
 
+    /**
+    *   Initialises the view
+    */
 	void init(int height, int width, std::map<std::pair<int, int>, Cell*>* map);
 	sf::RenderWindow* getWindow();
+
+	/**
+	*   Draw the world
+	*/
 	void draw();
 
 	void setWorld(World* world);
