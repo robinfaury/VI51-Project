@@ -1,23 +1,27 @@
-#ifndef LEARNINGMETHOD_H_
-#define LEARNINGMETHOD_H_
+#ifndef LEARNINGMETHODRNA_H_
+#define LEARNINGMETHODRNA_H_
 
 /** \class LearningMethod
 *   The LearningMethod class is the base class for all the learning algorithms of the the program.
 *   It defines the base methods that must be implemented for the simulator to employ them in the simulation.
 */
 
-#include "Agent.h"
-#include "World.h"
+#include "LearningMethod.h"
+#include "NeuronalLemming.h"
 
-class LearningMethod
+class LearningMethodRNA : public LearningMethod
 {
 protected:
     World* currentWorld; /*!< Pointer to the current world */
+	
+	bool learningFinish;
 
-	LearningMethod(void);
+	NeuronalNetworkMonocouche* ArtificialInteligence;
+
+	LearningMethodRNA(void);
 
 public:
-    LearningMethod(World* world);
+    LearningMethodRNA(World* world, std::string filename);
 
     //! Performs the actual learning.
     /**
@@ -25,22 +29,24 @@ public:
     * This function can use the World, but can't modify it.
 	* returns true if the learning finished correctly
     */
-    virtual bool learn() = 0;
+    virtual bool learn();
 
     //! Returns true if the learning has finished correctly.
-    virtual bool learningComplete() = 0;    // Returns true if learning is complete
+    virtual bool learningComplete();    // Returns true if learning is complete
 
     //! Creates and returns an agent of the appropriate type, and setup correctly, to use the learning that has been done.
     /**
     *   When the learning is complete (not before!), this function returns an agent. The agent contains the necessary code to use the performed learning.
     */
-    virtual Agent* createAgent() = 0;   // Creates and returns an agent set up to be simulated with what has been learned.
+    virtual Agent* createAgent();   // Creates and returns an agent set up to be simulated with what has been learned.
 
     //! Generates a report of the learning.
     /**
     *   When the learning is complete, this function creates a report containing information about the result, stats, etc.
     */
     virtual std::string generateReport();
+
+	~LearningMethodRNA();
 };
 
 #endif

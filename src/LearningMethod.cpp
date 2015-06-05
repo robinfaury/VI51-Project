@@ -1,5 +1,10 @@
 #include "LearningMethod.h"
 
+LearningMethod::LearningMethod(void)
+{
+
+}
+
 LearningMethod::LearningMethod(World* world) : currentWorld(world)
 {
 

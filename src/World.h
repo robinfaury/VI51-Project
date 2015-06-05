@@ -50,6 +50,7 @@ public:
 	void saveLevel(std::string path = "Default");
 
 	void loadLevel(std::string path = "Default");
+	void generateLevel();
 
     /**
     *   Creates a body at given positon, stores it in the map, and returns a pointer to it

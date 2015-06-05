@@ -18,7 +18,8 @@ float Neurone::activeNeurone(std::vector<float>* input)
 		sum += (*input)[i]*this->poids[i];
 	sum += -1 * sigmoide(0);
 
-	return (sigmoide(sum) >= sigmoide(0))? 1.0f : 0.0f;
+	return sigmoide(sum);
+	//return (sigmoide(sum) >= sigmoide(0))? 1.0f : 0.0f;
 }
 
 void Neurone::learn(std::vector<float>* sampleData, int out)

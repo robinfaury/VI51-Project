@@ -19,9 +19,11 @@ void Simulator::CreateWorld()
 
 	std::cout << "Map created" << endl;
 
+
+
 	// For each body, create an agent
 	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
-		this->agents.push_back(new AgentLemmingTest((*currentBody)));
+		this->agents.push_back(new AgentLemmingDummy(*currentBody));
 
 	this->SFMLView.setWorld(&this->world);
 }

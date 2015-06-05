@@ -1,8 +1,6 @@
 #ifndef GRAPHICVIEW_H_
 #define GRAPHICVIEW_H_
 
-
-
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 

@@ -285,3 +285,4 @@ std::map<std::pair<int, int>, Cell*>::iterator Map::findCell(PhysicalObject* obj
 	}
 	return this->m_map.end();
 }
+
