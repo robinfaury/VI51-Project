@@ -11,7 +11,6 @@
 
 #include "PhysicalObject.h"
 #include "BodyLemming.h"
-#include "Event.h"
 #include "PerceptionCircle.h"
 #include "Terrain.h"
 
@@ -39,6 +38,7 @@ public:
 	// Loading/saving level
 	//TODO: save level
 	void loadLevel(std::string path = "Default");
+	void generateLevel();
 
     // Create a body at position x / y
 	Body* createBody(int x, int y);

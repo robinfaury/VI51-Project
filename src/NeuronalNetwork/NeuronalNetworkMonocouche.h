@@ -20,6 +20,7 @@ public:
 
 	void learning();
 	void testing();
+	std::vector<float> testing(Sample caracteristicVector);
 
 	~NeuronalNetworkMonocouche(void);
 };

@@ -61,7 +61,7 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 	ProblemState* newState = convertPerceptionToState(newPerception);
 
 	// calculate and set reward using manhattan distance
-	reward = std::abs(newPerception->getExitX - newPerception->getLemmingX) + std::abs(newPerception->getExitX - newPerception->getLemmingY);
+	//reward = std::abs(newPerception->getExitX - newPerception->getLemmingX) + std::abs(newPerception->getExitX - newPerception->getLemmingY);
 	
 	return newState;
 }

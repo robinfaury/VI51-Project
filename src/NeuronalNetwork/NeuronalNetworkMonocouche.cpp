@@ -7,8 +7,6 @@ NeuronalNetworkMonocouche::NeuronalNetworkMonocouche(void)
 
 NeuronalNetworkMonocouche::NeuronalNetworkMonocouche(std::string filenameSamplingData)
 {
-	srand (static_cast <unsigned> (time(0)));
-
 	Parser parser;
 	parser.loadLearningData(filenameSamplingData);
 	this->samples = parser.getSamples();
@@ -38,14 +36,24 @@ void NeuronalNetworkMonocouche::learning()
 
 void NeuronalNetworkMonocouche::testing()
 {
-	std::cout<<std::endl<<"TESTING"<<std::endl;
+	std::cout<<std::endl<<"TESTING ALL SAMPLES"<<std::endl;
 	for (unsigned int i=0; i<this->samples.size(); ++i)
+		testing(this->samples[i]);
+}
+
+std::vector<float> NeuronalNetworkMonocouche::testing(Sample caracteristicVector)
+{
+	std::vector<float> output;
+	std::cout<<std::endl<<"TESTING A VECTOR"<<std::endl;
+	caracteristicVector.to_string_CaracteristicVectorOnly();
+	for (int i=0; i<this->nbNeurones-1; ++i)
 	{
-		this->samples[i].to_string_CaracteristicVectorOnly();
-		for (int j=0; j<this->nbNeurones-1; ++j)
-			std::cout<<this->neurones[j]->activeNeurone(this->samples[i].getData())<<" ; ";
-		std::cout<<this->neurones[this->nbNeurones-1]->activeNeurone(this->samples[i].getData())<<"]"<<std::endl;
+		output.push_back(this->neurones[i]->activeNeurone(caracteristicVector.getData()));
+		std::cout<<output[output.size()-1]<<" ; ";
 	}
+	output.push_back(this->neurones[this->nbNeurones-1]->activeNeurone(caracteristicVector.getData()));
+	std::cout<<output[output.size()-1]<<"]"<<std::endl;
+	return output;
 }
 
 NeuronalNetworkMonocouche::~NeuronalNetworkMonocouche(void)

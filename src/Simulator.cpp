@@ -4,7 +4,7 @@
 Simulator::Simulator(int numberOfAgents) : frameFlag(true), play(true), finishSimulation(false)
 {
 	this->numberOfAgents = numberOfAgents;
-	this->SFMLView.init(30*27, 30*30, this->world.getMap()->getMap());
+	this->SFMLView.init(TILE_SIZE*30, TILE_SIZE*30, this->world.getMap()->getMap());
 	this->window = this->SFMLView.getWindow();
 }
 
