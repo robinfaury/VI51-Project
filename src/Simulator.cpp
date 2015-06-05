@@ -161,7 +161,7 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 {
     if (mode == SIMULATION_MODE::SIMULATION && this->currentMode != SIMULATION_MODE::SIMULATION)
     {
-        this->SFMLView.init(30*27, 30*30, this->world.getMap()->getMap());
+        this->SFMLView.init(32*30, 32*30, this->world.getMap()->getMap());
         this->window = this->SFMLView.getWindow();
     }
 
