@@ -14,7 +14,7 @@ World::~World(void)
 void World::createMap()
 {
 //TODO: clean
-	//generateLevel();
+	generateLevel();
 }
 
 // Loading/saving level
