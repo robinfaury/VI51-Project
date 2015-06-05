@@ -44,6 +44,11 @@ void LearningManager::launchLearning(LEARNING_TYPE type)
 	}
 }
 
+void LearningManager::displayReports()
+{
+    //TODO : display reports from all methods
+}
+
 // Sets current world
 void LearningManager::setWorld(World* currentWorld)
 {

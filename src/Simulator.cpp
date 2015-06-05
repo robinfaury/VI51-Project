@@ -1,11 +1,11 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : frameFlag(true), play(true), finishSimulation(false), currentMode(SIMULATION_MODE::SIMULATION)
+Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(true), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING)
 {
 	this->numberOfAgents = numberOfAgents;
-	this->SFMLView.init(TILE_SIZE*30, TILE_SIZE*30, this->world.getMap()->getMap());
-	this->window = this->SFMLView.getWindow();
+
+	this->toggleMode(SIMULATION_MODE::SIMULATION);
 }
 
 World* Simulator::getWorld()
@@ -19,9 +19,11 @@ void Simulator::CreateWorld()
 
 	std::cout << "Map created" << endl;
 
+
+
 	// For each body, create an agent
 	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
-		this->agents.push_back(new NeuronalLemming((*currentBody)));
+		this->agents.push_back(new AgentLemmingDummy(*currentBody));
 
 	this->SFMLView.setWorld(&this->world);
 }
@@ -35,7 +37,6 @@ void Simulator::Run()
 	std::cout << "Starting program loop" << endl;
 	while(!finishSimulation)
 	{
-		
 		if (this->currentMode == SIMULATION_MODE::SIMULATION && this->frameFlag)
 		{
 			this->frameFlag = false;
@@ -61,9 +62,27 @@ void Simulator::Run()
 
 			endTime = this->simulationClock.getElapsedTime();
 			frameTime = endTime - startTime;
-			
+
 			std::cout << "frame time : " << frameTime.asMilliseconds() << std::endl;
 			std::cout << "Simulator::Run : FRAME ENDED" << endl;
+        }
+		else if (currentMode == SIMULATION_MODE::LEARNING)
+		{
+            std::cout << std::endl << "Starting learning mode" << std::endl;
+            // Force pause
+            this->play = false;
+            //Learn with all methods
+            std::cout << "Simulator : Performing learning" << std::endl;
+            this->learningManager.launchLearning();
+            endTime = this->simulationClock.getElapsedTime();
+			frameTime = endTime - startTime;
+
+			std::cout << "Learning complete! Total learning time : " << frameTime.asMilliseconds() << std::endl;
+
+            this->learningManager.displayReports();
+
+            std::cout << std::endl << "Resuming to simulation" << std::endl;
+            this->toggleMode(SIMULATION_MODE::SIMULATION);
 		}
 		else
 		{
@@ -106,15 +125,15 @@ void Simulator::checkEvents()
 				else
 					this->play = false;
 			}
-			else if (event.key.code == sf::Keyboard::S)
+			else if (event.key.code == sf::Keyboard::F2)
 			{
 				//TODO: launch simulation
-				this->currentMode = SIMULATION_MODE::SIMULATION;
+				this->toggleMode(SIMULATION_MODE::SIMULATION);
 			}
-			else if (event.key.code == sf::Keyboard::L)
+			else if (event.key.code == sf::Keyboard::F1)
 			{
 				//TODO: launch learning
-				this->currentMode = SIMULATION_MODE::LEARNING;
+				this->toggleMode(SIMULATION_MODE::LEARNING);
 			}
 			else if (event.key.code == sf::Keyboard::A)
 				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
@@ -136,6 +155,21 @@ void Simulator::checkEvents()
 
 		applyUserAction(this->SFMLView.getUserAction(), x, y);
 	}
+}
+
+void Simulator::toggleMode(SIMULATION_MODE mode)
+{
+    if (mode == SIMULATION_MODE::SIMULATION && this->currentMode != SIMULATION_MODE::SIMULATION)
+    {
+        this->SFMLView.init(30*27, 30*30, this->world.getMap()->getMap());
+        this->window = this->SFMLView.getWindow();
+    }
+
+    else if (mode != SIMULATION_MODE::SIMULATION && this->currentMode == SIMULATION_MODE::SIMULATION)
+        this->SFMLView.clear();
+
+    this->currentMode = mode;
+
 }
 
 void Simulator::applyUserAction(USER_ACTIONS action, int tileX, int tileY)

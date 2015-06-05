@@ -168,7 +168,7 @@ Cell* Map::getCell(int x, int y)
 
 Cell* Map::getCell(std::pair<int, int> cell)
 {
-	std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.find(cell);    
+	std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.find(cell);
 	if (it == this->m_map.end())
 		return NULL;
 	return (it->second);
@@ -203,7 +203,7 @@ bool Map::addWorldObject(int x, int y, PhysicalObject* object)
 
 // Returns true if given object has been removed from the map. Else, returns false.
 bool Map::removeWorldObject(PhysicalObject* object)
-{	
+{
 	std::map<std::pair<int, int>, Cell*>::iterator it = findCell(object);
 	if (it == this->m_map.end())
 	{
@@ -286,7 +286,3 @@ std::map<std::pair<int, int>, Cell*>::iterator Map::findCell(PhysicalObject* obj
 	return this->m_map.end();
 }
 
-void Map::unserializeMap(pugi::xml_node mapNode)
-{
-
-}

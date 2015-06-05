@@ -1,7 +1,7 @@
 #include "GraphicView.h"
 
 
-GraphicView::GraphicView(void)
+GraphicView::GraphicView(void) : initialized(false)
 {
 }
 
@@ -25,6 +25,17 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	terrainSprite.setTexture(terrainTexture);
 
 	std::cout << "Graphics initialised" << endl;
+
+	initialized = true;
+}
+
+void GraphicView::clear()
+{
+    if (initialized)
+    {
+        this->window->close();
+        initialized = false;
+    }
 }
 
 sf::RenderWindow* GraphicView::getWindow()
@@ -34,6 +45,9 @@ sf::RenderWindow* GraphicView::getWindow()
 
 void GraphicView::draw()
 {
+    if (!initialized)
+        return;
+
 	window->clear(sf::Color::Black);
 
 	int x, y;

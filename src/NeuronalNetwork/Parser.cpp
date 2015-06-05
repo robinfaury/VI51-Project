@@ -18,7 +18,7 @@ void Parser::loadLearningData(std::string filename)
 	std::string currentLine;
 	std::getline(file, currentLine);
 	size_t sizeCaracteristicVector = std::count(currentLine.begin(), currentLine.end(), ' ') + 1;
-	__int64 lines = (std::count(std::istreambuf_iterator<char>( file ), std::istreambuf_iterator<char>(), '\n')+2)/2; 
+	int lines = (std::count(std::istreambuf_iterator<char>( file ), std::istreambuf_iterator<char>(), '\n')+2)/2;
 
 	file.seekg(0);
 	float value;

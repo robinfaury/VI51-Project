@@ -110,6 +110,20 @@ public:
 	*/
 	Perception* getPerceptionFromTile(int tileX, int tileY);	// Gets perception from given tile.
 
+
+    /**
+*   Called by the LearningMethods. This function returns all possible lemming perceptions (ignoring above objects)
+*
+*   Perceptions are stored like this :
+*   ?   ?   ?
+*   [0] X   [1]
+*   [2] [3] [4]
+*
+*   where ? is unknown (and not contained in the vector), and X is the lemming
+*/
+    std::vector<std::vector<PhysicalObject*>> getAllPossiblePerceptions();
+
+
 	/**
 	*   Reloads the current level
 	*/

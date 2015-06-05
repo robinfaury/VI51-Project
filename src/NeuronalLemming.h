@@ -1,5 +1,5 @@
-#ifndef AGENTLEMMINGTEST_H_
-#define AGENTLEMMINGTEST_H_
+#ifndef NEURONALLEMMING_H_
+#define NEURONALLEMMING_H_
 
 #include "Agent.h"
 #include "NeuronalNetwork/NeuronalNetworkMonocouche.h"

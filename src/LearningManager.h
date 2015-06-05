@@ -23,12 +23,14 @@ World* world;
 std::vector<LearningMethod*> methods;
 
     public:
-    LearningManager(World* worldo);
+    LearningManager(World* world);
     ~LearningManager();
 
 	void init(World* world);
 	void launchLearning();
 	void launchLearning(LEARNING_TYPE type);
+
+	void displayReports();
 
     void setWorld(World* currentWorld); // Sets current world
     World* getWorld();  // gets current world
