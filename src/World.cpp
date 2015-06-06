@@ -4,6 +4,7 @@
 World::World(void)
 {
     this->m_map = new Map();
+	this->mapGenerator == NULL;
 }
 
 World::~World(void)
@@ -118,87 +119,12 @@ void World::generateLevel()
 	this->m_influences.clear();
 	this->m_objects.clear();
 
-	createBody(4, 4);
-	createObject(28, 28, SEMANTIC::T_EXIT);
+	this->mapGenerator = new MapGenerator();
+	this->mapGenerator->setWorld(this);
+	this->mapGenerator->generate(40, 15);
 
-	for (int i=0; i<30; ++i)
-	{
-		createObject(0, i, SEMANTIC::T_BOUND);
-		createObject(i, 0, SEMANTIC::T_BOUND);
-		createObject(29, i, SEMANTIC::T_BOUND);
-		createObject(i, 29, SEMANTIC::T_BOUND);
-	}
-
-	std::pair<int, int> seedsRock;
-	seedsRock.first = rand()%28 + 1;
-	seedsRock.second = rand()%28 + 1;
-	createObject(seedsRock.first, seedsRock.second, SEMANTIC::T_ROCK);
-
-	std::pair<int, int> seedsDirt;
-	seedsDirt.first = rand()%28 + 1;
-	seedsDirt.second = rand()%28 + 1;
-	createObject(seedsDirt.first, seedsDirt.second, SEMANTIC::T_DIRT);
-
-	int nbCaseFree = 30*30 - 4*29 - 2 - 2;
-
-	std::vector<std::pair<int, int> > listRock;
-	listRock.push_back(seedsRock);
-
-	while(nbCaseFree)
-	{
-		int borne = static_cast<int>(listRock.size());
-
-		for (int i=0; i<borne; ++i)
-		{
-			int count = 0;
-			if (createObject(listRock[i].first-1, listRock[i].second, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first-1;
-				positionNewBlock.second = listRock[i].second;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (createObject(listRock[i].first+1, listRock[i].second, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first+1;
-				positionNewBlock.second = listRock[i].second;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (createObject(listRock[i].first, listRock[i].second-1, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first;
-				positionNewBlock.second = listRock[i].second-1;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (createObject(listRock[i].first, listRock[i].second+1, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first;
-				positionNewBlock.second = listRock[i].second+1;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (count == 4)
-			{
-				listRock.erase(listRock.begin()+i);
-				--borne;
-				--i;
-			}
-		}
-	}
+	delete this->mapGenerator;
+	this->mapGenerator == NULL;
 }
 
 Body* World::createBody(int x, int y)

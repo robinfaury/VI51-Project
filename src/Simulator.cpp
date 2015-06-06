@@ -93,7 +93,7 @@ void Simulator::Run()
 
 			if (play)
 			{
-				if (frameTime.asMilliseconds() > 1000)
+				if (frameTime.asMilliseconds() > 200)
 					frameFlag = true;
 			}
 			else
@@ -161,7 +161,9 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 {
     if (mode == SIMULATION_MODE::SIMULATION && this->currentMode != SIMULATION_MODE::SIMULATION)
     {
-        this->SFMLView.init(32*30, 32*30, this->world.getMap()->getMap());
+		int height = TILE_SIZE*HEIGHT;
+		int width = TILE_SIZE*WIDTH;
+        this->SFMLView.init(height, width, this->world.getMap()->getMap());
         this->window = this->SFMLView.getWindow();
     }
 
