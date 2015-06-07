@@ -121,7 +121,7 @@ void World::generateLevel()
 
 	this->mapGenerator = new MapGenerator();
 	this->mapGenerator->setWorld(this);
-	this->mapGenerator->generate(40, 15);
+	this->mapGenerator->generateWithAutoSeeds();
 
 	delete this->mapGenerator;
 	this->mapGenerator == NULL;

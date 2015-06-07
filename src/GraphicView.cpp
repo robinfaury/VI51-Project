@@ -24,6 +24,12 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	}
 	terrainSprite.setTexture(terrainTexture);
 
+	this->tileSizeX = static_cast<float>(this->window->getSize().x)/WIDTH;
+	this->tileSizeY = static_cast<float>(this->window->getSize().y)/HEIGHT;
+	sf::Vector2f scale(this->tileSizeX/TILE_SIZE, this->tileSizeY/TILE_SIZE);
+	this->lemmingSprite.scale(scale);
+	this->terrainSprite.scale(scale);
+
 	std::cout << "Graphics initialised" << endl;
 
 	initialized = true;
@@ -51,6 +57,7 @@ void GraphicView::draw()
 	window->clear(sf::Color::Black);
 
 	int x, y;
+	
 	// For each cell of the map
 	for (std::map<std::pair<int, int>, Cell*>::iterator it = currentMap->begin(); it != currentMap->end(); ++it)
 	{
@@ -63,13 +70,13 @@ void GraphicView::draw()
             // If it's a terrain, draw it with mapSprite
             if (setTextureRectFromSemantic(object->getSemantic()))
             {
-                this->terrainSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
+                this->terrainSprite.setPosition(static_cast<float>(x*this->tileSizeX), static_cast<float>(y*this->tileSizeY));
                 window->draw(terrainSprite);
             }
             else
             {
                 // Else, draw the lemming
-                this->lemmingSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
+                this->lemmingSprite.setPosition(static_cast<float>(x*this->tileSizeX), static_cast<float>(y*this->tileSizeY));
                 window->draw(lemmingSprite);
             }
         }

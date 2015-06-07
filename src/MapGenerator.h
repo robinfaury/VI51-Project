@@ -22,6 +22,7 @@ public:
 	MapGenerator(void);
 
 	void generate(int nbSeedDirt, int nbSeedRock);
+	void generateWithAutoSeeds();
 
 	void setWorld(World* world);
 	World* getWorld();

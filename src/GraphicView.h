@@ -26,6 +26,9 @@ private:
 	sf::RenderWindow* window;
 	World* world;
 
+	float tileSizeX;
+	float tileSizeY;
+
 	sf::Texture terrainTexture;
 	sf::Texture lemmingTexture;
 

@@ -163,7 +163,7 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
     {
 		int height = TILE_SIZE*HEIGHT;
 		int width = TILE_SIZE*WIDTH;
-        this->SFMLView.init(height, width, this->world.getMap()->getMap());
+        this->SFMLView.init(500, 500, this->world.getMap()->getMap());
         this->window = this->SFMLView.getWindow();
     }
 

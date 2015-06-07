@@ -3,13 +3,17 @@
 
 MapGenerator::MapGenerator()
 {
-	
+	this->sizeMap = HEIGHT;
+}
+
+void MapGenerator::generateWithAutoSeeds()
+{
+	generate(1.25*this->sizeMap, 0.5*this->sizeMap);
 }
 
 void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)
 {
 	this->world->createBody(4, 4);
-	this->sizeMap = HEIGHT;
 	this->world->createObject(this->sizeMap-2, this->sizeMap-2, SEMANTIC::T_EXIT);
 
 	for (int i=0; i<this->sizeMap; ++i)
