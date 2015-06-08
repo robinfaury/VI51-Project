@@ -421,6 +421,46 @@ Perception* World::getPerceptionFromTile(int x, int y)
     return newPerception;
 }
 
+
+bool World::checkValidPosition(int tileX, int tileY)
+{
+	Cell* cell = this->m_map->getCell(tileX, tileY);
+	if (cell == NULL)
+		return false;
+
+	PhysicalObject* object = cell->getWorldObject();
+	if (object == NULL)
+		return true;
+
+	switch (object->getSemantic())
+	{
+	case SEMANTIC::B_LEMMING :
+	case SEMANTIC::T_DIRT :
+	case SEMANTIC::T_EXIT :	
+		return true;
+	default :
+		return false;
+	}
+}
+
+bool World::forceLemmingPosition(int tileX, int tileY)
+{
+	if (this->checkValidPosition(tileX, tileY))
+	{
+		// Lemming cleaned from the map
+		this->m_map->removeWorldObject(this->m_bodies.at(0));
+		Cell* cell = this->m_map->getCell(tileX, tileY);
+		PhysicalObject* object = cell->getWorldObject();
+		if (object != NULL)
+			this->removeObject(object);
+
+		cell->setWorldObject(this->m_bodies.at(0));
+
+		return true;
+	}
+	return false;
+}
+
 /**
 *   Called by the LearningMethods. This function returns all possible lemming perceptions (ignoring above objects)
 *
