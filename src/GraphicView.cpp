@@ -14,15 +14,24 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	// Textures loading
 	if (!lemmingTexture.loadFromFile(LEMMINGTEX_PATH))
 	{
-        std::cout << "ERROR : couldn't load lemming texture from " << LEMMINGTEX_PATH << endl;
+		std::cout << "ERROR : couldn't load lemming texture from " << LEMMINGTEX_PATH << endl;
 	}
 	lemmingSprite.setTexture(lemmingTexture);
 
 	if (!terrainTexture.loadFromFile(TERRAINTEX_PATH))
 	{
-        std::cout << "ERROR : couldn't load terrain texture from " << TERRAINTEX_PATH << endl;
+		std::cout << "ERROR : couldn't load terrain texture from " << TERRAINTEX_PATH << endl;
 	}
 	terrainSprite.setTexture(terrainTexture);
+
+
+	this->lemmingSprite.setScale(1.0f, 1.0f);
+	this->terrainSprite.setScale(1.0f, 1.0f);
+	this->tileSizeX = static_cast<float>(this->window->getSize().x) / WIDTH;
+	this->tileSizeY = static_cast<float>(this->window->getSize().y) / HEIGHT;
+	sf::Vector2f scale(this->tileSizeX / TILE_SIZE, this->tileSizeY / TILE_SIZE);
+	this->lemmingSprite.scale(scale);
+	this->terrainSprite.scale(scale);
 
 	std::cout << "Graphics initialised" << endl;
 
@@ -51,6 +60,7 @@ void GraphicView::draw()
 	window->clear(sf::Color::Black);
 
 	int x, y;
+	
 	// For each cell of the map
 	for (std::map<std::pair<int, int>, Cell*>::iterator it = currentMap->begin(); it != currentMap->end(); ++it)
 	{
@@ -63,13 +73,13 @@ void GraphicView::draw()
             // If it's a terrain, draw it with mapSprite
             if (setTextureRectFromSemantic(object->getSemantic()))
             {
-                this->terrainSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
+                this->terrainSprite.setPosition(static_cast<float>(x*this->tileSizeX), static_cast<float>(y*this->tileSizeY));
                 window->draw(terrainSprite);
             }
             else
             {
                 // Else, draw the lemming
-                this->lemmingSprite.setPosition(static_cast<float>(x*TILE_SIZE), static_cast<float>(y*TILE_SIZE));
+                this->lemmingSprite.setPosition(static_cast<float>(x*this->tileSizeX), static_cast<float>(y*this->tileSizeY));
                 window->draw(lemmingSprite);
             }
         }
@@ -100,8 +110,8 @@ USER_ACTIONS GraphicView::getUserAction()
 
 void GraphicView::convertCoordinates_worldToTiles(int px, int py, int& wx, int& wy)
 {
-	wx = px / TILE_SIZE;
-	wy = py / TILE_SIZE;
+	wx = px / tileSizeX;
+	wy = py / tileSizeY;
 }
 
 //Private functions

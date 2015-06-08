@@ -20,6 +20,10 @@
 #include "Terrain.h"
 #include "MapGenerator.h"
 
+#define extensionPath ".xml"
+#define resPath "res/"
+#define mapPath "maps/"
+
 class MapGenerator;
 
 class World
@@ -35,16 +39,13 @@ private:
 	bool isDiggable(SEMANTIC semantic);		// For a given semantic, returns true if the lemming can dig it
     void setBodyPerception(Body* body);		// Sets the perception of given body
 
-	std::string currentLevelPath;
+	
+
+	PhysicalObject* deserializeObject(pugi::xml_node* objectNode);
 
 public:
 	World(void);
 	~World(void);
-
-    /**
-    *   Initialises the map for the first time.
-    */
-	void createMap();
 
 	// Loading/saving level
 	//TODO: save level
@@ -53,7 +54,7 @@ public:
 	*/
 	void saveLevel(std::string path = "Default");
 
-	void loadLevel(std::string path = "Default");
+	bool loadLevel(std::string path = "Default");
 	void generateLevel();
 
     /**
@@ -122,12 +123,6 @@ public:
 *   where ? is unknown (and not contained in the vector), and X is the lemming
 */
     std::vector<std::vector<PhysicalObject*>> getAllPossiblePerceptions();
-
-
-	/**
-	*   Reloads the current level
-	*/
-	void reset();
 
 };
 

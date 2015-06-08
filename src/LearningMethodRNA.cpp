@@ -14,6 +14,7 @@ LearningMethodRNA::LearningMethodRNA(World* world, std::string filename) : curre
 bool LearningMethodRNA::learn()
 {
 	this->ArtificialInteligence->learn();
+	this->learningFinish = true;
 	return true;
 }
 
@@ -24,9 +25,13 @@ bool LearningMethodRNA::learningComplete()
 
 Agent* LearningMethodRNA::createAgent()
 {
-	NeuronalLemming* a = new NeuronalLemming();
-	a->setBrain(this->ArtificialInteligence);
-	return a;
+	if (learningComplete())
+	{
+		NeuronalLemming* a = new NeuronalLemming();
+		a->setBrain(this->ArtificialInteligence);
+		return a;
+	}
+	return NULL;
 }
 
 

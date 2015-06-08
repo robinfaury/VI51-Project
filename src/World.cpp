@@ -4,17 +4,11 @@
 World::World(void)
 {
     this->m_map = new Map();
+	this->mapGenerator = NULL;
 }
 
 World::~World(void)
 {
-}
-
-
-void World::createMap()
-{
-//TODO: clean
-	generateLevel();
 }
 
 // Loading/saving level
@@ -40,11 +34,9 @@ void World::saveLevel(std::string path)
     pugi::xml_node tempCellObject;
 
     // Iterating on every cell
-    int i = 0;
     for (std::map<std::pair<int, int>, Cell*>::iterator it = this->getMap()->getMap()->begin(); it != this->getMap()->getMap()->end(); ++it)
     {
-        tempCell = cells.append_child("Cell" + i);
-        ++i;
+        tempCell = cells.append_child("Cell");
 
         // Setting cell coordinate
         tempCell.append_attribute("x").set_value(it->first.first);
@@ -61,11 +53,13 @@ void World::saveLevel(std::string path)
 
     }
     cout << "Map : serializeMap : Done" << endl;
-    std::string completePath = "Maps/" + path;
-    cout << "Saving result : " << completePath.data() << doc.save_file(completePath.data()) << endl;
+	std::string completePath = resPath;
+	completePath = completePath + mapPath + path + extensionPath;
+	//cout << "Saving result : " << completePath.data() << " : " << doc.save_file("test") << endl;
+    cout << "Saving result : " << completePath.data() << " : " << doc.save_file(completePath.data()) << endl;
 }
 
-void World::loadLevel(std::string path)
+bool World::loadLevel(std::string path)
 {
 	// Clearing previous objects
 	this->m_map->clear();
@@ -73,40 +67,51 @@ void World::loadLevel(std::string path)
 	this->m_influences.clear();
 	this->m_objects.clear();
 
-	this->currentLevelPath = path;
+	std::string completePath = resPath;
+	completePath = completePath + mapPath + path + extensionPath;
+
 	if (path.compare("Default") == 0)	// Identical
 	{
-		// Default, hardcoded map
-		for (int i = 0; i < 10; ++i) //largeur
-		{
-			for (int j = 0; j < 10; ++j) //hauteur
-			{
-				if (i == 4 && j == 4)
-				{
-					// Lemming start
-					createBody(i, j);
-				}
-				else if (i == 8 && j == 8)
-				{
-					// Exit
-					createObject(i, j, SEMANTIC::T_EXIT);
-				}
-				else if (i == 0 || i == 9 || j == 0 || j == 9)
-				{
-					// Rocks
-					createObject(i, j, SEMANTIC::T_ROCK);
-				}
-				else
-				{
-					// Dirt
-					createObject(i, j, SEMANTIC::T_DIRT);
-				}
-			}
-		}
+		this->generateLevel();
+		return true;
 	}
 	else
 	{
+		// Clearing previous level
+		this->m_bodies.clear();
+		this->m_objects.clear();
 
+		// Loading doc
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load_file(completePath.data());
+		if (result.status != pugi::xml_parse_status::status_ok)
+		{
+			// Error occured
+			std::cout << "ERROR : World::LoadLevel : unable to parse given file : " << completePath << std::endl;
+			std::cout << "Aborting map loading..." << std::endl;
+			return false;
+		}
+		cout << "Load result: " << result.description() << endl;
+
+		pugi::xml_node levelNode = doc.child("Level");
+		pugi::xml_node cells = levelNode.child("Cells");
+
+		pugi::xml_node tempCell = cells.first_child();
+		pugi::xml_node tempChild;
+		while (tempCell)
+		{
+			if (tempCell.attribute("hasChild").as_bool())
+			{
+				tempChild = tempCell.child("object");
+				this->deserializeObject(&tempChild);
+			}
+			else
+			{
+				this->m_map->createCell(static_cast<SEMANTIC>(tempCell.attribute("x").as_int()), static_cast<SEMANTIC>(tempCell.attribute("y").as_int()), NULL);
+			}
+			tempCell = tempCell.next_sibling();
+		}
+		return true;
 	}
 }
 
@@ -118,87 +123,12 @@ void World::generateLevel()
 	this->m_influences.clear();
 	this->m_objects.clear();
 
-	createBody(4, 4);
-	createObject(28, 28, SEMANTIC::T_EXIT);
+	this->mapGenerator = new MapGenerator();
+	this->mapGenerator->setWorld(this);
+	this->mapGenerator->generateWithAutoSeeds();
 
-	for (int i=0; i<30; ++i)
-	{
-		createObject(0, i, SEMANTIC::T_BOUND);
-		createObject(i, 0, SEMANTIC::T_BOUND);
-		createObject(29, i, SEMANTIC::T_BOUND);
-		createObject(i, 29, SEMANTIC::T_BOUND);
-	}
-
-	std::pair<int, int> seedsRock;
-	seedsRock.first = rand()%28 + 1;
-	seedsRock.second = rand()%28 + 1;
-	createObject(seedsRock.first, seedsRock.second, SEMANTIC::T_ROCK);
-
-	std::pair<int, int> seedsDirt;
-	seedsDirt.first = rand()%28 + 1;
-	seedsDirt.second = rand()%28 + 1;
-	createObject(seedsDirt.first, seedsDirt.second, SEMANTIC::T_DIRT);
-
-	int nbCaseFree = 30*30 - 4*29 - 2 - 2;
-
-	std::vector<std::pair<int, int> > listRock;
-	listRock.push_back(seedsRock);
-
-	while(nbCaseFree)
-	{
-		int borne = static_cast<int>(listRock.size());
-
-		for (int i=0; i<borne; ++i)
-		{
-			int count = 0;
-			if (createObject(listRock[i].first-1, listRock[i].second, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first-1;
-				positionNewBlock.second = listRock[i].second;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (createObject(listRock[i].first+1, listRock[i].second, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first+1;
-				positionNewBlock.second = listRock[i].second;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (createObject(listRock[i].first, listRock[i].second-1, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first;
-				positionNewBlock.second = listRock[i].second-1;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (createObject(listRock[i].first, listRock[i].second+1, SEMANTIC::T_DIRT) != NULL)
-			{
-				std::pair<int, int> positionNewBlock;
-				positionNewBlock.first = listRock[i].first;
-				positionNewBlock.second = listRock[i].second+1;
-				listRock.push_back(positionNewBlock);
-				--nbCaseFree;
-			}
-			else
-				++count;
-			if (count == 4)
-			{
-				listRock.erase(listRock.begin()+i);
-				--borne;
-				--i;
-			}
-		}
-	}
+	delete this->mapGenerator;
+	this->mapGenerator = NULL;
 }
 
 Body* World::createBody(int x, int y)
@@ -210,7 +140,7 @@ Body* World::createBody(int x, int y)
         return NULL;
     }
 
-    // Creating the new body
+
     Body* b = new BodyLemming(SEMANTIC::B_LEMMING);
 
     // Adding body to map
@@ -534,10 +464,6 @@ std::vector<std::vector<SEMANTIC>> getAllPossiblePerceptions()
     return ret;
 }
 
-void World::reset()
-{
-    loadLevel(this->currentLevelPath);
-}
 
 //Private functions
 
@@ -573,4 +499,21 @@ void World::setBodyPerception(Body* body)
     }
     newPerception->setPerceivedObjects(perceivedObjects);
     body->setPerception(newPerception);
+}
+
+
+PhysicalObject* World::deserializeObject(pugi::xml_node* objectNode)
+{
+	PhysicalObject* ret = NULL;
+	switch (static_cast<SEMANTIC>(objectNode->attribute("semantic").as_int()))
+	{
+	case SEMANTIC::B_LEMMING :
+		ret = createBody(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), static_cast<SEMANTIC>(objectNode->attribute("y").as_int()));
+		break;
+	default :
+		ret = createObject(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), 
+			static_cast<SEMANTIC>(objectNode->attribute("y").as_int()), 
+			static_cast<SEMANTIC>(objectNode->attribute("semantic").as_int()));
+	}
+	return ret;
 }

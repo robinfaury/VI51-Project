@@ -1,31 +1,18 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(true), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING)
+Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK),
+	currentLevelPath("Islands")
 {
 	this->numberOfAgents = numberOfAgents;
 
+	this->SFMLView.setWorld(&this->world);
 	this->toggleMode(SIMULATION_MODE::SIMULATION);
 }
 
 World* Simulator::getWorld()
 {
 	return &this->world;
-}
-
-void Simulator::CreateWorld()
-{
-	this->world.createMap();
-
-	std::cout << "Map created" << endl;
-
-
-
-	// For each body, create an agent
-	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
-		this->agents.push_back(new AgentLemmingDummy(*currentBody));
-
-	this->SFMLView.setWorld(&this->world);
 }
 
 void Simulator::Run()
@@ -42,7 +29,7 @@ void Simulator::Run()
 			this->frameFlag = false;
 
 			startTime = this->simulationClock.getElapsedTime();
-			std::cout << endl << "Simulator::Run : STARTING FRAME" << endl;
+			//std::cout << endl << "Simulator::Run : STARTING FRAME" << endl;
 
 			if (play)
 			{
@@ -50,8 +37,14 @@ void Simulator::Run()
 				this->world.setPerceptions();
 
 				// Running agent
+				int i = 0;
 				for (std::vector<Agent*>::iterator currentAgent = this->agents.begin(); currentAgent != this->agents.end(); ++currentAgent)
+				{
 					(*currentAgent)->live();
+					std::cout << "Agent " << i << " living" << std::endl;
+					++i;
+				}
+					
 
 				// Updating the world with given influences
 				this->world.update();
@@ -63,8 +56,9 @@ void Simulator::Run()
 			endTime = this->simulationClock.getElapsedTime();
 			frameTime = endTime - startTime;
 
-			std::cout << "frame time : " << frameTime.asMilliseconds() << std::endl;
-			std::cout << "Simulator::Run : FRAME ENDED" << endl;
+			if (frameTime.asMilliseconds() > 100)
+				std::cout << "PERFORMANCE ISSUE : frame time : " << frameTime.asMilliseconds() << std::endl;
+			//std::cout << "Simulator::Run : FRAME ENDED" << endl;
         }
 		else if (currentMode == SIMULATION_MODE::LEARNING)
 		{
@@ -93,7 +87,7 @@ void Simulator::Run()
 
 			if (play)
 			{
-				if (frameTime.asMilliseconds() > 1000)
+				if (frameTime.asMilliseconds() > 200)
 					frameFlag = true;
 			}
 			else
@@ -121,19 +115,64 @@ void Simulator::checkEvents()
 			if (event.key.code == sf::Keyboard::P)
 			{
 				if (!this->play)
+				{
 					this->play = true;
+					std::cout << "Simulation : play" << std::endl;
+				}
 				else
+				{
 					this->play = false;
+					std::cout << "Simulation : pause" << std::endl;
+				}
+					
+			}
+			else if (event.key.code == sf::Keyboard::Escape)
+			{
+				this->window->close();
+				finishSimulation = true;
+			}
+			else if (event.key.code == sf::Keyboard::S)
+			{
+				//Save level
+				std::cout << "Saving : Please input level name : ";
+				std::string path;
+				std::cin >> path;
+				this->world.saveLevel(path);
+			}
+			else if (event.key.code == sf::Keyboard::L)
+			{
+				//Load level
+				std::cout << "Loading : Please input level name : ";
+				std::string path;
+				std::cin >> path;
+				
+				this->resetSimulation(path);
+			}
+			else if (event.key.code == sf::Keyboard::R)
+			{
+				// Forcing pause
+				this->play = false;
+
+				//Load level
+				std::cout << "Resetting level";
+
+				this->resetSimulation(this->currentLevelPath);
 			}
 			else if (event.key.code == sf::Keyboard::F2)
 			{
-				//TODO: launch simulation
 				this->toggleMode(SIMULATION_MODE::SIMULATION);
 			}
 			else if (event.key.code == sf::Keyboard::F1)
 			{
-				//TODO: launch learning
 				this->toggleMode(SIMULATION_MODE::LEARNING);
+			}
+			else if (event.key.code == sf::Keyboard::F5)
+			{
+				this->currentIAType = LEARNING_TYPE::QLEARNING;
+			}
+			else if (event.key.code == sf::Keyboard::F6)
+			{
+				this->currentIAType = LEARNING_TYPE::NEURALNETWORK;
 			}
 			else if (event.key.code == sf::Keyboard::A)
 				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
@@ -157,11 +196,51 @@ void Simulator::checkEvents()
 	}
 }
 
+void Simulator::resetSimulation(std::string levelPath)
+{
+	//TODO: handle error in world loading
+	
+
+	if (!this->world.loadLevel(levelPath))
+	{
+		std::cout << "ERROR : Simulator::resetSimulation : World could not load map. Switching to procedural generation..." << std::endl;
+		this->currentLevelPath = "Default";
+		this->world.loadLevel(this->currentLevelPath);
+	}
+	else
+	{
+		this->currentLevelPath = levelPath;
+	}
+
+	// Clearing agents, and reaffecting them
+	this->agents.clear();
+
+	// For each body, give it an agent
+	std::vector<Body*>* bodies = this->world.getBodies();
+	Agent* tempAgent = NULL;
+	for (std::vector<Body*>::iterator it = this->world.getBodies()->begin(); it != this->world.getBodies()->end(); ++it)
+	{
+		tempAgent = this->learningManager.getAgent(this->currentIAType);
+		std::cout << "Trying to get agent for method " << this->currentIAType << std::endl;
+		if (tempAgent == NULL)
+			std::cout << "ERROR : Simulator::CheckEvents : couldn't reassign new agents after loading level" << std::endl;
+		else
+		{
+			tempAgent->linkBody(*it);
+			this->agents.push_back(tempAgent);
+		}
+	}
+}
+
 void Simulator::toggleMode(SIMULATION_MODE mode)
 {
     if (mode == SIMULATION_MODE::SIMULATION && this->currentMode != SIMULATION_MODE::SIMULATION)
     {
-        this->SFMLView.init(32*30, 32*30, this->world.getMap()->getMap());
+		this->resetSimulation(this->currentLevelPath);
+
+		int height = TILE_SIZE*HEIGHT;
+		int width = TILE_SIZE*WIDTH;
+        this->SFMLView.init(500, 500, this->world.getMap()->getMap());
         this->window = this->SFMLView.getWindow();
     }
 

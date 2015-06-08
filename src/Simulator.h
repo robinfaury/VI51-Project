@@ -27,6 +27,7 @@ private:
 	std::vector<Agent*> agents;
 
 	SIMULATION_MODE currentMode;
+	LEARNING_TYPE currentIAType;
 
 	LearningManager learningManager;
 
@@ -38,14 +39,16 @@ private:
 	bool frameFlag;	// flag used to allow window events while waiting next frame
 	bool play;	// flag used to skip simulation at user command
 	bool finishSimulation;	// flag used to signal the end of the simulation
+
+	std::string currentLevelPath;
 public:
 	Simulator(int numberOfAgents);
 
 	World* getWorld();
 
-	void CreateWorld();
 	void Run();
 	void checkEvents();
+	void resetSimulation(std::string levelPath = "Default");
 
 	void toggleMode(SIMULATION_MODE mode);
 

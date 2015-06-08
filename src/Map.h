@@ -15,6 +15,9 @@ The Map can serialize and deserialize itself using pugixml nodes.
 #include "Cell.h"
 #include "pugi/pugixml.hpp"
 
+#define HEIGHT 40
+#define WIDTH 40
+
 using namespace std;
 
 class Map
