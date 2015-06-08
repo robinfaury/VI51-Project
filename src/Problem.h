@@ -1,6 +1,8 @@
 #ifndef PROBLEM_H
 #define PROBLEM_H
 
+#define TEMPORARY_MAP_SIZE 40
+
 #include <vector>
 
 #include "PerceptionCross.h"
@@ -13,9 +15,10 @@ class Problem
 {
 public:
 	Problem();
+	Problem(World* world);
     ~Problem();
 
-	void initProblemStates(World* world);
+	bool initProblemStates();
 
 	std::vector<std::string>* getPossibleActions(ProblemState* state);
 
@@ -29,10 +32,14 @@ public:
 	int convertPerceptionToStateId(Perception* perception);
 	ProblemState* convertPerceptionToState(Perception* perception);
 
+	World* getWorld();
+	Body* getBody();
+	void setBody(Body* body);
+
 protected:
 	ProblemStore m_problemStore;
-	std::vector<ProblemState*> m_problemStates;
-
+	std::map<int, ProblemState*> m_problemStates;
+	World* m_world;
 };
 
 #endif // PROBLEM_H

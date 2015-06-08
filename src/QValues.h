@@ -19,7 +19,7 @@ public:
     ~QValues();
 
 	// All float values are between 0 and 1
-	void QValuesAlgorithm(Problem& problem, ProblemState* startingState, int iterations, 
+	bool QValuesAlgorithm(Problem& problem, ProblemState* startingState, int iterations, 
 		float learningRate = PARAMETER_LEARNING, 
 		float discountRate = PARAMETER_DISCOUNT, 
 		float actionRandomness = PARAMETER_RANDOMNESS, 
@@ -27,7 +27,7 @@ public:
 
 private :
 	float nextRandomCoefficient();
-	void checkParameterValues(float* learningRate, float* discountRate, float * actionRandomness, float * walkLength);
+	bool checkParameterValues(float* learningRate, float* discountRate, float * actionRandomness, float * walkLength);
 	std::string getOneOf(std::vector<std::string>* possibleActions);
 };
 

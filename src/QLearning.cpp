@@ -2,7 +2,7 @@
 
 QLearning::QLearning(World* world) : LearningMethod(world)
 {
-
+	m_learningComplete = false;
 }
 
 //! Performs the actual learning.
@@ -12,38 +12,55 @@ QLearning::QLearning(World* world) : LearningMethod(world)
 * returns true if the learning finished correctly
 */
 bool QLearning::learn()
-{
+{	
 	int iterations;
-	float alpha, gamma, rho, nu;
+	float alpha = 0.3f, gamma = 0.75f, rho = 0.2f, nu = 0.1f;
+	char choice;
 
 	// get number of iterations and alpha, gamma, rho and nu parameters from user input
 	std::cout << "Enter the number of iterations:" << std::endl;
 	std::cin >> iterations;
-	std::cout << "Enter the learning rate (alpha) between 0 and 1:" << std::endl;
-	std::cin >> alpha;
-	std::cout << "Enter the discount rate (gamma) between 0 and 1:" << std::endl;
-	std::cin >> gamma;
-	std::cout << "Enter the randomness of exploration (rho) between 0 and 1:" << std::endl;
-	std::cin >> rho;
-	std::cout << "Enter the lenght of walk (nu) between 0 and 1:" << std::endl;
-	std::cin >> nu;
+	do
+	{
+		std::cout << "Do you want to choose the parameter values ? (y/n)" << std::endl;
+		std::cin >> choice;
+	} while (choice != 'y' && choice != 'n');
+	if (choice == 'y')
+	{
+		std::cout << "Enter the learning rate (alpha) between 0 and 1:" << std::endl;
+		std::cin >> alpha;
+		std::cout << "Enter the discount rate (gamma) between 0 and 1:" << std::endl;
+		std::cin >> gamma;
+		std::cout << "Enter the randomness of exploration (rho) between 0 and 1:" << std::endl;
+		std::cin >> rho;
+		std::cout << "Enter the lenght of walk (nu) between 0 and 1:" << std::endl;
+		std::cin >> nu;
+	}
 
 	// init problemStates
-	Problem problem;
-	problem.initProblemStates(this->currentWorld);
+	Problem* problem = new Problem(this->currentWorld);
+	if (!problem->initProblemStates())
+	{
+		return false;
+	}
+
+	std::cout << "problem states init done" << std::endl;
 
 	// do the QLearning
 	QValues qValues;
-	qValues.QValuesAlgorithm(problem, NULL, iterations, alpha, gamma, rho, nu);
+	if (!qValues.QValuesAlgorithm((*problem), NULL, iterations, alpha, gamma, rho, nu))
+	{
+		return false;
+	}
 
+	m_learningComplete = true;
 	return true;
 }
 
 //! Returns true if the learning has finished correctly.
 bool QLearning::learningComplete()
 {
-	//TODO: check that learning occured correctly
-	return false;
+	return this->m_learningComplete;
 }
 
 //! Creates and returns an agent of the appropriate type, and setup correctly, to use the learning that has been done.
@@ -56,8 +73,7 @@ Agent* QLearning::createAgent()
 	{
 		//TODO: return an agent configured with the learning
 	}
-	else
-		return NULL;
+	return NULL;
 }
 
 //! Generates a report of the learning.
