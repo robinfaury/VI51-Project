@@ -150,6 +150,9 @@ void Simulator::checkEvents()
 			}
 			else if (event.key.code == sf::Keyboard::R)
 			{
+				// Forcing pause
+				this->play = false;
+
 				//Load level
 				std::cout << "Resetting level";
 
