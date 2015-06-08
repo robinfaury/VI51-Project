@@ -1,7 +1,7 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(true), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING)
+Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK)
 {
 	this->numberOfAgents = numberOfAgents;
 
@@ -18,8 +18,6 @@ void Simulator::CreateWorld()
 	this->world.createMap();
 
 	std::cout << "Map created" << endl;
-
-
 
 	// For each body, create an agent
 	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
@@ -125,14 +123,51 @@ void Simulator::checkEvents()
 				else
 					this->play = false;
 			}
+			else if (event.key.code == sf::Keyboard::Escape)
+			{
+				this->window->close();
+				finishSimulation = true;
+			}
+			else if (event.key.code == sf::Keyboard::S)
+			{
+				//Save level
+				std::cout << "Saving : Please input level name : ";
+				std::string path;
+				std::cin >> path;
+				this->world.saveLevel(path);
+			}
+			else if (event.key.code == sf::Keyboard::L)
+			{
+				//Load level
+				std::cout << "Loading : Please input level name : ";
+				std::string path;
+				std::cin >> path;
+				this->world.loadLevel(path);
+
+				// Clearing agents, and reaffecting them
+				this->agents.clear();
+
+				// For each body, give it an agent
+				std::vector<Body*>* bodies = this->world.getBodies();
+				Agent* tempAgent = NULL;
+				for (std::vector<Body*>::iterator it = this->world.getBodies()->begin(); it != this->world.getBodies()->end(); ++it)
+				{
+					tempAgent = this->learningManager.getAgent(this->currentIAType);
+					if (tempAgent == NULL)
+						std::cout << "ERROR : Simulator::CheckEvents : couldn't reassign new agents after loading level" << std::endl;
+					else
+					{
+						tempAgent->linkBody(*it);
+						this->agents.push_back(tempAgent);
+					}
+				}
+			}
 			else if (event.key.code == sf::Keyboard::F2)
 			{
-				//TODO: launch simulation
 				this->toggleMode(SIMULATION_MODE::SIMULATION);
 			}
 			else if (event.key.code == sf::Keyboard::F1)
 			{
-				//TODO: launch learning
 				this->toggleMode(SIMULATION_MODE::LEARNING);
 			}
 			else if (event.key.code == sf::Keyboard::A)

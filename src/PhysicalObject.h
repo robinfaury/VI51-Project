@@ -27,7 +27,6 @@ public:
 
 	virtual void serialize(pugi::xml_node * node);
 
-
 	~PhysicalObject(void);
 };
 

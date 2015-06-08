@@ -20,6 +20,10 @@
 #include "Terrain.h"
 #include "MapGenerator.h"
 
+#define extensionPath ".xml"
+#define resPath "res/"
+#define mapPath "maps/"
+
 class MapGenerator;
 
 class World
@@ -36,6 +40,8 @@ private:
     void setBodyPerception(Body* body);		// Sets the perception of given body
 
 	std::string currentLevelPath;
+
+	PhysicalObject* deserializeObject(pugi::xml_node* objectNode);
 
 public:
 	World(void);

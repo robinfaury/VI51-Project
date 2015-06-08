@@ -27,6 +27,7 @@ private:
 	std::vector<Agent*> agents;
 
 	SIMULATION_MODE currentMode;
+	LEARNING_TYPE currentIAType;
 
 	LearningManager learningManager;
 

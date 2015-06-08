@@ -4,7 +4,8 @@
 World::World(void)
 {
     this->m_map = new Map();
-	this->mapGenerator == NULL;
+	//FIXME : Golé, woot?
+	this->mapGenerator = NULL;
 }
 
 World::~World(void)
@@ -41,11 +42,9 @@ void World::saveLevel(std::string path)
     pugi::xml_node tempCellObject;
 
     // Iterating on every cell
-    int i = 0;
     for (std::map<std::pair<int, int>, Cell*>::iterator it = this->getMap()->getMap()->begin(); it != this->getMap()->getMap()->end(); ++it)
     {
-        tempCell = cells.append_child("Cell" + i);
-        ++i;
+        tempCell = cells.append_child("Cell");
 
         // Setting cell coordinate
         tempCell.append_attribute("x").set_value(it->first.first);
@@ -62,8 +61,10 @@ void World::saveLevel(std::string path)
 
     }
     cout << "Map : serializeMap : Done" << endl;
-    std::string completePath = "Maps/" + path;
-    cout << "Saving result : " << completePath.data() << doc.save_file(completePath.data()) << endl;
+	std::string completePath = resPath;
+	completePath = completePath + mapPath + path + extensionPath;
+	//cout << "Saving result : " << completePath.data() << " : " << doc.save_file("test") << endl;
+    cout << "Saving result : " << completePath.data() << " : " << doc.save_file(completePath.data()) << endl;
 }
 
 void World::loadLevel(std::string path)
@@ -73,6 +74,9 @@ void World::loadLevel(std::string path)
 	this->m_bodies.clear();
 	this->m_influences.clear();
 	this->m_objects.clear();
+
+	std::string completePath = resPath;
+	completePath = completePath + mapPath + path + extensionPath;
 
 	this->currentLevelPath = path;
 	if (path.compare("Default") == 0)	// Identical
@@ -107,7 +111,33 @@ void World::loadLevel(std::string path)
 	}
 	else
 	{
+		// Clearing previous level
+		this->m_bodies.clear();
+		this->m_objects.clear();
 
+		// Loading doc
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load_file(completePath.data());
+		cout << "Load result: " << result.description() << endl;
+
+		pugi::xml_node levelNode = doc.child("Level");
+		pugi::xml_node cells = levelNode.child("Cells");
+
+		pugi::xml_node tempCell = cells.first_child();
+		pugi::xml_node tempChild;
+		while (tempCell)
+		{
+			if (tempCell.attribute("hasChild").as_bool())
+			{
+				tempChild = tempCell.child("object");
+				this->deserializeObject(&tempChild);
+			}
+			else
+			{
+				this->m_map->createCell(static_cast<SEMANTIC>(tempCell.attribute("x").as_int()), static_cast<SEMANTIC>(tempCell.attribute("y").as_int()), NULL);
+			}
+			tempCell = tempCell.next_sibling();
+		}
 	}
 }
 
@@ -124,7 +154,7 @@ void World::generateLevel()
 	this->mapGenerator->generateWithAutoSeeds();
 
 	delete this->mapGenerator;
-	this->mapGenerator == NULL;
+	this->mapGenerator = NULL;
 }
 
 Body* World::createBody(int x, int y)
@@ -136,7 +166,7 @@ Body* World::createBody(int x, int y)
         return NULL;
     }
 
-    // Creating the new body
+
     Body* b = new BodyLemming(SEMANTIC::B_LEMMING);
 
     // Adding body to map
@@ -499,4 +529,21 @@ void World::setBodyPerception(Body* body)
     }
     newPerception->setPerceivedObjects(perceivedObjects);
     body->setPerception(newPerception);
+}
+
+
+PhysicalObject* World::deserializeObject(pugi::xml_node* objectNode)
+{
+	PhysicalObject* ret = NULL;
+	switch (static_cast<SEMANTIC>(objectNode->attribute("semantic").as_int()))
+	{
+	case SEMANTIC::B_LEMMING :
+		ret = createBody(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), static_cast<SEMANTIC>(objectNode->attribute("y").as_int()));
+		break;
+	default :
+		ret = createObject(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), 
+			static_cast<SEMANTIC>(objectNode->attribute("y").as_int()), 
+			static_cast<SEMANTIC>(objectNode->attribute("semantic").as_int()));
+	}
+	return ret;
 }

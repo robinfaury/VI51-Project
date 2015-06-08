@@ -107,8 +107,8 @@ USER_ACTIONS GraphicView::getUserAction()
 
 void GraphicView::convertCoordinates_worldToTiles(int px, int py, int& wx, int& wy)
 {
-	wx = px / TILE_SIZE;
-	wy = py / TILE_SIZE;
+	wx = px / tileSizeX;
+	wy = py / tileSizeY;
 }
 
 //Private functions
