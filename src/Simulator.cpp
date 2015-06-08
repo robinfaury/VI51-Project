@@ -166,6 +166,14 @@ void Simulator::checkEvents()
 			{
 				this->toggleMode(SIMULATION_MODE::LEARNING);
 			}
+			else if (event.key.code == sf::Keyboard::F5)
+			{
+				this->currentIAType = LEARNING_TYPE::QLEARNING;
+			}
+			else if (event.key.code == sf::Keyboard::F6)
+			{
+				this->currentIAType = LEARNING_TYPE::NEURALNETWORK;
+			}
 			else if (event.key.code == sf::Keyboard::A)
 				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
 			else if (event.key.code == sf::Keyboard::Z)
@@ -191,9 +199,18 @@ void Simulator::checkEvents()
 void Simulator::resetSimulation(std::string levelPath)
 {
 	//TODO: handle error in world loading
-	this->currentLevelPath = levelPath;
+	
 
-	this->world.loadLevel(levelPath);
+	if (!this->world.loadLevel(levelPath))
+	{
+		std::cout << "ERROR : Simulator::resetSimulation : World could not load map. Switching to procedural generation..." << std::endl;
+		this->currentLevelPath = "Default";
+		this->world.loadLevel(this->currentLevelPath);
+	}
+	else
+	{
+		this->currentLevelPath = levelPath;
+	}
 
 	// Clearing agents, and reaffecting them
 	this->agents.clear();

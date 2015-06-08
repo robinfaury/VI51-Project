@@ -59,7 +59,7 @@ void World::saveLevel(std::string path)
     cout << "Saving result : " << completePath.data() << " : " << doc.save_file(completePath.data()) << endl;
 }
 
-void World::loadLevel(std::string path)
+bool World::loadLevel(std::string path)
 {
 	// Clearing previous objects
 	this->m_map->clear();
@@ -73,6 +73,7 @@ void World::loadLevel(std::string path)
 	if (path.compare("Default") == 0)	// Identical
 	{
 		this->generateLevel();
+		return true;
 	}
 	else
 	{
@@ -83,6 +84,13 @@ void World::loadLevel(std::string path)
 		// Loading doc
 		pugi::xml_document doc;
 		pugi::xml_parse_result result = doc.load_file(completePath.data());
+		if (result.status != pugi::xml_parse_status::status_ok)
+		{
+			// Error occured
+			std::cout << "ERROR : World::LoadLevel : unable to parse given file : " << completePath << std::endl;
+			std::cout << "Aborting map loading..." << std::endl;
+			return false;
+		}
 		cout << "Load result: " << result.description() << endl;
 
 		pugi::xml_node levelNode = doc.child("Level");
@@ -103,6 +111,7 @@ void World::loadLevel(std::string path)
 			}
 			tempCell = tempCell.next_sibling();
 		}
+		return true;
 	}
 }
 

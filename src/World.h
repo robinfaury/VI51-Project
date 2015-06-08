@@ -54,7 +54,7 @@ public:
 	*/
 	void saveLevel(std::string path = "Default");
 
-	void loadLevel(std::string path = "Default");
+	bool loadLevel(std::string path = "Default");
 	void generateLevel();
 
     /**
