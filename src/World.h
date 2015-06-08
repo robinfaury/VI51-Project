@@ -111,6 +111,12 @@ public:
 	*/
 	Perception* getPerceptionFromTile(int tileX, int tileY);	// Gets perception from given tile.
 
+	// Returns true if given position is valid (either dirt, empty, exit, or lemming)
+	bool checkValidPosition(int tileX, int tileY);
+
+	// Forces the lemming on given position
+	bool forceLemmingPosition(int tileX, int tileY);
+
 
     /**
 *   Called by the LearningMethods. This function returns all possible lemming perceptions (ignoring above objects)
