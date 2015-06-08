@@ -13,8 +13,30 @@ QLearning::QLearning(World* world) : LearningMethod(world)
 */
 bool QLearning::learn()
 {
-	//Do the actual learning
-	return false;
+	int iterations;
+	float alpha, gamma, rho, nu;
+
+	// get number of iterations and alpha, gamma, rho and nu parameters from user input
+	std::cout << "Enter the number of iterations:" << std::endl;
+	std::cin >> iterations;
+	std::cout << "Enter the learning rate (alpha) between 0 and 1:" << std::endl;
+	std::cin >> alpha;
+	std::cout << "Enter the discount rate (gamma) between 0 and 1:" << std::endl;
+	std::cin >> gamma;
+	std::cout << "Enter the randomness of exploration (rho) between 0 and 1:" << std::endl;
+	std::cin >> rho;
+	std::cout << "Enter the lenght of walk (nu) between 0 and 1:" << std::endl;
+	std::cin >> nu;
+
+	// init problemStates
+	Problem problem;
+	problem.initProblemStates(this->currentWorld);
+
+	// do the QLearning
+	QValues qValues;
+	qValues.QValuesAlgorithm(problem, NULL, iterations, alpha, gamma, rho, nu);
+
+	return true;
 }
 
 //! Returns true if the learning has finished correctly.

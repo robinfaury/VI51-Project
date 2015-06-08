@@ -2,6 +2,8 @@
 #define QLEARNING_H_
 
 #include "LearningMethod.h"
+#include "Problem.h"
+#include "QValues.h"
 
 class QLearning : public LearningMethod
 {

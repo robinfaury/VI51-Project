@@ -5,22 +5,15 @@ Problem::Problem()
 
 }
 
-Problem::Problem(Body* body, World* world)
-{
-	m_body = body;
-	m_world = world;
-	initProblemStates();
-}
-
 Problem::~Problem()
 {
 
 }
 
-void Problem::initProblemStates()
+void Problem::initProblemStates(World* world)
 {
 	std::cout << "init problem states" << std::endl;
-	Map* map = m_world->getMap();
+	Map* map = world->getMap();
 	std::map<std::pair<int, int>, Cell*>* stdmap = map->getMap();
 	std::map<std::pair<int, int>, Cell*>::iterator it;
 	int xPos, yPos;
@@ -33,7 +26,7 @@ void Problem::initProblemStates()
 		xPos = (*it).first.first;
 		yPos = (*it).first.second;
 		std::cout << "(" << xPos << ", " << yPos << ")" << std::endl;
-		perception = m_world->getPerceptionFromTile(xPos, yPos);
+		perception = world->getPerceptionFromTile(xPos, yPos);
 		std::cout << "perception got" << std::endl;
 		stateId = this->convertPerceptionToStateId(perception);
 		std::cout << "perception converted" << std::endl;
@@ -80,7 +73,15 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		influence = ACTIONS::A_NONE;
 	}
 
-	m_body->setInfluence(influence);
+	/*
+	boucle pour x et y
+	checkValidPos
+	forceLemmingPos
+	world->getBodies() -> return 1 lemming
+	lemming->setInfluence(influence);
+	collectInfluence
+	resolveInfuence
+	*/
 
 	// TODO: process influences, resolve actions and send back new perception
 
