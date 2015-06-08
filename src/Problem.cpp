@@ -159,10 +159,12 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 
 	// process tile below
 	TILE_TYPE bottomTile;
+	std::cout << objects->size() << std::endl;
 	if (objects->at(3) == NULL)
 	{
 		std::cout << "objects at 3 null !!" << std::endl;
 	}
+	std::cout << "switch" << std::endl;
 	switch (objects->at(3)->getSemantic())
 	{
 	case SEMANTIC::T_ROCK:
