@@ -14,19 +14,22 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	// Textures loading
 	if (!lemmingTexture.loadFromFile(LEMMINGTEX_PATH))
 	{
-        std::cout << "ERROR : couldn't load lemming texture from " << LEMMINGTEX_PATH << endl;
+		std::cout << "ERROR : couldn't load lemming texture from " << LEMMINGTEX_PATH << endl;
 	}
 	lemmingSprite.setTexture(lemmingTexture);
 
 	if (!terrainTexture.loadFromFile(TERRAINTEX_PATH))
 	{
-        std::cout << "ERROR : couldn't load terrain texture from " << TERRAINTEX_PATH << endl;
+		std::cout << "ERROR : couldn't load terrain texture from " << TERRAINTEX_PATH << endl;
 	}
 	terrainSprite.setTexture(terrainTexture);
 
-	this->tileSizeX = static_cast<float>(this->window->getSize().x)/WIDTH;
-	this->tileSizeY = static_cast<float>(this->window->getSize().y)/HEIGHT;
-	sf::Vector2f scale(this->tileSizeX/TILE_SIZE, this->tileSizeY/TILE_SIZE);
+
+	this->lemmingSprite.setScale(1.0f, 1.0f);
+	this->terrainSprite.setScale(1.0f, 1.0f);
+	this->tileSizeX = static_cast<float>(this->window->getSize().x) / WIDTH;
+	this->tileSizeY = static_cast<float>(this->window->getSize().y) / HEIGHT;
+	sf::Vector2f scale(this->tileSizeX / TILE_SIZE, this->tileSizeY / TILE_SIZE);
 	this->lemmingSprite.scale(scale);
 	this->terrainSprite.scale(scale);
 

@@ -4,19 +4,11 @@
 World::World(void)
 {
     this->m_map = new Map();
-	//FIXME : Golé, woot?
 	this->mapGenerator = NULL;
 }
 
 World::~World(void)
 {
-}
-
-
-void World::createMap()
-{
-//TODO: clean
-	generateLevel();
 }
 
 // Loading/saving level
@@ -78,36 +70,9 @@ void World::loadLevel(std::string path)
 	std::string completePath = resPath;
 	completePath = completePath + mapPath + path + extensionPath;
 
-	this->currentLevelPath = path;
 	if (path.compare("Default") == 0)	// Identical
 	{
-		// Default, hardcoded map
-		for (int i = 0; i < 10; ++i) //largeur
-		{
-			for (int j = 0; j < 10; ++j) //hauteur
-			{
-				if (i == 4 && j == 4)
-				{
-					// Lemming start
-					createBody(i, j);
-				}
-				else if (i == 8 && j == 8)
-				{
-					// Exit
-					createObject(i, j, SEMANTIC::T_EXIT);
-				}
-				else if (i == 0 || i == 9 || j == 0 || j == 9)
-				{
-					// Rocks
-					createObject(i, j, SEMANTIC::T_ROCK);
-				}
-				else
-				{
-					// Dirt
-					createObject(i, j, SEMANTIC::T_DIRT);
-				}
-			}
-		}
+		this->generateLevel();
 	}
 	else
 	{
@@ -490,10 +455,6 @@ std::vector<std::vector<SEMANTIC>> getAllPossiblePerceptions()
     return ret;
 }
 
-void World::reset()
-{
-    loadLevel(this->currentLevelPath);
-}
 
 //Private functions
 

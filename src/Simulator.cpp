@@ -1,29 +1,18 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK)
+Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK),
+	currentLevelPath("Islands")
 {
 	this->numberOfAgents = numberOfAgents;
 
+	this->SFMLView.setWorld(&this->world);
 	this->toggleMode(SIMULATION_MODE::SIMULATION);
 }
 
 World* Simulator::getWorld()
 {
 	return &this->world;
-}
-
-void Simulator::CreateWorld()
-{
-	this->world.createMap();
-
-	std::cout << "Map created" << endl;
-
-	// For each body, create an agent
-	for (std::vector<Body*>::iterator currentBody = this->world.getBodies()->begin(); currentBody != this->world.getBodies()->end(); ++currentBody)
-		this->agents.push_back(new AgentLemmingDummy(*currentBody));
-
-	this->SFMLView.setWorld(&this->world);
 }
 
 void Simulator::Run()
@@ -40,7 +29,7 @@ void Simulator::Run()
 			this->frameFlag = false;
 
 			startTime = this->simulationClock.getElapsedTime();
-			std::cout << endl << "Simulator::Run : STARTING FRAME" << endl;
+			//std::cout << endl << "Simulator::Run : STARTING FRAME" << endl;
 
 			if (play)
 			{
@@ -48,8 +37,14 @@ void Simulator::Run()
 				this->world.setPerceptions();
 
 				// Running agent
+				int i = 0;
 				for (std::vector<Agent*>::iterator currentAgent = this->agents.begin(); currentAgent != this->agents.end(); ++currentAgent)
+				{
 					(*currentAgent)->live();
+					std::cout << "Agent " << i << " living" << std::endl;
+					++i;
+				}
+					
 
 				// Updating the world with given influences
 				this->world.update();
@@ -61,8 +56,9 @@ void Simulator::Run()
 			endTime = this->simulationClock.getElapsedTime();
 			frameTime = endTime - startTime;
 
-			std::cout << "frame time : " << frameTime.asMilliseconds() << std::endl;
-			std::cout << "Simulator::Run : FRAME ENDED" << endl;
+			if (frameTime.asMilliseconds() > 100)
+				std::cout << "PERFORMANCE ISSUE : frame time : " << frameTime.asMilliseconds() << std::endl;
+			//std::cout << "Simulator::Run : FRAME ENDED" << endl;
         }
 		else if (currentMode == SIMULATION_MODE::LEARNING)
 		{
@@ -119,9 +115,16 @@ void Simulator::checkEvents()
 			if (event.key.code == sf::Keyboard::P)
 			{
 				if (!this->play)
+				{
 					this->play = true;
+					std::cout << "Simulation : play" << std::endl;
+				}
 				else
+				{
 					this->play = false;
+					std::cout << "Simulation : pause" << std::endl;
+				}
+					
 			}
 			else if (event.key.code == sf::Keyboard::Escape)
 			{
@@ -142,25 +145,15 @@ void Simulator::checkEvents()
 				std::cout << "Loading : Please input level name : ";
 				std::string path;
 				std::cin >> path;
-				this->world.loadLevel(path);
+				
+				this->resetSimulation(path);
+			}
+			else if (event.key.code == sf::Keyboard::R)
+			{
+				//Load level
+				std::cout << "Resetting level";
 
-				// Clearing agents, and reaffecting them
-				this->agents.clear();
-
-				// For each body, give it an agent
-				std::vector<Body*>* bodies = this->world.getBodies();
-				Agent* tempAgent = NULL;
-				for (std::vector<Body*>::iterator it = this->world.getBodies()->begin(); it != this->world.getBodies()->end(); ++it)
-				{
-					tempAgent = this->learningManager.getAgent(this->currentIAType);
-					if (tempAgent == NULL)
-						std::cout << "ERROR : Simulator::CheckEvents : couldn't reassign new agents after loading level" << std::endl;
-					else
-					{
-						tempAgent->linkBody(*it);
-						this->agents.push_back(tempAgent);
-					}
-				}
+				this->resetSimulation(this->currentLevelPath);
 			}
 			else if (event.key.code == sf::Keyboard::F2)
 			{
@@ -192,10 +185,39 @@ void Simulator::checkEvents()
 	}
 }
 
+void Simulator::resetSimulation(std::string levelPath)
+{
+	//TODO: handle error in world loading
+	this->currentLevelPath = levelPath;
+
+	this->world.loadLevel(levelPath);
+
+	// Clearing agents, and reaffecting them
+	this->agents.clear();
+
+	// For each body, give it an agent
+	std::vector<Body*>* bodies = this->world.getBodies();
+	Agent* tempAgent = NULL;
+	for (std::vector<Body*>::iterator it = this->world.getBodies()->begin(); it != this->world.getBodies()->end(); ++it)
+	{
+		tempAgent = this->learningManager.getAgent(this->currentIAType);
+		std::cout << "Trying to get agent for method " << this->currentIAType << std::endl;
+		if (tempAgent == NULL)
+			std::cout << "ERROR : Simulator::CheckEvents : couldn't reassign new agents after loading level" << std::endl;
+		else
+		{
+			tempAgent->linkBody(*it);
+			this->agents.push_back(tempAgent);
+		}
+	}
+}
+
 void Simulator::toggleMode(SIMULATION_MODE mode)
 {
     if (mode == SIMULATION_MODE::SIMULATION && this->currentMode != SIMULATION_MODE::SIMULATION)
     {
+		this->resetSimulation(this->currentLevelPath);
+
 		int height = TILE_SIZE*HEIGHT;
 		int width = TILE_SIZE*WIDTH;
         this->SFMLView.init(500, 500, this->world.getMap()->getMap());
