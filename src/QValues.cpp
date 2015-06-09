@@ -25,19 +25,19 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 	// Init starting state
 	if (startingState == NULL)
 	{
-		World* world = problem.getWorld();
 		currentState = problem.getRandomState();
 		if (currentState == NULL)
 		{
 			return false;
 		}
-		std::cout << "starting state set" << std::endl;
 	}
 	else
 	{
 		currentState = startingState;
 	}
-		
+	
+	std::cout << "starting state set" << std::endl;
+
 	for (int i = 0; i < iterations; ++i)
 	{
 		std::cout << "iteration " << i << std::endl;

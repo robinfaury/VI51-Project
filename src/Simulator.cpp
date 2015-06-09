@@ -1,7 +1,7 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : world(), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK),
+Simulator::Simulator(int numberOfAgents) : world(this->currentLevelPath), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK),
 	currentLevelPath("Islands")
 {
 	this->numberOfAgents = numberOfAgents;
