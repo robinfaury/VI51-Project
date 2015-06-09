@@ -16,7 +16,11 @@ bool ProblemStore::initQValues(std::map<int, ProblemState*> problemStates)
 	{
 		return false;
 	}
-	std::map<std::string, float> actionsQvalues = { { "left", 0 }, { "right", 0 }, { "down", 0 } };
+	std::map<std::string, float> actionsQvalues;
+	actionsQvalues.insert(std::pair<std::string, float>("left", 0.0f));
+	actionsQvalues.insert(std::pair<std::string, float>("right", 0.0f));
+	actionsQvalues.insert(std::pair<std::string, float>("down", 0.0f));
+
 	std::map<int, ProblemState*>::iterator it;
 	for (it = problemStates.begin(); it != problemStates.end(); ++it)
 	{
