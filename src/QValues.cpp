@@ -29,7 +29,6 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 		currentState = problem.getRandomState();
 		if (currentState == NULL)
 		{
-			std::cout << "state NULL !!" << std::endl;
 			return false;
 		}
 		std::cout << "starting state set" << std::endl;

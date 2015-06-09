@@ -39,12 +39,12 @@ private:
 	bool isDiggable(SEMANTIC semantic);		// For a given semantic, returns true if the lemming can dig it
     void setBodyPerception(Body* body);		// Sets the perception of given body
 
-	
+	std::string& currentMap;
 
 	PhysicalObject* deserializeObject(pugi::xml_node* objectNode);
 
 public:
-	World(void);
+	World(std::string levelPath);
 	~World(void);
 
 	// Loading/saving level
@@ -55,6 +55,7 @@ public:
 	void saveLevel(std::string path = "Default");
 
 	bool loadLevel(std::string path = "Default");
+	void resetMap();	// Resets map with current level path
 	void generateLevel();
 
     /**
