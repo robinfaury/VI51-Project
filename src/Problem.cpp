@@ -24,8 +24,6 @@ bool Problem::initProblemStore()
 {
 	if (m_world != NULL)
 	{
-		std::cout << "init problem states" << std::endl;
-
 		Perception* perception;
 		int stateId;
 
@@ -33,10 +31,8 @@ bool Problem::initProblemStore()
 		{
 			for (int y = 1; y < TEMPORARY_MAP_SIZE - 2; y++)
 			{
-				std::cout << "(" << x << ", " << y << ")" << std::endl;
 				if (m_world->checkValidPosition(x, y))
 				{
-					std::cout << "valid tile" << std::endl;
 					perception = m_world->getPerceptionFromTile(x, y);
 					stateId = this->convertPerceptionToStateId(perception);
 					if (stateId == -1)
@@ -45,7 +41,6 @@ bool Problem::initProblemStore()
 					}
 					ProblemState* state = new ProblemState(stateId);
 					m_problemStates[stateId] = state;
-					std::cout << "state id: " << state->getId() << std::endl;
 				}
 			}
 		}
@@ -74,12 +69,11 @@ ProblemState* Problem::getRandomState()
 		randomY = rand() % ((TEMPORARY_MAP_SIZE - 2) - 1) + 1;
 	} while (!m_world->checkValidPosition(randomX, randomY));
 
-	std::cout << "random pos generated" << std::endl;
-
+	m_world->resetMap();
 	m_world->forceLemmingPosition(randomX, randomY);
 	m_world->setPerceptions();
 
-	std::cout << "lemming pos forced" << std::endl;
+	std::cout << "lemming pos forced" << "(" << randomX << ", " << randomY << ")" << std::endl;
 
 	std::vector<Body*>* bodies = m_world->getBodies();
 
@@ -94,7 +88,6 @@ ProblemState* Problem::getRandomState()
 		return false;
 	}
 	Perception* perception = bodies->at(0)->getPerception();
-	std::cout << "get perceptions ok" << std::endl;
 	ProblemState* state = this->convertPerceptionToState(perception);
 	return state;
 }
@@ -129,6 +122,8 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 			influence = ACTIONS::A_NONE;
 		}
 		
+		std::cout << "take action " << pAction << std::endl;
+
 		bodies->at(0)->setInfluence(influence);
 		m_world->collectInfluences();
 		m_world->resolveInfluences();
@@ -137,6 +132,8 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		std::vector<int> pos = bodies->at(0)->getPosition();
 		int xPos = pos.at(0);
 		int yPos = pos.at(1);
+
+		std::cout << "lemming pos " << "(" << xPos << ", " << yPos << ")" << std::endl;
 
 		Perception* newPerception = m_world->getPerceptionFromTile(xPos, yPos);
 		ProblemState* newState = convertPerceptionToState(newPerception);
@@ -239,8 +236,6 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	// calculate unique state id
 	int stateId = goalDir + leftTile * goalPoss + rightTile * (goalPoss + leftPoss) + bottomTile * (goalPoss * leftPoss * rightPoss);
 
-	std::cout << "stateId = " << stateId << std::endl;
-
 	return stateId;
 }
 
@@ -251,7 +246,12 @@ ProblemState* Problem::convertPerceptionToState(Perception* perception)
 	{
 		return NULL;
 	}
-	return m_problemStates.at(stateId);
+	if (m_problemStates[stateId] == NULL)
+	{
+		ProblemState* state = new ProblemState(stateId);
+		m_problemStates[stateId] = state;
+	}
+	return m_problemStates[stateId];
 }
 
 std::vector<std::string>* Problem::getPossibleActions(ProblemState* state)

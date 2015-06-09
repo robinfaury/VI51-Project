@@ -44,7 +44,7 @@ bool QLearning::learn()
 		return false;
 	}
 
-	std::cout << "problem states init done" << std::endl;
+	std::cout << "problem store init done" << std::endl;
 
 	// do the QLearning
 	QValues qValues;
@@ -52,6 +52,8 @@ bool QLearning::learn()
 	{
 		return false;
 	}
+
+	std::cout << "problem qvalues algo done" << std::endl;
 
 	m_learningComplete = true;
 	return true;
