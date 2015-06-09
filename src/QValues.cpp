@@ -18,7 +18,7 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 		return false;
 	}
 
-	std::cout << "parameter values chacked" << std::endl;
+		std::cout << "parameter values chacked" << std::endl;
 
 	ProblemState* currentState;
 
@@ -36,11 +36,12 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 		currentState = startingState;
 	}
 	
-	std::cout << "starting state set" << std::endl;
+		std::cout << "starting state set" << std::endl;
 
 	for (int i = 0; i < iterations; ++i)
 	{
-		std::cout << "iteration " << i << std::endl;
+		if (DEBUG)
+			std::cout << "iteration " << i << std::endl;
 
 		// Randomly chosing to start over from a new state
 		if (nextRandomCoefficient() < walkLength)

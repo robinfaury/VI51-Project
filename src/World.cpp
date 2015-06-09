@@ -460,6 +460,7 @@ bool World::forceLemmingPosition(int tileX, int tileY)
 			this->removeObject(object);
 
 		cell->setWorldObject(this->m_bodies.at(0));
+		this->m_bodies.at(0)->setPosition(tileX, tileY);
 
 		return true;
 	}
