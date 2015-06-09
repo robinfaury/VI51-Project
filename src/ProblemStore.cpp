@@ -10,6 +10,22 @@ ProblemStore::~ProblemStore()
 
 }
 
+bool ProblemStore::initQValues(std::map<int, ProblemState*> problemStates)
+{
+	if (problemStates.empty())
+	{
+		return false;
+	}
+	std::map<std::string, float> actionsQvalues = { { "left", 0 }, { "right", 0 }, { "down", 0 } };
+	std::map<int, ProblemState*>::iterator it;
+	for (it = problemStates.begin(); it != problemStates.end(); ++it)
+	{
+		m_QValues[it->first] = actionsQvalues;
+	}
+
+	return true;
+}
+
 std::vector<std::string>* ProblemStore::getPossibleActions(int stateId)
 {
 	std::vector<std::string>* actions = new std::vector<std::string>();

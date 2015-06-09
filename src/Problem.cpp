@@ -20,7 +20,7 @@ World* Problem::getWorld()
 	return m_world;
 }
 
-bool Problem::initProblemStates()
+bool Problem::initProblemStore()
 {
 	if (m_world != NULL)
 	{
@@ -49,6 +49,11 @@ bool Problem::initProblemStates()
 				}
 			}
 		}
+
+		if (!this->getProblemStore()->initQValues(this->m_problemStates))
+		{
+			return false;
+		}
 		return true;
 	}
 	return false;
@@ -61,8 +66,37 @@ ProblemState* Problem::getState(int stateId)
 
 ProblemState* Problem::getRandomState()
 {
-	int randomIndex = rand() % m_problemStates.size();
-	return m_problemStates[randomIndex];
+	// TODO : getMapSize instead of TEMPORARY_MAP_SIZE
+	int randomX, randomY;
+	do
+	{
+		randomX = rand() % ((TEMPORARY_MAP_SIZE - 2) - 1) + 1;
+		randomY = rand() % ((TEMPORARY_MAP_SIZE - 2) - 1) + 1;
+	} while (!m_world->checkValidPosition(randomX, randomY));
+
+	std::cout << "random pos generated" << std::endl;
+
+	m_world->forceLemmingPosition(randomX, randomY);
+	m_world->setPerceptions();
+
+	std::cout << "lemming pos forced" << std::endl;
+
+	std::vector<Body*>* bodies = m_world->getBodies();
+
+	if (bodies->empty())
+	{
+		std::cout << "bodies empty" << std::endl;
+		return false;
+	}
+	if (bodies->at(0) == NULL)
+	{
+		std::cout << "body null" << std::endl;
+		return false;
+	}
+	Perception* perception = bodies->at(0)->getPerception();
+	std::cout << "get perceptions ok" << std::endl;
+	ProblemState* state = this->convertPerceptionToState(perception);
+	return state;
 }
 
 ProblemStore* Problem::getProblemStore()
@@ -98,6 +132,7 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		bodies->at(0)->setInfluence(influence);
 		m_world->collectInfluences();
 		m_world->resolveInfluences();
+		m_world->setPerceptions();
 
 		std::vector<int> pos = bodies->at(0)->getPosition();
 		int xPos = pos.at(0);
@@ -118,6 +153,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 {
 	if (perception == NULL)
 	{
+		std::cout << "perception NULL !!" << std::endl;
 		return -1;
 	}
 	std::vector<PhysicalObject*>* objects = perception->getPerceivedObjects();
@@ -145,6 +181,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	TILE_TYPE leftTile;
 	if (objects->at(1) == NULL)
 	{
+		std::cout << "perception[1] NULL !!" << std::endl;
 		return -1;
 	}
 	switch (objects->at(1)->getSemantic())
@@ -164,6 +201,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	TILE_TYPE rightTile;
 	if (objects->at(2) == NULL)
 	{
+		std::cout << "perception[2] NULL !!" << std::endl;
 		return -1;
 	}
 	switch (objects->at(2)->getSemantic())
@@ -183,6 +221,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	TILE_TYPE bottomTile;
 	if (objects->at(3) == NULL)
 	{
+		std::cout << "perception[3] NULL !!" << std::endl;
 		return -1;
 	}
 	switch (objects->at(3)->getSemantic())
@@ -200,12 +239,18 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	// calculate unique state id
 	int stateId = goalDir + leftTile * goalPoss + rightTile * (goalPoss + leftPoss) + bottomTile * (goalPoss * leftPoss * rightPoss);
 
+	std::cout << "stateId = " << stateId << std::endl;
+
 	return stateId;
 }
 
 ProblemState* Problem::convertPerceptionToState(Perception* perception)
 {
 	int stateId = this->convertPerceptionToStateId(perception);
+	if (stateId == -1)
+	{
+		return NULL;
+	}
 	return m_problemStates.at(stateId);
 }
 
