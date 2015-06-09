@@ -1,7 +1,7 @@
 #include "World.h"
 
 
-World::World(std::string currentLevelPath) : currentMap(currentLevelPath)
+World::World(std::string* currentLevelPath) : currentMap(currentLevelPath)
 {
     this->m_map = new Map();
 	this->mapGenerator = NULL;
@@ -117,7 +117,7 @@ bool World::loadLevel(std::string path)
 
 void World::resetMap()	// Resets map with current level path
 {
-	loadLevel(this->currentMap);
+	loadLevel(*this->currentMap);
 }
 
 void World::generateLevel()
