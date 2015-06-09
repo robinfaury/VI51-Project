@@ -26,37 +26,12 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 	if (startingState == NULL)
 	{
 		World* world = problem.getWorld();
-
-		// TODO : getMapSize instead of 40x40
-		int randomX, randomY;
-		do
+		currentState = problem.getRandomState();
+		if (currentState == NULL)
 		{
-			randomX = rand() % ((TEMPORARY_MAP_SIZE - 2) - 1) + 1;
-			randomY = rand() % ((TEMPORARY_MAP_SIZE - 2) - 1) + 1;
-		} 
-		while (!world->checkValidPosition(randomX, randomY));
-
-		std::cout << "random pos generated" << std::endl;
-
-		world->forceLemmingPosition(randomX, randomY);
-
-		std::cout << "lemming pos forced" << std::endl;
-
-		std::vector<Body*>* bodies = world->getBodies();
-
-		if (!bodies->empty())
-		{
-			std::cout << "bodies empty" << std::endl;
+			std::cout << "state NULL !!" << std::endl;
 			return false;
 		}
-		if (bodies->at(0) == NULL)
-		{
-			std::cout << "body null" << std::endl;
-			return false;
-		}
-		Perception* perception = bodies->at(0)->getPerception();
-		currentState = problem.convertPerceptionToState(perception);
-
 		std::cout << "starting state set" << std::endl;
 	}
 	else
@@ -67,6 +42,7 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 	for (int i = 0; i < iterations; ++i)
 	{
 		std::cout << "iteration " << i << std::endl;
+
 		// Randomly chosing to start over from a new state
 		if (nextRandomCoefficient() < walkLength)
 			currentState = problem.getRandomState();

@@ -39,7 +39,7 @@ bool QLearning::learn()
 
 	// init problemStates
 	Problem* problem = new Problem(this->currentWorld);
-	if (!problem->initProblemStates())
+	if (!problem->initProblemStore())
 	{
 		return false;
 	}

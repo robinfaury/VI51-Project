@@ -18,7 +18,7 @@ public:
 	Problem(World* world);
     ~Problem();
 
-	bool initProblemStates();
+	bool initProblemStore();
 
 	std::vector<std::string>* getPossibleActions(ProblemState* state);
 

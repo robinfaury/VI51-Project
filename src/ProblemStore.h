@@ -17,6 +17,8 @@ public:
     ProblemStore();
     ~ProblemStore();
 
+	bool initQValues(std::map<int, ProblemState*> problemStates);
+
 	std::vector<std::string>* getPossibleActions(int stateId); // get all possible actions from the given state
 	std::vector<std::string>* getPossibleActions(ProblemState* problemState);
 
