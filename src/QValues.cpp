@@ -44,7 +44,7 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 
 		std::vector<Body*>* bodies = world->getBodies();
 
-		if (!bodies->empty())
+		if (bodies->empty())
 		{
 			std::cout << "bodies empty" << std::endl;
 			return false;
