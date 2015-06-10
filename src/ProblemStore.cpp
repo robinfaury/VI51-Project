@@ -28,7 +28,7 @@ bool ProblemStore::initQValues(std::map<int, ProblemState*> problemStates)
 	}
 
 	return true;
-}
+} 
 
 std::vector<std::string>* ProblemStore::getPossibleActions(int stateId)
 {

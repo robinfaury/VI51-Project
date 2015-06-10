@@ -7,6 +7,8 @@
 #define TILE_SIZE 32
 #define LEMMINGTEX_PATH "res/lemming.png"
 #define TERRAINTEX_PATH "res/terrain.png"
+#define ICONNNTEX_PATH "res/icons/iconNN.png"
+#define ICONQLTEX_PATH "res/icons/iconQL.png"
 
 #include "World.h"
 
@@ -29,11 +31,20 @@ private:
 	float tileSizeX;
 	float tileSizeY;
 
+	// World textures
 	sf::Texture terrainTexture;
 	sf::Texture lemmingTexture;
 
+	//Icons
+	sf::Texture image_iconNN;
+	sf::Texture image_iconQL;
+
+	sf::Sprite iconNN;
+	sf::Sprite iconQL;
+
 	sf::Sprite terrainSprite;
 	sf::Sprite lemmingSprite;
+
 
 	std::map<std::pair<int, int>, Cell*>* currentMap;
 

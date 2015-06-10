@@ -48,7 +48,8 @@ public:
 
 	void Run();
 	void checkEvents();
-	void resetSimulation(std::string levelPath = "Default");
+	void resetSimulation(std::string levelPath = "Islands");
+	void recreateAgents();
 
 	void toggleMode(SIMULATION_MODE mode);
 
