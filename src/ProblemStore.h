@@ -30,6 +30,8 @@ public:
 
     void updateQValue(int stateId, std::string action, float newQValue);
 	void updateQValue(ProblemState* problemState, std::string action, float newQValue);
+
+	std::string getQValuesReport();
 	
 
     //Getters / Setters

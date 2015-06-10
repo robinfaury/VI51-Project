@@ -138,6 +138,8 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		// calculate and set reward using manhattan distance
 		float newExitDistance = std::abs(newPerception->getExitX() - newPerception->getLemmingX()) + std::abs(newPerception->getExitY() - newPerception->getLemmingY());
 		reward = exitDistance - newExitDistance;
+		std::cout << "position : " << xPos << ", " << yPos << std::endl;
+		std::cout << "reward : " << reward << std::endl;
 
 		return newState;
 	}

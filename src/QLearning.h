@@ -37,6 +37,7 @@ class QLearning : public LearningMethod
 	protected:
 		bool m_learningComplete;
 		Problem* m_problem;
+		std::string report;
 };
 
 #endif
