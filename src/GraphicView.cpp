@@ -24,6 +24,21 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	}
 	terrainSprite.setTexture(terrainTexture);
 
+	/*// Icon images
+	if (!this->image_iconNN.loadFromFile(ICONNNTEX_PATH))
+	{
+		std::cout << "ERROR : couldn't load iconNN texture from " << ICONNNTEX_PATH << endl;
+	}
+	iconNN.setTexture(image_iconNN);
+
+	if (!this->image_iconQL.loadFromFile(ICONQLTEX_PATH))
+	{
+		std::cout << "ERROR : couldn't load iconNN texture from " << ICONQLTEX_PATH << endl;
+	}
+	iconNN.setTexture(image_iconQL);*/
+
+
+
 
 	this->lemmingSprite.setScale(1.0f, 1.0f);
 	this->terrainSprite.setScale(1.0f, 1.0f);

@@ -70,7 +70,7 @@ bool World::loadLevel(std::string path)
 	std::string completePath = resPath;
 	completePath = completePath + mapPath + path + extensionPath;
 
-	if (path.compare("Default") == 0)	// Identical
+	if (path.compare("Generate") == 0)	// Identical
 	{
 		this->generateLevel();
 		return true;

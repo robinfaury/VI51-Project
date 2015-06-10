@@ -169,10 +169,14 @@ void Simulator::checkEvents()
 			else if (event.key.code == sf::Keyboard::F5)
 			{
 				this->currentIAType = LEARNING_TYPE::QLEARNING;
+				recreateAgents();
+				std::cout << "Currently selected agents : QLearning" << std::endl;
 			}
 			else if (event.key.code == sf::Keyboard::F6)
 			{
 				this->currentIAType = LEARNING_TYPE::NEURALNETWORK;
+				recreateAgents();
+				std::cout << "Currently selected agents : NeuralNetwork" << std::endl;
 			}
 			else if (event.key.code == sf::Keyboard::A)
 				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
@@ -203,15 +207,20 @@ void Simulator::resetSimulation(std::string levelPath)
 
 	if (!this->world.loadLevel(levelPath))
 	{
-		std::cout << "ERROR : Simulator::resetSimulation : World could not load map. Switching to procedural generation..." << std::endl;
-		this->currentLevelPath = "Default";
+		std::cout << "ERROR : Simulator::resetSimulation : World could not load map. Switching to default map..." << std::endl;
+		this->currentLevelPath = "Islands";
 		this->world.loadLevel(this->currentLevelPath);
 	}
 	else
 	{
 		this->currentLevelPath = levelPath;
 	}
+	recreateAgents();
+	
+}
 
+void Simulator::recreateAgents()
+{
 	// Clearing agents, and reaffecting them
 	this->agents.clear();
 

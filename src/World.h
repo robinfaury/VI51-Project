@@ -52,9 +52,9 @@ public:
 	/**
 	*   This function saves the level in the given filepath, under xml format
 	*/
-	void saveLevel(std::string path = "Default");
+	void saveLevel(std::string path);
 
-	bool loadLevel(std::string path = "Default");
+	bool loadLevel(std::string path = "Islands");
 	void resetMap();	// Resets map with current level path
 	void generateLevel();
 
