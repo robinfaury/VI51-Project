@@ -65,13 +65,19 @@ void Simulator::Run()
             std::cout << std::endl << "Starting learning mode" << std::endl;
             // Force pause
             this->play = false;
+
+			// Save the map, to allow Learning methods to reload it
+			this->currentLevelPath = "LearningPath";
+			this->world.saveLevel(currentLevelPath);
+
+
             //Learn with all methods
             std::cout << "Simulator : Performing learning" << std::endl;
             this->learningManager.launchLearning();
             endTime = this->simulationClock.getElapsedTime();
 			frameTime = endTime - startTime;
 
-			std::cout << "Learning complete! Total learning time : " << frameTime.asMilliseconds() << std::endl;
+			std::cout << "Learning complete! Total learning time : " << frameTime.asSeconds() << std::endl;
 
             this->learningManager.displayReports();
 
@@ -112,8 +118,12 @@ void Simulator::checkEvents()
 		}
 		else if (event.type == sf::Event::KeyReleased)
 		{
-			if (event.key.code == sf::Keyboard::P)
+			std::string path;	// Forward declaration for the std::cin
+			int intChoice;
+
+			switch (event.key.code)
 			{
+			case sf::Keyboard::P : 
 				if (!this->play)
 				{
 					this->play = true;
@@ -124,32 +134,30 @@ void Simulator::checkEvents()
 					this->play = false;
 					std::cout << "Simulation : pause" << std::endl;
 				}
-					
-			}
-			else if (event.key.code == sf::Keyboard::Escape)
-			{
+				break;
+			case sf::Keyboard::C:
+				std::cout << "Current lemming state : " << Problem::convertPerceptionToStateId(this->world.getBodies()->at(0)->getPerception()) << std::endl;
+				this->world.getBodies()->at(0)->getPerception()->display();
+				break;
+			case sf::Keyboard::Escape:
 				this->window->close();
 				finishSimulation = true;
-			}
-			else if (event.key.code == sf::Keyboard::S)
-			{
+				break;
+			case sf::Keyboard::S:
 				//Save level
 				std::cout << "Saving : Please input level name : ";
-				std::string path;
 				std::cin >> path;
 				this->world.saveLevel(path);
-			}
-			else if (event.key.code == sf::Keyboard::L)
-			{
+				break;
+			case sf::Keyboard::L:
 				//Load level
 				std::cout << "Loading : Please input level name : ";
-				std::string path;
 				std::cin >> path;
-				
+
 				this->resetSimulation(path);
-			}
-			else if (event.key.code == sf::Keyboard::R)
-			{
+				this->SFMLView.resize(800, 800);
+				break;
+			case sf::Keyboard::R:
 				// Forcing pause
 				this->play = false;
 
@@ -157,33 +165,40 @@ void Simulator::checkEvents()
 				std::cout << "Resetting level";
 
 				this->resetSimulation(this->currentLevelPath);
-			}
-			else if (event.key.code == sf::Keyboard::F2)
-			{
+				break;
+			case sf::Keyboard::F2:
 				this->toggleMode(SIMULATION_MODE::SIMULATION);
-			}
-			else if (event.key.code == sf::Keyboard::F1)
-			{
+				break;
+			case sf::Keyboard::F1:
 				this->toggleMode(SIMULATION_MODE::LEARNING);
-			}
-			else if (event.key.code == sf::Keyboard::F5)
-			{
+				break;
+			case  sf::Keyboard::F5:
 				this->currentIAType = LEARNING_TYPE::QLEARNING;
 				recreateAgents();
 				std::cout << "Currently selected agents : QLearning" << std::endl;
-			}
-			else if (event.key.code == sf::Keyboard::F6)
-			{
+				break;
+			case sf::Keyboard::F6:
 				this->currentIAType = LEARNING_TYPE::NEURALNETWORK;
-				recreateAgents();
 				std::cout << "Currently selected agents : NeuralNetwork" << std::endl;
-			}
-			else if (event.key.code == sf::Keyboard::A)
+				recreateAgents();
+				break;
+			case sf::Keyboard::A:
 				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
-			else if (event.key.code == sf::Keyboard::Z)
+				break;
+			case sf::Keyboard::Z:
 				this->SFMLView.setUserAction(USER_ACTIONS::U_DIRT);
-			else if (event.key.code == sf::Keyboard::E)
+				break;
+			case sf::Keyboard::E:
 				this->SFMLView.setUserAction(USER_ACTIONS::U_ROCK);
+				break;
+			case sf::Keyboard::M :
+				std::cout << "Choose new map size : ";
+				std::cin >> intChoice;
+				this->world.setSize(intChoice);
+				resetSimulation("Generate");
+				this->SFMLView.resize(800, 800);
+				break;
+			}
 		}
 	}
 
@@ -216,7 +231,6 @@ void Simulator::resetSimulation(std::string levelPath)
 		this->currentLevelPath = levelPath;
 	}
 	recreateAgents();
-	
 }
 
 void Simulator::recreateAgents()
@@ -230,15 +244,17 @@ void Simulator::recreateAgents()
 	for (std::vector<Body*>::iterator it = this->world.getBodies()->begin(); it != this->world.getBodies()->end(); ++it)
 	{
 		tempAgent = this->learningManager.getAgent(this->currentIAType);
-		std::cout << "Trying to get agent for method " << this->currentIAType << std::endl;
 		if (tempAgent == NULL)
 			std::cout << "ERROR : Simulator::CheckEvents : couldn't reassign new agents after loading level" << std::endl;
 		else
 		{
+			
 			tempAgent->linkBody(*it);
 			this->agents.push_back(tempAgent);
+			std::cout << "Created another agent" << std::endl;
 		}
 	}
+	std::cout << "Agents recreated" << std::endl;
 }
 
 void Simulator::toggleMode(SIMULATION_MODE mode)
@@ -247,14 +263,17 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
     {
 		this->resetSimulation(this->currentLevelPath);
 
-		int height = TILE_SIZE*HEIGHT;
-		int width = TILE_SIZE*WIDTH;
-        this->SFMLView.init(500, 500, this->world.getMap()->getMap());
+		int height = TILE_SIZE * this->world.getSize();
+		int width = TILE_SIZE * this->world.getSize();
+        this->SFMLView.init(800, 800, this->world.getMap()->getMap());
         this->window = this->SFMLView.getWindow();
+
+		recreateAgents();
     }
 
-    else if (mode != SIMULATION_MODE::SIMULATION && this->currentMode == SIMULATION_MODE::SIMULATION)
+    else if (mode == SIMULATION_MODE::LEARNING && this->currentMode == SIMULATION_MODE::SIMULATION)
         this->SFMLView.clear();
+
 
     this->currentMode = mode;
 

@@ -8,6 +8,7 @@
  * - For each ProblemState, a list of QValues : 1 QValue for each possible action of the ProblemState
  */
 
+#include <iostream>
 #include "ProblemState.h"
 #include <map>
 
@@ -33,6 +34,7 @@ public:
 
 	std::string getQValuesReport();
 	
+	static std::string getOneOf(std::vector<std::string>* possibleActions);
 
     //Getters / Setters
 protected:

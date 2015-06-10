@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level mapSize="1600">
+<Level size="40">
 	<Cells>
 		<Cell x="0" y="0" hasChild="true">
 			<object semantic="3" x="0" y="0" />

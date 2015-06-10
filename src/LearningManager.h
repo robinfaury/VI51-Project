@@ -18,9 +18,10 @@ enum LEARNING_TYPE
 
 class LearningManager
 {
-    protected:
-World* world;
-std::vector<LearningMethod*> methods;
+protected:
+	World* world;
+	std::vector<LearningMethod*> methods;
+
 
     public:
     LearningManager(World* world);

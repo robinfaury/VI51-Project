@@ -19,7 +19,7 @@ private:
 	bool createObject(int x, int y, SEMANTIC type);
 
 public:
-	MapGenerator(void);
+	MapGenerator(int size);
 
 	void generate(int nbSeedDirt, int nbSeedRock);
 	void generateWithAutoSeeds();

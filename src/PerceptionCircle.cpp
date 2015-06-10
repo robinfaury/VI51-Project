@@ -1,12 +1,7 @@
 #include "PerceptionCircle.h"
 
-PerceptionCircle::PerceptionCircle()
+PerceptionCircle::PerceptionCircle(int lemmingX, int lemmingY, int exitX, int exitY) : Perception(lemmingX, lemmingY, exitX, exitY)
 {
-}
-
-PerceptionCircle::PerceptionCircle(std::vector<PhysicalObject*> perceivedObjects)
-{
-	setPerceivedObjects(perceivedObjects);
 }
 
 void PerceptionCircle::setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects)

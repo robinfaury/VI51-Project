@@ -213,7 +213,8 @@ bool Map::removeWorldObject(PhysicalObject* object)
 	else
 	{
 		it->second->setWorldObject(NULL);
-		//std::cout << "Map::removeWorldObject : removed object at " << it->first.first << "," << it->first.second << endl;
+		if (MAP_DEBUG)
+			std::cout << "Map::removeWorldObject : removed object at " << it->first.first << "," << it->first.second << endl;
 		return true;
 	}
 }
@@ -242,6 +243,8 @@ bool Map::moveWorldObject(int oldX, int oldY, int newX, int newY)
 	}
 	else
 	{
+		if (MAP_DEBUG)
+			std::cout << "Map::moveWorldObject : moved object from " << oldX << "," << oldY << " to " << newX << "," << newY << std::endl;
 		newCell->setWorldObject(oldCell->getWorldObject());
 		oldCell->setWorldObject(NULL);
 		return true;

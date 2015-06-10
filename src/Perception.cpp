@@ -1,6 +1,6 @@
 #include "Perception.h"
 
-Perception::Perception()
+Perception::Perception(int lemmingX, int lemmingY, int exitX, int exitY) : lemmingX(lemmingX), lemmingY(lemmingY), exitX(exitX), exitY(exitY)
 {
 
 }
@@ -8,6 +8,21 @@ Perception::Perception()
 std::vector<PhysicalObject*>* Perception::getPerceivedObjects()
 {
 	return &this->perceivedObjects;
+}
+
+void Perception::display()
+{
+	std::cout << "Displaying perception" << std::endl;
+	int i = 0;
+	for (std::vector<PhysicalObject*>::iterator it = this->perceivedObjects.begin(); it != this->perceivedObjects.end(); ++it)
+	{
+		if ((*it) == NULL)
+			std::cout << "Perception[" << i << "] : EMPTY" << std::endl;
+		else
+			std::cout << "Perception[" << i << "] : " << (*it)->getSemantic() << std::endl;
+		
+		++i;
+	}
 }
 
 void Perception::getLemmingPos(int& x, int& y)

@@ -28,13 +28,13 @@ bool QLearning::learn()
 	} while (choice != 'y' && choice != 'n');
 	if (choice == 'y')
 	{
-		std::cout << "Enter the learning rate (alpha) between 0 and 1:" << std::endl;
+		std::cout << "Enter the learning rate (alpha) between 0 and 1 (default is " << PARAMETER_LEARNING << ") :" << std::endl;
 		std::cin >> alpha;
-		std::cout << "Enter the discount rate (gamma) between 0 and 1:" << std::endl;
+		std::cout << "Enter the discount rate (gamma) between 0 and 1 (default is " << PARAMETER_DISCOUNT << ") :" << std::endl;
 		std::cin >> gamma;
-		std::cout << "Enter the randomness of exploration (rho) between 0 and 1:" << std::endl;
+		std::cout << "Enter the randomness of exploration (rho) between 0 and 1 (default is " << PARAMETER_RANDOMNESS << ") :" << std::endl;
 		std::cin >> rho;
-		std::cout << "Enter the lenght of walk (nu) between 0 and 1:" << std::endl;
+		std::cout << "Enter the lenght of walk (nu) between 0 and 1 (default is " << PARAMETER_WALK << ") :" << std::endl;
 		std::cin >> nu;
 	}
 
@@ -59,6 +59,8 @@ bool QLearning::learn()
 	}
 
 	std::cout << "problem qvalues algo done" << std::endl;
+	report = m_problem->getProblemStore()->getQValuesReport();
+	std::cout << report << std::endl;
 
 	m_learningComplete = true;
 	return true;

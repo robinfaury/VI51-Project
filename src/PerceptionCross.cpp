@@ -1,12 +1,7 @@
 #include "PerceptionCross.h"
 
-PerceptionCross::PerceptionCross()
+PerceptionCross::PerceptionCross(int lemmingX, int lemmingY, int exitX, int exitY) : Perception(lemmingX, lemmingY, exitX, exitY)
 {
-}
-
-PerceptionCross::PerceptionCross(std::vector<PhysicalObject*> perceivedObjects)
-{
-	setPerceivedObjects(perceivedObjects);
 }
 
 void PerceptionCross::setPerceivedObjects(std::vector<PhysicalObject*> percievedObjects)

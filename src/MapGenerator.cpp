@@ -1,9 +1,8 @@
 #include "MapGenerator.h"
 
 
-MapGenerator::MapGenerator()
+MapGenerator::MapGenerator(int size) : sizeMap(size)
 {
-	this->sizeMap = HEIGHT;
 }
 
 void MapGenerator::generateWithAutoSeeds()
@@ -13,7 +12,8 @@ void MapGenerator::generateWithAutoSeeds()
 
 void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)
 {
-	this->world->createBody(4, 4);
+	std::cout << "Generating new map for size : " << this->sizeMap << std::endl;
+	this->world->createBody((int)(this->sizeMap * 2) / 10, (int)(this->sizeMap * 2) / 10);
 	this->world->createObject(this->sizeMap-2, this->sizeMap-2, SEMANTIC::T_EXIT);
 
 	for (int i=0; i<this->sizeMap; ++i)
@@ -59,6 +59,7 @@ void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)
 			}
 		}
 	}
+	std::cout << "Generated new map" << std::endl;
 }
 
 bool MapGenerator::createObject(int x, int y, SEMANTIC type)
