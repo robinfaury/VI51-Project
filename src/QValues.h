@@ -26,11 +26,11 @@ public:
 		float discountRate = PARAMETER_DISCOUNT, 
 		float actionRandomness = PARAMETER_RANDOMNESS, 
 		float walkLength = PARAMETER_WALK);
+	static std::string getOneOf(std::vector<std::string>* possibleActions);
 
 private :
 	float nextRandomCoefficient();
 	bool checkParameterValues(float* learningRate, float* discountRate, float * actionRandomness, float * walkLength);
-	std::string getOneOf(std::vector<std::string>* possibleActions);
 };
 
 #endif // QVALUES_H

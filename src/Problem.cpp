@@ -73,8 +73,6 @@ ProblemState* Problem::getRandomState()
 	m_world->forceLemmingPosition(randomX, randomY);
 	m_world->setPerceptions();
 
-	std::cout << "lemming pos forced" << "(" << randomX << ", " << randomY << ")" << std::endl;
-
 	std::vector<Body*>* bodies = m_world->getBodies();
 
 	if (bodies->empty())
@@ -88,7 +86,7 @@ ProblemState* Problem::getRandomState()
 		return false;
 	}
 	Perception* perception = bodies->at(0)->getPerception();
-	ProblemState* state = this->convertPerceptionToState(perception);
+	ProblemState* state = this->convertPerceptionToState(perception, true);
 	return state;
 }
 
@@ -121,8 +119,6 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		{
 			influence = ACTIONS::A_NONE;
 		}
-		
-		//std::cout << "take action " << pAction << std::endl;
 
 		bodies->at(0)->setInfluence(influence);
 		m_world->collectInfluences();
@@ -133,10 +129,8 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		int xPos = pos.at(0);
 		int yPos = pos.at(1);
 
-		//std::cout << "lemming pos " << "(" << xPos << ", " << yPos << ")" << std::endl;
-
 		Perception* newPerception = m_world->getPerceptionFromTile(xPos, yPos);
-		ProblemState* newState = convertPerceptionToState(newPerception);
+		ProblemState* newState = convertPerceptionToState(newPerception, true);
 
 		// calculate and set reward using manhattan distance
 		reward = std::abs(newPerception->getExitX() - newPerception->getLemmingX()) + std::abs(newPerception->getExitX() - newPerception->getLemmingY());
@@ -242,14 +236,14 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	return stateId;
 }
 
-ProblemState* Problem::convertPerceptionToState(Perception* perception)
+ProblemState* Problem::convertPerceptionToState(Perception* perception, bool createState)
 {
 	int stateId = this->convertPerceptionToStateId(perception);
 	if (stateId == -1)
 	{
 		return NULL;
 	}
-	if (m_problemStates[stateId] == NULL)
+	if (m_problemStates[stateId] == NULL && createState)
 	{
 		ProblemState* state = new ProblemState(stateId);
 		m_problemStates[stateId] = state;

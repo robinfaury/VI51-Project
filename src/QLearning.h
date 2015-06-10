@@ -4,6 +4,7 @@
 #include "LearningMethod.h"
 #include "Problem.h"
 #include "QValues.h"
+#include "AgentQLearning.h"
 
 class QLearning : public LearningMethod
 {
@@ -35,6 +36,7 @@ class QLearning : public LearningMethod
 
 	protected:
 		bool m_learningComplete;
+		Problem* m_problem;
 };
 
 #endif

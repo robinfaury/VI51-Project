@@ -3,6 +3,7 @@
 QLearning::QLearning(World* world) : LearningMethod(world)
 {
 	m_learningComplete = false;
+	m_problem = new Problem(world);
 }
 
 //! Performs the actual learning.
@@ -38,8 +39,7 @@ bool QLearning::learn()
 	}
 
 	// init problemStates
-	Problem* problem = new Problem(this->currentWorld);
-	if (!problem->initProblemStore())
+	if (!m_problem->initProblemStore())
 	{
 		return false;
 	}
@@ -48,7 +48,7 @@ bool QLearning::learn()
 
 	// do the QLearning
 	QValues qValues;
-	if (!qValues.QValuesAlgorithm((*problem), NULL, iterations, alpha, gamma, rho, nu))
+	if (!qValues.QValuesAlgorithm((*m_problem), NULL, iterations, alpha, gamma, rho, nu))
 	{
 		return false;
 	}
@@ -73,9 +73,13 @@ Agent* QLearning::createAgent()
 {
 	if (learningComplete())
 	{
-		//TODO: return an agent configured with the learning
+		Agent* agent = new AgentQLearning(m_problem);
+		return agent;
 	}
-	return NULL;
+	else
+	{
+		return NULL;
+	}
 }
 
 //! Generates a report of the learning.
