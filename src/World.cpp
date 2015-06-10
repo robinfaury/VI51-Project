@@ -249,11 +249,11 @@ void World::resolveInfluences()
                                              x, y + 1))
             {
                 m_bodies[i]->setPosition(x, y + 1);
-                std::cout << "World::resolveInfluences : Body " << i << " fell down" << endl;
+                //std::cout << "World::resolveInfluences : Body " << i << " fell down" << endl;
             }
             else
             {
-                std::cout << "ERROR : World::resolveInfluences : Body " << i << " couldn't fall down" << endl;
+				std::cout << "ERROR : World::resolveInfluences : Body " << i << " couldn't fall down" << endl;
             }
         }
         else
@@ -275,7 +275,7 @@ void World::resolveInfluences()
                                                          x+1, y))
                         {
                             m_bodies[i]->setPosition(x + 1, y);
-                            std::cout << "World::resolveInfluences : Body " << i << " moved right" << endl;
+							//std::cout << "World::resolveInfluences : Body " << i << " moved right" << endl;
                         }
                         else
                         {
@@ -292,7 +292,7 @@ void World::resolveInfluences()
                                                          x+1, y))
                         {
                             m_bodies[i]->setPosition(x + 1, y);	// moving lemming to new cell
-                            std::cout << "World::resolveInfluences : Body " << i << " dug right" << endl;
+							//std::cout << "World::resolveInfluences : Body " << i << " dug right" << endl;
                         }
                         else
                         {
@@ -314,7 +314,7 @@ void World::resolveInfluences()
                                                          x-1, y))
                         {
                             m_bodies[i]->setPosition(x - 1, y);
-                            std::cout << "World::resolveInfluences : Body " << i << " moved left" << endl;
+							//std::cout << "World::resolveInfluences : Body " << i << " moved left" << endl;
                         }
                         else
                         {
@@ -333,7 +333,7 @@ void World::resolveInfluences()
                                                          x - 1, y))
                         {
                             m_bodies[i]->setPosition(x - 1, y);	// moving lemming to new cell
-                            std::cout << "World::resolveInfluences : Body " << i << " dug left" << endl;
+							//std::cout << "World::resolveInfluences : Body " << i << " dug left" << endl;
                         }
                         else
                         {
@@ -360,7 +360,7 @@ void World::resolveInfluences()
                                                          x, y+1))
                         {
                             m_bodies[i]->setPosition(x, y + 1);	// moving lemming to new cell
-                            std::cout << "World::resolveInfluences : Body " << i << " dug down" << endl;
+							// std::cout << "World::resolveInfluences : Body " << i << " dug down" << endl;
                         }
                         else
                         {
