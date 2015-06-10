@@ -92,3 +92,20 @@ void ProblemStore::updateQValue(ProblemState* problemState, std::string action, 
 {
 	updateQValue(problemState->getId(), action, newQValue);
 }
+
+std::string ProblemStore::getQValuesReport()
+{
+	std::string report = "----- QValues -----\n";
+	std::map <int, std::map<std::string, float> >::iterator it;
+	for (it = m_QValues.begin(); it != m_QValues.end(); ++it)
+	{
+		std::map<std::string, float>::iterator it2;
+		report += "state " + std::to_string((*it).first) + "\n";
+		for (it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2)
+		{
+			report += "\taction : " + (*it2).first + "\n";
+			report += "\tQvalue : " + std::to_string((*it2).second) + "\n";
+		}
+	}
+	return report;
+}

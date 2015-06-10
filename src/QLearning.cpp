@@ -44,12 +44,17 @@ bool QLearning::learn()
 		return false;
 	}
 
+	std::string report = m_problem->getProblemStore()->getQValuesReport();
+
 	std::cout << "problem store init done" << std::endl;
+	std::cout << report << std::endl;
 
 	// do the QLearning
 	QValues qValues;
 	if (!qValues.QValuesAlgorithm((*m_problem), NULL, iterations, alpha, gamma, rho, nu))
 	{
+		std::string report = m_problem->getProblemStore()->getQValuesReport();
+		std::cout << report << std::endl;
 		return false;
 	}
 

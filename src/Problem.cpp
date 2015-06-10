@@ -102,6 +102,7 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 
 	if (!bodies->empty() && bodies->at(0) != NULL)
 	{
+		Body* body = bodies->at(0);
 		ACTIONS influence;
 		if (pAction == "down")
 		{
@@ -120,7 +121,9 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 			influence = ACTIONS::A_NONE;
 		}
 
-		bodies->at(0)->setInfluence(influence);
+		float exitDistance = std::abs(body->getPerception()->getExitX() - body->getPerception()->getLemmingX()) + std::abs(body->getPerception()->getExitY() - body->getPerception()->getLemmingY());
+
+		body->setInfluence(influence);
 		m_world->collectInfluences();
 		m_world->resolveInfluences();
 		m_world->setPerceptions();
@@ -133,7 +136,10 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		ProblemState* newState = convertPerceptionToState(newPerception, true);
 
 		// calculate and set reward using manhattan distance
-		reward = std::abs(newPerception->getExitX() - newPerception->getLemmingX()) + std::abs(newPerception->getExitX() - newPerception->getLemmingY());
+		float newExitDistance = std::abs(newPerception->getExitX() - newPerception->getLemmingX()) + std::abs(newPerception->getExitY() - newPerception->getLemmingY());
+		reward = exitDistance - newExitDistance;
+		std::cout << "position : " << xPos << ", " << yPos << std::endl;
+		std::cout << "reward : " << reward << std::endl;
 
 		return newState;
 	}
