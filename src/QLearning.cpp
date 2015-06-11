@@ -65,9 +65,6 @@ bool QLearning::learn()
 		return false;
 	}
 
-	report = m_problem->getProblemStore()->getQValuesReport();
-	std::cout << report << std::endl;
-
 	std::cout << "problem qvalues algo done" << std::endl;
 	report = m_problem->getProblemStore()->getQValuesReport();
 	std::cout << report << std::endl;
