@@ -177,7 +177,6 @@ Body* World::createBody(int x, int y)
         return NULL;
     }
 
-
     Body* b = new BodyLemming(SEMANTIC::B_LEMMING);
 
     // Adding body to map
@@ -485,7 +484,7 @@ bool World::checkValidPosition(int tileX, int tileY)
 	{
 	case SEMANTIC::B_LEMMING :
 	case SEMANTIC::T_DIRT :
-	case SEMANTIC::T_EXIT :	
+	case SEMANTIC::T_EXIT :
 		return true;
 	default :
 		return false;
@@ -638,8 +637,8 @@ PhysicalObject* World::deserializeObject(pugi::xml_node* objectNode)
 		ret = createBody(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), static_cast<SEMANTIC>(objectNode->attribute("y").as_int()));
 		break;
 	default :
-		ret = createObject(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), 
-			static_cast<SEMANTIC>(objectNode->attribute("y").as_int()), 
+		ret = createObject(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()),
+			static_cast<SEMANTIC>(objectNode->attribute("y").as_int()),
 			static_cast<SEMANTIC>(objectNode->attribute("semantic").as_int()));
 	}
 	return ret;

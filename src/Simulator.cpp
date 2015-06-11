@@ -44,7 +44,7 @@ void Simulator::Run()
 					std::cout << "Agent " << i << " living" << std::endl;
 					++i;
 				}
-					
+
 
 				// Updating the world with given influences
 				this->world.update();
@@ -123,7 +123,7 @@ void Simulator::checkEvents()
 
 			switch (event.key.code)
 			{
-			case sf::Keyboard::P : 
+			case sf::Keyboard::P :
 				if (!this->play)
 				{
 					this->play = true;
@@ -145,14 +145,18 @@ void Simulator::checkEvents()
 				break;
 			case sf::Keyboard::S:
 				//Save level
-				std::cout << "Saving : Please input level name : ";
-				std::cin >> path;
+				path.clear();
+				do
+				{
+                    HelperFunctions::safeChoice("Saving : Please input level name : ", "Please enter a valid name", path);
+				} while (path.empty());
+
 				this->world.saveLevel(path);
 				break;
 			case sf::Keyboard::L:
 				//Load level
-				std::cout << "Loading : Please input level name : ";
-				std::cin >> path;
+				path.clear();
+				HelperFunctions::safeChoice("Loading : Please input level name : ", "Please enter a valid name", path);
 
 				this->resetSimulation(path);
 				this->SFMLView.resize(800, 800);
@@ -184,16 +188,19 @@ void Simulator::checkEvents()
 				break;
 			case sf::Keyboard::A:
 				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
+				std::cout << "Selected CLEAR tile : click to apply" << std::endl;
 				break;
 			case sf::Keyboard::Z:
 				this->SFMLView.setUserAction(USER_ACTIONS::U_DIRT);
+				std::cout << "Selected DIRT tile : click to apply" << std::endl;
 				break;
 			case sf::Keyboard::E:
 				this->SFMLView.setUserAction(USER_ACTIONS::U_ROCK);
+				std::cout << "Selected ROCK tile : click to apply" << std::endl;
 				break;
 			case sf::Keyboard::M :
-				std::cout << "Choose new map size : ";
-				std::cin >> intChoice;
+                HelperFunctions::safeChoice("Input new map size : ", "Please enter a valid int", intChoice);
+
 				this->world.setSize(intChoice);
 				resetSimulation("Generate");
 				this->SFMLView.resize(800, 800);
@@ -218,7 +225,7 @@ void Simulator::checkEvents()
 void Simulator::resetSimulation(std::string levelPath)
 {
 	//TODO: handle error in world loading
-	
+
 
 	if (!this->world.loadLevel(levelPath))
 	{
@@ -248,7 +255,7 @@ void Simulator::recreateAgents()
 			std::cout << "ERROR : Simulator::CheckEvents : couldn't reassign new agents after loading level" << std::endl;
 		else
 		{
-			
+
 			tempAgent->linkBody(*it);
 			this->agents.push_back(tempAgent);
 			std::cout << "Created another agent" << std::endl;
