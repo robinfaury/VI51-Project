@@ -20,8 +20,13 @@ void Memory::addPosition(int x, int y)
 // Returns true if lemming visited given position
 bool Memory::visited(std::pair<int,int> position)
 {
-    if (this->memory.find(position) != this->end())
-        return true;
+	for (std::vector<std::pair<int, int>>::iterator it = this->memory.begin(); it != this->memory.end(); ++it)
+	{
+		if (it->first == position.first && it->second == position.second)
+		{
+			return true;
+		}
+	}
     return false;
 }
 

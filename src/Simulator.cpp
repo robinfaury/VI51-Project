@@ -137,7 +137,6 @@ void Simulator::checkEvents()
 				break;
 			case sf::Keyboard::C:
 				std::cout << "Current lemming state : " << Problem::convertPerceptionToStateId(this->world.getBodies()->at(0)->getPerception(), this->world.getSize()) << std::endl;
-				this->world.getBodies()->at(0)->getPerception()->display();
 				break;
 			case sf::Keyboard::Escape:
 				this->window->close();
@@ -272,7 +271,7 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 
 		int height = TILE_SIZE * this->world.getSize();
 		int width = TILE_SIZE * this->world.getSize();
-        this->SFMLView.init(800, 800, this->world.getMap()->getMap());
+        this->SFMLView.init(600, 600, this->world.getMap()->getMap());
         this->window = this->SFMLView.getWindow();
 
 		recreateAgents();

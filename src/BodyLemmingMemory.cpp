@@ -17,5 +17,6 @@ Memory* BodyLemmingMemory::getMemory()
 // Redefining from PhysicalObject to add memory
 void BodyLemmingMemory::setPosition(int x, int y)
 {
-
+	this->memory.addPosition(x, y);
+	BodyLemming::setPosition(x, y);
 }

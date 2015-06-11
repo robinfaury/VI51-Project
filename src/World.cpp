@@ -574,6 +574,8 @@ void World::setBodyPerception(Body* body)
     std::vector<PhysicalObject*> perceivedObjects;
 
 	int xOffset, yOffset;
+	xOffset = 0;
+	yOffset = 0;
 	for (int i = 0; i < 8; ++i)
 	{
 		switch (i)
