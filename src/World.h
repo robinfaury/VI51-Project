@@ -18,7 +18,7 @@
 #include <typeinfo>
 
 #include "PhysicalObject.h"
-#include "BodyLemming.h"
+#include "BodyLemmingMemory.h"
 #include "PerceptionCircle.h"
 #include "PerceptionCross.h"
 #include "Terrain.h"

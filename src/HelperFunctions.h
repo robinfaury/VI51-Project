@@ -1,5 +1,5 @@
-//#ifndef HELPERFUNCTIONS_H_
-//#define HELPERFUNCTIONS_H_
+#ifndef HELPERFUNCTIONS_H_
+#define HELPERFUNCTIONS_H_
 
 #include <iostream>
 #include <string>
@@ -14,4 +14,4 @@ public :
     static void safeChoice(std::string inputSentence, std::string errorSentence, char& choice);
 };
 
-//#endif
+#endif
