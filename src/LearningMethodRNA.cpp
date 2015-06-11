@@ -44,6 +44,17 @@ std::string LearningMethodRNA::generateReport()
 	return string("DEFAULT REPORT");
 }
 
+// Loading and saving learning results
+void LearningMethodRNA::serialize(pugi::xml_node* node)
+{
+
+}
+
+void LearningMethodRNA::unzerialize(pugi::xml_node* node)
+{
+
+}
+
 LearningMethodRNA::~LearningMethodRNA()
 {
 	delete this->ArtificialInteligence;

@@ -18,3 +18,4 @@ std::string LearningMethod::generateReport()
 {
 	return string("DEFAULT REPORT");
 }
+

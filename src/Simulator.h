@@ -10,10 +10,11 @@
 #include "World.h"
 #include "LearningManager.h"
 #include "AgentLemmingDummy.h"
+#include "ScriptManager.h"
 
 enum SIMULATION_MODE
 {
-	VICTORY,
+	SCRIPT,
 	LEARNING,
 	SIMULATION
 };
@@ -30,6 +31,7 @@ private:
 	LEARNING_TYPE currentIAType;
 
 	LearningManager learningManager;
+	ScriptManager scriptManager;
 
 	sf::RenderWindow* window;
 
@@ -53,8 +55,12 @@ public:
 
 	void toggleMode(SIMULATION_MODE mode);
 
+	
+
 	// User actions
 	void applyUserAction(USER_ACTIONS action, int tileX = -1, int tileY = -1);
+
+
 };
 
 #endif

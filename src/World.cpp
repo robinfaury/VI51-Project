@@ -53,8 +53,8 @@ void World::saveLevel(std::string path)
 
     }
     cout << "Map : serializeMap : Done" << endl;
-	std::string completePath = resPath;
-	completePath = completePath + mapPath + path + extensionPath;
+	std::string completePath = sourcesPath;
+	completePath = completePath + resPath + mapPath + path + extensionPath;
 	//cout << "Saving result : " << completePath.data() << " : " << doc.save_file("test") << endl;
     cout << "Saving result : " << completePath.data() << " : " << doc.save_file(completePath.data()) << endl;
 }
@@ -67,8 +67,8 @@ bool World::loadLevel(std::string path)
 	this->m_influences.clear();
 	this->m_objects.clear();
 
-	std::string completePath = resPath;
-	completePath = completePath + mapPath + path + extensionPath;
+	std::string completePath = sourcesPath;
+	completePath = completePath + resPath + mapPath + path + extensionPath;
 
 	if (path.compare("Generate") == 0)	// Identical
 	{
@@ -152,6 +152,21 @@ void World::findExit(int& exitX, int& exitY)
 			return;
 		}
 	}
+}
+
+// Checks if at least one lemming managed to get to the exit
+bool World::lemmingSuccess()
+{
+	int x, y, lemmingX, lemmingY;
+	findExit(x, y);
+
+	for (std::vector<Body*>::iterator it = this->m_bodies.begin(); it != this->m_bodies.end(); ++it)
+	{
+		(*it)->getPosition(lemmingX, lemmingY);
+		if (lemmingX == x && lemmingY == y)
+			return true;
+	}
+	return false;
 }
 
 int World::getSize()

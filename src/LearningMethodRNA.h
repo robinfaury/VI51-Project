@@ -46,6 +46,10 @@ public:
     */
     virtual std::string generateReport();
 
+	// Loading and saving learning results
+	virtual void serialize(pugi::xml_node* node);
+	virtual void unzerialize(pugi::xml_node* node);
+
 	~LearningMethodRNA();
 };
 

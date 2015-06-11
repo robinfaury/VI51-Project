@@ -1,6 +1,8 @@
 #ifndef PROBLEMSTORE_H
 #define PROBLEMSTORE_H
 
+#include "pugi\pugixml.hpp"
+
 /*
  * The ProblemStore is the database for storing ProblemStates. For each ProblemState, the ProblemStore will store the QValues that are
  * associated with this State. The ProblemStore contains :
@@ -36,8 +38,13 @@ public:
 	
 	static std::string getOneOf(std::vector<std::string>* possibleActions);
 
+	// Load / save
+	void serialize(pugi::xml_node* node);
+	void unserialize(pugi::xml_node* node);
+
     //Getters / Setters
 protected:
+	// map< stateId, 
 	std::map <int, std::map<std::string, float> > m_QValues; // array indexed by ProblemState ids containing arrays of q-values indexed by actions
 
 };

@@ -41,6 +41,12 @@ public:
     *   When the learning is complete, this function creates a report containing information about the result, stats, etc.
     */
     virtual std::string generateReport();
+
+	// Loading and saving learning results
+	virtual void serialize(pugi::xml_node* node) = 0;
+	virtual void unzerialize(pugi::xml_node* node) = 0;
+
+
 };
 
 #endif

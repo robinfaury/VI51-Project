@@ -1,8 +1,8 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : currentLevelPath("Islands"), world(&this->currentLevelPath), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK)
-
+Simulator::Simulator(int numberOfAgents) : currentLevelPath("Islands"), world(&this->currentLevelPath), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), 
+currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK), scriptManager(&this->learningManager, &this->world, currentLevelPath)
 {
 	this->numberOfAgents = numberOfAgents;
 
@@ -141,6 +141,11 @@ void Simulator::checkEvents()
 			case sf::Keyboard::Escape:
 				this->window->close();
 				finishSimulation = true;
+				break;
+				
+				// Launching scripting
+			case sf::Keyboard::N:
+				toggleMode(SIMULATION_MODE::SCRIPT);
 				break;
 			case sf::Keyboard::S:
 				//Save level
@@ -281,9 +286,36 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
         this->SFMLView.clear();
 
 
+	switch (mode)
+	{
+	case SCRIPT:
+		// Clearing scriptManager
+		this->scriptManager.clearMapPool();
+		this->scriptManager.clearSpecialIterationNumbers();
+
+		// setting parameters
+		this->scriptManager.setAlpha(0.1, 0.9, 0.1);
+		this->scriptManager.setGamma(0.1, 0.9, 0.05);
+		this->scriptManager.setAlpha(0.1, 0.9, 0.1);
+		this->scriptManager.setAlpha(0.01, 0.2, 0.01);
+		this->scriptManager.setTriesPerLearning(10);
+		this->scriptManager.setIterations(1000, 10000, 10000);
+
+		this->scriptManager.addMapToPool("10_Easy1");
+		this->scriptManager.addMapToPool("10_Easy2");
+		this->scriptManager.addMapToPool("10_Easy3");
+
+		break;
+	default:
+		break;
+	}
+
     this->currentMode = mode;
 
 }
+
+
+
 
 void Simulator::applyUserAction(USER_ACTIONS action, int tileX, int tileY)
 {
