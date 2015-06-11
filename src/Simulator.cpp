@@ -136,7 +136,7 @@ void Simulator::checkEvents()
 				}
 				break;
 			case sf::Keyboard::C:
-				std::cout << "Current lemming state : " << Problem::convertPerceptionToStateId(this->world.getBodies()->at(0)->getPerception()) << std::endl;
+				std::cout << "Current lemming state : " << Problem::convertPerceptionToStateId(this->world.getBodies()->at(0)->getPerception(), this->world.getSize()) << std::endl;
 				this->world.getBodies()->at(0)->getPerception()->display();
 				break;
 			case sf::Keyboard::Escape:

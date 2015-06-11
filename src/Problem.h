@@ -29,7 +29,7 @@ public:
 
 	ProblemState* takeAction(ProblemState* pOriginalState, std::string pAction, float& reward, bool& victory);	// Returns the resulting state of doing action pAction in state originalState, giving the appropriate reward
 
-	static int convertPerceptionToStateId(Perception* perception);
+	static int convertPerceptionToStateId(Perception* perception, int worldSize);
 	ProblemState* convertPerceptionToState(Perception* perception, bool createState);
 
 	World* getWorld();

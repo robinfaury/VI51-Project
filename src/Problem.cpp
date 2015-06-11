@@ -34,7 +34,7 @@ bool Problem::initProblemStore()
 				if (m_world->checkValidPosition(x, y))
 				{
 					perception = m_world->getPerceptionFromTile(x, y);
-					stateId = this->convertPerceptionToStateId(perception);
+					stateId = this->convertPerceptionToStateId(perception, this->m_world->getSize());
 					if (stateId == -1)
 					{
 						return false;
@@ -182,7 +182,7 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 	return NULL;
 }
 
-int Problem::convertPerceptionToStateId(Perception* perception)
+int Problem::convertPerceptionToStateId(Perception* perception, int worldSize)
 {
 	if (perception == NULL)
 	{
@@ -191,11 +191,37 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	}	
 	std::vector<PhysicalObject*>* objects = perception->getPerceivedObjects();
 
-	int goalPosX = perception->getExitX();
+	//int goalPosX = perception->getExitX();
 	int actualPosX = perception->getLemmingX();
+	int actualPosY = perception->getLemmingY();
+
+	int worldPart; // represents a part of the world when it is divided in 4
+	if (actualPosX <= std::abs(worldSize / 2)) // if lemming in the left part of world
+	{
+		if (actualPosY <= std::abs(worldSize / 2)) // if lemming in the upper part of world
+		{
+			worldPart = 0;
+		}
+		else // if lemming in the lower part of world
+		{
+			worldPart = 2;
+		}
+	}
+	else // if lemming in the right part of world
+	{
+		if (actualPosY <= std::abs(worldSize / 2)) // if lemming in the upper part of world
+		{
+			worldPart = 1;
+		}
+		else // if lemming in the lower part of world
+		{
+			worldPart = 3;
+		}
+	}
+	int worldPartPoss = 4; // total number of possible values for the world part
 
 	// process goal direction
-	DIRECTION goalDir;
+	/*DIRECTION goalDir;
 	if (actualPosX > goalPosX)
 	{
 		goalDir = DIRECTION::LEFT;
@@ -208,7 +234,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	{
 		goalDir = DIRECTION::DOWN;
 	}
-	int goalPoss = 3;  // total number of possible values for the goal direction
+	int goalPoss = 3;  // total number of possible values for the goal direction*/
 
 	// process tile on the left
 	TILE_TYPE leftTile;
@@ -272,15 +298,16 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	}
 
 	// calculate unique state id
-	int stateId = goalDir + leftTile * goalPoss + rightTile * (goalPoss + leftPoss) + bottomTile * (goalPoss * leftPoss * rightPoss);
+	//int stateId = goalDir + leftTile * goalPoss + rightTile * (goalPoss + leftPoss) + bottomTile * (goalPoss * leftPoss * rightPoss);
 	//int stateId = leftTile + rightTile * (leftPoss) + bottomTile * (leftPoss * rightPoss);
+	int stateId = worldPart + leftTile * worldPartPoss + rightTile * (worldPartPoss + leftPoss) + bottomTile * (worldPartPoss * leftPoss * rightPoss);
 
 	return stateId;
 }
 
 ProblemState* Problem::convertPerceptionToState(Perception* perception, bool createState)
 {
-	int stateId = this->convertPerceptionToStateId(perception);
+	int stateId = this->convertPerceptionToStateId(perception, this->m_world->getSize());
 	if (stateId == -1)
 	{
 		return NULL;
