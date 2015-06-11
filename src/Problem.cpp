@@ -78,12 +78,12 @@ ProblemState* Problem::getRandomState()
 	if (bodies->empty())
 	{
 		std::cout << "bodies empty" << std::endl;
-		return false;
+		return NULL;
 	}
 	if (bodies->at(0) == NULL)
 	{
 		std::cout << "body null" << std::endl;
-		return false;
+		return NULL;
 	}
 	Perception* perception = bodies->at(0)->getPerception();
 	ProblemState* state = this->convertPerceptionToState(perception, true);
@@ -148,7 +148,7 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		ProblemState* newState = convertPerceptionToState(newPerception, true);
 
 		// Compute new exit distance
-		
+
 		float newExitDistance = std::abs(newPerception->getExitX() - newPerception->getLemmingX()) + std::abs(newPerception->getExitY() - newPerception->getLemmingY());
 		if (QLEARNING_DEBUG)
 			std::cout << "Problem::takeAction : newExitDistance : " << newExitDistance << std::endl;
@@ -174,8 +174,8 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 			std::cout << "position : " << xPos << ", " << yPos << std::endl;
 			std::cout << "reward : " << reward << std::endl;
 		}
-		
-		
+
+
 
 		return newState;
 	}
@@ -188,7 +188,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 	{
 		std::cout << "ERROR : Problem::convertPerceptionToStateId : perception NULL !!" << std::endl;
 		return -1;
-	}	
+	}
 	std::vector<PhysicalObject*>* objects = perception->getPerceivedObjects();
 
 	int goalPosX = perception->getExitX();
@@ -228,7 +228,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 			break;
 		}
 	}
-	
+
 	int leftPoss = 2;  // total number of possible values for the left tile
 
 	// process tile on the right
@@ -249,7 +249,7 @@ int Problem::convertPerceptionToStateId(Perception* perception)
 			break;
 		}
 	}
-	
+
 	int rightPoss = 2; // total number of possible values for right tile
 
 	// process tile below

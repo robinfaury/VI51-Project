@@ -177,7 +177,7 @@ Body* World::createBody(int x, int y)
         return NULL;
     }
 
-    Body* b = new BodyLemming(SEMANTIC::B_LEMMING);
+    Body* b = new BodyLemmingMemory(SEMANTIC::B_LEMMING);
 
     // Adding body to map
     if (this->m_map->addWorldObject(x, y, b))
