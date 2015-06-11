@@ -18,7 +18,9 @@ void LearningManager::init(World* world)
 	{
 		// For each learning method, create it iin this->learningMethods and set corresponding bool to false
 		this->methods.push_back(new QLearning(world));
-		this->methods.push_back(new LearningMethodRNA(world, "res/learn.txt"));
+		std::string filePath = sourcesPath;
+		filePath += "res/learn.txt";
+		this->methods.push_back(new LearningMethodRNA(world, filePath));
 	}
 	else
 	{
@@ -29,7 +31,6 @@ void LearningManager::init(World* world)
 void LearningManager::launchLearning()
 {
 	launchLearning(LEARNING_TYPE::QLEARNING);
-	launchLearning(LEARNING_TYPE::NEURALNETWORK);
 }
 
 void LearningManager::launchLearning(LEARNING_TYPE type)
@@ -73,4 +74,23 @@ Agent* LearningManager::getAgent(LEARNING_TYPE type)  // When learning is comple
         return this->methods.at(type)->createAgent();
 
 	return NULL;
+}
+
+//Load / save learning result
+void LearningManager::serialize(LEARNING_TYPE type, pugi::xml_node* node)
+{
+	if (this->methods.at(type)->learningComplete())
+	{
+		this->methods.at(type)->serialize(node);
+	}
+}
+
+void LearningManager::unserialize(LEARNING_TYPE type, pugi::xml_node* node)
+{
+	this->methods.at(type)->unzerialize(node);
+}
+
+LearningMethod* LearningManager::getLearningMethod(LEARNING_TYPE type)
+{
+	return this->methods.at(type);
 }

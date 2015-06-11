@@ -19,6 +19,7 @@ public:
     ~Problem();
 
 	bool initProblemStore();
+	bool initProblemStates();
 
 	std::vector<std::string>* getPossibleActions(ProblemState* state);
 
@@ -35,6 +36,10 @@ public:
 	World* getWorld();
 	Body* getBody();
 	void setBody(Body* body);
+
+	// Load / save
+	void serialize(pugi::xml_node* node);	// Saves all problem states, and associated QValues in the store
+	void unserialize(pugi::xml_node* node);	// Loads problem states and associated QValues from given node
 
 protected:
 	ProblemStore m_problemStore;

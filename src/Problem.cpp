@@ -24,6 +24,26 @@ bool Problem::initProblemStore()
 {
 	if (m_world != NULL)
 	{
+		if (!initProblemStates())
+		{
+			std::cout << "ERROR : Problem::initProblemStore : couldn't initialize problem states" << std::endl;
+		}
+
+		// Problem store
+		if (!this->getProblemStore()->initQValues(this->m_problemStates))
+		{
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Problem::initProblemStates()
+{
+	if (m_world != NULL)
+	{
+		// States creation
 		Perception* perception;
 		int stateId;
 
@@ -43,11 +63,6 @@ bool Problem::initProblemStore()
 					m_problemStates[stateId] = state;
 				}
 			}
-		}
-
-		if (!this->getProblemStore()->initQValues(this->m_problemStates))
-		{
-			return false;
 		}
 		return true;
 	}
@@ -325,4 +340,18 @@ ProblemState* Problem::convertPerceptionToState(Perception* perception, bool cre
 std::vector<std::string>* Problem::getPossibleActions(ProblemState* state)
 {
 	return this->getProblemStore()->getPossibleActions(state);
+}
+
+// Load / save
+// Saves all problem states, and associated QValues in the store
+void Problem::serialize(pugi::xml_node* node)
+{
+	this->m_problemStore.serialize(node);
+}
+
+// Loads problem states and associated QValues from given node
+void Problem::unserialize(pugi::xml_node* node)	
+{
+	this->m_problemStates.clear();
+	this->m_problemStore.unserialize(node);
 }

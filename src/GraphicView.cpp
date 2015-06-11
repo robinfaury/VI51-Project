@@ -12,13 +12,17 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	this->window->setVerticalSyncEnabled(true);
 
 	// Textures loading
-	if (!lemmingTexture.loadFromFile(LEMMINGTEX_PATH))
+	std::string lemmingTexturePath = sourcesPath;
+	lemmingTexturePath += LEMMINGTEX_PATH;
+	if (!lemmingTexture.loadFromFile(lemmingTexturePath))
 	{
 		std::cout << "ERROR : couldn't load lemming texture from " << LEMMINGTEX_PATH << endl;
 	}
 	lemmingSprite.setTexture(lemmingTexture);
 
-	if (!terrainTexture.loadFromFile(TERRAINTEX_PATH))
+	std::string terrainTexturePath = sourcesPath;
+	terrainTexturePath += TERRAINTEX_PATH;
+	if (!terrainTexture.loadFromFile(terrainTexturePath))
 	{
 		std::cout << "ERROR : couldn't load terrain texture from " << TERRAINTEX_PATH << endl;
 	}

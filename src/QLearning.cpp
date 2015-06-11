@@ -73,6 +73,21 @@ bool QLearning::learn()
 	return true;
 }
 
+bool QLearning::learn(int iterations, float alpha, float gamma, float rho, float nu)
+{
+	if (!m_problem->initProblemStore())
+	{
+		return false;
+	}
+
+	QValues qValues;
+	if (!qValues.QValuesAlgorithm((*m_problem), NULL, iterations, alpha, gamma, rho, nu))
+	{
+		return false;
+	}
+	m_learningComplete = true;
+}
+
 //! Returns true if the learning has finished correctly.
 bool QLearning::learningComplete()
 {
@@ -104,4 +119,23 @@ std::string QLearning::generateReport()
 {
 	//TODO: generate report of the learning
 	return LearningMethod::generateReport();
+}
+
+// Loading and saving learning results
+void QLearning::serialize(pugi::xml_node* node)
+{
+	if (learningComplete())
+	{
+		this->m_problem->serialize(node);
+	}
+	else
+	{
+		std::cout << "QLearning::serialize : can't serialize problem, learning isn't complete" << std::endl;
+	}
+}
+
+void QLearning::unzerialize(pugi::xml_node* node)
+{
+	this->m_problem->unserialize(node);
+	this->m_learningComplete = true;
 }

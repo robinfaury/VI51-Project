@@ -39,6 +39,12 @@ protected:
     LearningMethod* getMethod(LEARNING_TYPE type);    // Returns a pointer to learning method of given type
 
     Agent* getAgent(LEARNING_TYPE type);  // When learning is complete, create and return an agent of appropriate type.
+
+	//Load / save learning result
+	void serialize(LEARNING_TYPE type, pugi::xml_node* node);
+	void unserialize(LEARNING_TYPE type, pugi::xml_node* node);
+
+	LearningMethod* getLearningMethod(LEARNING_TYPE type);
 };
 
 #endif

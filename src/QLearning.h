@@ -20,6 +20,9 @@ class QLearning : public LearningMethod
 		*/
 		virtual	bool learn();
 
+		//Special function for the scripting
+		virtual bool learn(int iterations, float alpha, float gamma, float rho, float nu);
+
 		//! Returns true if the learning has finished correctly.
 		virtual bool learningComplete();    // Returns true if learning is complete
 
@@ -34,6 +37,10 @@ class QLearning : public LearningMethod
 		*   When the learning is complete, this function creates a report containing information about the result, stats, etc.
 		*/
 		virtual std::string generateReport();
+
+		// Loading and saving learning results
+		virtual void serialize(pugi::xml_node* node);
+		virtual void unzerialize(pugi::xml_node* node);
 
 	protected:
 		bool m_learningComplete;

@@ -36,6 +36,7 @@ public:
 	int getId();
 
 protected:
+	//FIXME : remove that (or use it) if we have enough time
 	std::vector<std::string> m_possibleActions;
 	const int m_id;
 

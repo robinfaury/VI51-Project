@@ -9,6 +9,7 @@
 #define DEFAULT_SIZE 10
 #define WORLD_DEBUG 0
 
+
 #include <vector>
 #include <list>
 #include <iostream>
@@ -24,6 +25,7 @@
 #include "Terrain.h"
 #include "MapGenerator.h"
 
+#define sourcesPath "../VI51-Project/"
 #define extensionPath ".xml"
 #define resPath "res/"
 #define mapPath "maps/"
@@ -66,6 +68,9 @@ public:
 	void resetMap();	// Resets map with current level path
 	void generateLevel();
 	void findExit(int& exitX, int& exitY);	// finds the exit and sets its position to the two given integers
+
+	// Checks if at least one lemming managed to get to the exit
+	bool lemmingSuccess();
 
 	int getSize();
 	void setSize(int size);	// Sets the size of the map (in number of cells square)

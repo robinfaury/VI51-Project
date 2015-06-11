@@ -16,6 +16,8 @@ bool ProblemStore::initQValues(std::map<int, ProblemState*> problemStates)
 	{
 		return false;
 	}
+
+
 	std::map<std::string, float> actionsQvalues;
 	actionsQvalues.insert(std::pair<std::string, float>("left", 0.0f));
 	actionsQvalues.insert(std::pair<std::string, float>("right", 0.0f));
@@ -132,4 +134,85 @@ std::string ProblemStore::getOneOf(std::vector<std::string>* possibleActions)
 		return NULL;
 
 	return (*possibleActions)[rand() % possibleActions->size()];
+}
+
+// Load / save
+void ProblemStore::serialize(pugi::xml_node* node)
+{
+	if (node == NULL)
+		return;
+
+	node->set_name("ProblemStore");
+
+	pugi::xml_node QValues = node->append_child("QValues");
+	pugi::xml_node tempState;
+	pugi::xml_node tempValues;
+	pugi::xml_node tempQValue;
+
+	//Iterating on every q value
+	for (std::map <int, std::map<std::string, float>>::iterator it = this->m_QValues.begin(); it != this->m_QValues.end(); ++it)
+	{
+		tempState = QValues.append_child("State");
+
+		tempState.append_attribute("stateId").set_value(it->first);
+		tempValues = tempState.append_child("Values");
+
+		for (std::map<std::string, float>::iterator itValues = it->second.begin(); itValues != it->second.end(); ++itValues)
+		{
+			tempQValue = tempValues.append_child("QValue");
+
+			tempQValue.append_attribute("action").set_value(itValues->first.data());
+			tempQValue.append_attribute("value").set_value(itValues->second);
+		}
+	}
+}
+
+void ProblemStore::unserialize(pugi::xml_node* node)
+{
+	if (node == NULL)
+		return;
+
+	// Clearing any previous learning
+	this->m_QValues.clear();
+
+	pugi::xml_node QValues = node->child("QValues");
+
+	// Nodes used for iterating
+	pugi::xml_node tempState;
+	pugi::xml_node tempValues;
+	pugi::xml_node tempQValue;
+
+	tempState = QValues.first_child();
+
+	// Temorary variables to store results
+	int stateId;
+	std::string action;
+	float qValue;
+	std::map<std::string, float> values;
+
+	// Iterating on every node
+	while (tempState != NULL)
+	{
+		// Reading id
+		stateId = tempState.attribute("stateId").as_int();
+
+		//Iterating on every action/value pair
+		tempQValue = tempState.first_child();
+		while (tempQValue != NULL)
+		{
+			// Reading values
+			action = tempQValue.attribute("action").as_string();
+			qValue = tempQValue.attribute("value").as_float();
+
+			values.insert(std::pair<std::string, float>(action, qValue));
+			tempQValue = tempQValue.next_sibling();
+		}
+
+		//Inserting resulting values
+		this->m_QValues[stateId] = values;
+		
+		// Preparing next iteration
+		values.clear();
+		tempState = tempState.next_sibling();
+	}
 }
