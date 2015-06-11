@@ -18,8 +18,7 @@ class PerceptionCross : public Perception
 private:
 
 public:
-	PerceptionCross();
-	PerceptionCross(std::vector<PhysicalObject*> perceivedObjects);
+	PerceptionCross(int lemmingX, int lemmingY, int exitX, int exitY);
 	virtual void setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects);
 };
 

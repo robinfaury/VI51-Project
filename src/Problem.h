@@ -1,7 +1,7 @@
 #ifndef PROBLEM_H
 #define PROBLEM_H
 
-#define TEMPORARY_MAP_SIZE 40
+#define BASE_REWARD 1
 
 #include <vector>
 
@@ -27,9 +27,9 @@ public:
 
     ProblemStore* getProblemStore();
 
-	ProblemState* takeAction(ProblemState* pOriginalState, std::string pAction, float& reward);	// Returns the resulting state of doing action pAction in state originalState, giving the appropriate reward
+	ProblemState* takeAction(ProblemState* pOriginalState, std::string pAction, float& reward, bool& victory);	// Returns the resulting state of doing action pAction in state originalState, giving the appropriate reward
 
-	int convertPerceptionToStateId(Perception* perception);
+	static int convertPerceptionToStateId(Perception* perception);
 	ProblemState* convertPerceptionToState(Perception* perception, bool createState);
 
 	World* getWorld();

@@ -6,6 +6,9 @@
 *   The world contains the map (which is a grid of cell), and containers to store objects, bodies, etc.
 */
 
+#define DEFAULT_SIZE 10
+#define WORLD_DEBUG 0
+
 #include <vector>
 #include <list>
 #include <iostream>
@@ -17,6 +20,7 @@
 #include "PhysicalObject.h"
 #include "BodyLemming.h"
 #include "PerceptionCircle.h"
+#include "PerceptionCross.h"
 #include "Terrain.h"
 #include "MapGenerator.h"
 
@@ -32,6 +36,8 @@ private:
     Map* m_map; // current map
 	MapGenerator* mapGenerator;
 
+	int size;
+
     std::vector<PhysicalObject*> m_objects;    // All PhysicalObjects (which aren't bodies)
 	std::vector<Body*> m_bodies;    // All bodies in the world
 	std::vector<ACTIONS> m_influences;    // All influences of the bodies
@@ -40,6 +46,8 @@ private:
     void setBodyPerception(Body* body);		// Sets the perception of given body
 
 	std::string* currentMap;
+	int exitX;
+	int exitY;
 
 	PhysicalObject* deserializeObject(pugi::xml_node* objectNode);
 
@@ -54,9 +62,13 @@ public:
 	*/
 	void saveLevel(std::string path);
 
-	bool loadLevel(std::string path = "Islands");
+	bool loadLevel(std::string path = "Generate");
 	void resetMap();	// Resets map with current level path
 	void generateLevel();
+	void findExit(int& exitX, int& exitY);	// finds the exit and sets its position to the two given integers
+
+	int getSize();
+	void setSize(int size);	// Sets the size of the map (in number of cells square)
 
     /**
     *   Creates a body at given positon, stores it in the map, and returns a pointer to it

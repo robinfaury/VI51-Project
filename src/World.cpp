@@ -1,7 +1,7 @@
 #include "World.h"
 
 
-World::World(std::string* currentLevelPath) : currentMap(currentLevelPath)
+World::World(std::string* currentLevelPath) : currentMap(currentLevelPath), exitX(-1), exitY(-1), size(DEFAULT_SIZE)
 {
     this->m_map = new Map();
 	this->mapGenerator = NULL;
@@ -25,7 +25,7 @@ void World::saveLevel(std::string path)
     cout << "Map : serializeMap : begin" << endl;
 
     cout << "Map : serializeMap : mapInfo" << endl;
-    levelNode.append_attribute("mapSize").set_value((int)this->getMap()->getMap()->size());
+    levelNode.append_attribute("size").set_value(this->size);
 
     // saving tiles
     cout << "Map : serializeMap : Cells" << endl;
@@ -72,8 +72,8 @@ bool World::loadLevel(std::string path)
 
 	if (path.compare("Generate") == 0)	// Identical
 	{
+		std::cout << "World::Generating new map with size " << this->size << std::endl;
 		this->generateLevel();
-		return true;
 	}
 	else
 	{
@@ -91,9 +91,10 @@ bool World::loadLevel(std::string path)
 			std::cout << "Aborting map loading..." << std::endl;
 			return false;
 		}
-		cout << "Load result: " << result.description() << endl;
+		//cout << "Load result: " << result.description() << endl;
 
 		pugi::xml_node levelNode = doc.child("Level");
+		this->size = levelNode.attribute("size").as_int();
 		pugi::xml_node cells = levelNode.child("Cells");
 
 		pugi::xml_node tempCell = cells.first_child();
@@ -111,8 +112,10 @@ bool World::loadLevel(std::string path)
 			}
 			tempCell = tempCell.next_sibling();
 		}
-		return true;
 	}
+	findExit(this->exitX, this->exitY);
+	setPerceptions();
+	return true;
 }
 
 void World::resetMap()	// Resets map with current level path
@@ -128,12 +131,41 @@ void World::generateLevel()
 	this->m_influences.clear();
 	this->m_objects.clear();
 
-	this->mapGenerator = new MapGenerator();
+
+	this->mapGenerator = new MapGenerator(this->size);
 	this->mapGenerator->setWorld(this);
 	this->mapGenerator->generateWithAutoSeeds();
 
 	delete this->mapGenerator;
 	this->mapGenerator = NULL;
+}
+
+// finds the exit and sets its position to the two given integers
+void World::findExit(int& exitX, int& exitY)
+{
+	for (std::vector<PhysicalObject*>::iterator it = this->m_objects.begin(); it != this->m_objects.end(); ++it)
+	{
+		if ((*it)->getSemantic() == SEMANTIC::T_EXIT)
+		{
+			exitX = (*it)->getPosition().at(0);
+			exitY = (*it)->getPosition().at(1);
+			return;
+		}
+	}
+}
+
+int World::getSize()
+{
+	return this->size;
+}
+
+// Sets the size of the map (in number of cells square)
+void World::setSize(int size)
+{
+	if (size < DEFAULT_SIZE)
+		size = DEFAULT_SIZE;
+
+	this->size = size;
 }
 
 Body* World::createBody(int x, int y)
@@ -144,7 +176,6 @@ Body* World::createBody(int x, int y)
         std::cout << "ERROR : World::createBody : can't add on cell " << x << ", " << y << " : cell already occupied" << endl;
         return NULL;
     }
-
 
     Body* b = new BodyLemming(SEMANTIC::B_LEMMING);
 
@@ -204,10 +235,15 @@ void World::removeObject(PhysicalObject* object)
         if ((*it) == object)
         {
             // Found the object : clean memory, and return
-            it = this->m_objects.erase(it);
+			if (WORLD_DEBUG)
+				std::cout << "World::removeObject : Found and removed an object at " << (*it)->getPosition().at(0) << "," << (*it)->getPosition().at(1) << std::endl;
+
+			it = this->m_objects.erase(it);
             return;
         }
     }
+	if (WORLD_DEBUG)
+		std::cout << "World::removeObject : Didn't find " << std::endl;
 }
 
 // Completely removes object at given position from the map and the object container
@@ -249,11 +285,12 @@ void World::resolveInfluences()
                                              x, y + 1))
             {
                 m_bodies[i]->setPosition(x, y + 1);
-                std::cout << "World::resolveInfluences : Body " << i << " fell down" << endl;
+				if (WORLD_DEBUG)
+					std::cout << "World::resolveInfluences : Body " << i << " fell down" << endl;
             }
             else
             {
-                std::cout << "ERROR : World::resolveInfluences : Body " << i << " couldn't fall down" << endl;
+				std::cout << "ERROR : World::resolveInfluences : Body " << i << " couldn't fall down" << endl;
             }
         }
         else
@@ -275,7 +312,8 @@ void World::resolveInfluences()
                                                          x+1, y))
                         {
                             m_bodies[i]->setPosition(x + 1, y);
-                            std::cout << "World::resolveInfluences : Body " << i << " moved right" << endl;
+							if (WORLD_DEBUG)
+								std::cout << "World::resolveInfluences : Body " << i << " moved right" << endl;
                         }
                         else
                         {
@@ -292,7 +330,8 @@ void World::resolveInfluences()
                                                          x+1, y))
                         {
                             m_bodies[i]->setPosition(x + 1, y);	// moving lemming to new cell
-                            std::cout << "World::resolveInfluences : Body " << i << " dug right" << endl;
+							if (WORLD_DEBUG)
+								std::cout << "World::resolveInfluences : Body " << i << " dug right" << endl;
                         }
                         else
                         {
@@ -314,7 +353,8 @@ void World::resolveInfluences()
                                                          x-1, y))
                         {
                             m_bodies[i]->setPosition(x - 1, y);
-                            std::cout << "World::resolveInfluences : Body " << i << " moved left" << endl;
+							if (WORLD_DEBUG)
+								std::cout << "World::resolveInfluences : Body " << i << " moved left" << endl;
                         }
                         else
                         {
@@ -333,7 +373,8 @@ void World::resolveInfluences()
                                                          x - 1, y))
                         {
                             m_bodies[i]->setPosition(x - 1, y);	// moving lemming to new cell
-                            std::cout << "World::resolveInfluences : Body " << i << " dug left" << endl;
+							if (WORLD_DEBUG)
+								std::cout << "World::resolveInfluences : Body " << i << " dug left" << endl;
                         }
                         else
                         {
@@ -360,7 +401,8 @@ void World::resolveInfluences()
                                                          x, y+1))
                         {
                             m_bodies[i]->setPosition(x, y + 1);	// moving lemming to new cell
-                            std::cout << "World::resolveInfluences : Body " << i << " dug down" << endl;
+							if (WORLD_DEBUG)
+								std::cout << "World::resolveInfluences : Body " << i << " dug down" << endl;
                         }
                         else
                         {
@@ -389,6 +431,7 @@ void World::update()
 {
     this->collectInfluences();
     this->resolveInfluences();
+	this->setPerceptions();
 }
 
 void World::setPerceptions()
@@ -404,7 +447,7 @@ void World::setPerceptions()
 */
 Perception* World::getPerceptionFromTile(int x, int y)
 {
-    Perception* newPerception = new PerceptionCircle();
+    Perception* newPerception = new PerceptionCircle(x,y,this->exitX, this->exitY);
     Cell* cell;
 
     std::vector<PhysicalObject*> perceivedObjects;
@@ -441,7 +484,7 @@ bool World::checkValidPosition(int tileX, int tileY)
 	{
 	case SEMANTIC::B_LEMMING :
 	case SEMANTIC::T_DIRT :
-	case SEMANTIC::T_EXIT :	
+	case SEMANTIC::T_EXIT :
 		return true;
 	default :
 		return false;
@@ -515,7 +558,7 @@ std::vector<std::vector<SEMANTIC>> getAllPossiblePerceptions()
 
 bool World::isDiggable(SEMANTIC semantic)
 {
-    if (semantic == SEMANTIC::T_DIRT)
+    if (semantic == SEMANTIC::T_DIRT || semantic == SEMANTIC::T_EXIT)
         return true;
     return false;
 }
@@ -525,24 +568,61 @@ void World::setBodyPerception(Body* body)
     int x,y;
     body->getPosition(x,y);
 
-    Perception* newPerception = new PerceptionCircle();
+    Perception* newPerception = new PerceptionCircle(x, y, this->exitX, this->exitY);
     Cell* cell;
 
     std::vector<PhysicalObject*> perceivedObjects;
 
-    //topleft
-    for (int i = -1 ; i <= 1; ++i)
-    {
-        for (int j = -1 ; j <= 1 ; ++j)
-        {
-            if (i != 0 || j != 0)
-            {
-                cell = this->m_map->getCell(x + j, y + i);
-                if (cell != NULL)
-                    perceivedObjects.push_back(cell->getWorldObject());
-            }
-        }
-    }
+	int xOffset, yOffset;
+	for (int i = 0; i < 8; ++i)
+	{
+		switch (i)
+		{
+		case 0:
+			xOffset = -1;
+			yOffset = -1;
+			break;
+		case 1:
+			xOffset = 0;
+			yOffset = -1;
+			break;
+		case 2:
+			xOffset = 1;
+			yOffset = -1;
+			break;
+		case 3:
+			xOffset = -1;
+			yOffset = 0;
+			break;
+		case 4:
+			xOffset = +1;
+			yOffset = 0;
+			break;
+		case 5:
+			xOffset = -1;
+			yOffset = 1;
+			break;
+		case 6:
+			xOffset = 0;
+			yOffset = 1;
+			break;
+		case 7:
+			xOffset = 1;
+			yOffset = 1;
+			break;
+		}
+
+		cell = this->m_map->getCell(x + xOffset, y + yOffset);
+		if (cell != NULL)
+		{
+			perceivedObjects.push_back(cell->getWorldObject());
+		}
+		else
+		{
+			std::cout << "ERROR : World::setBodyPerception : fatal error, couldn't find cell at pos " << x + xOffset << "," << y + yOffset << std::endl;
+		}
+	}
+
     newPerception->setPerceivedObjects(perceivedObjects);
     body->setPerception(newPerception);
 }
@@ -557,8 +637,8 @@ PhysicalObject* World::deserializeObject(pugi::xml_node* objectNode)
 		ret = createBody(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), static_cast<SEMANTIC>(objectNode->attribute("y").as_int()));
 		break;
 	default :
-		ret = createObject(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()), 
-			static_cast<SEMANTIC>(objectNode->attribute("y").as_int()), 
+		ret = createObject(static_cast<SEMANTIC>(objectNode->attribute("x").as_int()),
+			static_cast<SEMANTIC>(objectNode->attribute("y").as_int()),
 			static_cast<SEMANTIC>(objectNode->attribute("semantic").as_int()));
 	}
 	return ret;

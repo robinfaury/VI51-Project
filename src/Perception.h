@@ -2,6 +2,7 @@
 #define PERCEPTION_H_
 
 #include <vector>
+#include <iostream>
 #include "PhysicalObject.h"
 
 /**
@@ -19,8 +20,10 @@ protected:
 	int exitY;
 
 public:
-	Perception();
+	Perception(int lemmingX, int lemmingY, int exitX, int exitY);
 	Perception(std::vector<PhysicalObject*> perceivedObjects);
+
+	virtual void display();
 
     virtual std::vector<PhysicalObject*>* getPerceivedObjects();
     virtual void setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects) = 0;

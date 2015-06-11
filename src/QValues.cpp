@@ -38,10 +38,17 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 	
 		std::cout << "starting state set" << std::endl;
 
+	bool victory = false;
 	for (int i = 0; i < iterations; ++i)
 	{
-		if (DEBUG)
+		if (QLEARNING_DEBUG)
 			std::cout << "iteration " << i << std::endl;
+
+		if (victory)
+		{
+			currentState = problem.getRandomState();
+			victory = false;
+		}
 
 		// Randomly chosing to start over from a new state
 		if (nextRandomCoefficient() < walkLength)
@@ -55,17 +62,23 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 		if (nextRandomCoefficient() < actionRandomness)
 		{
 			// Random action
-			action = getOneOf(possibleActions);
+			action = ProblemStore::getOneOf(possibleActions);
 		}
 		else
 		{
 			// Getting best possible action
 			action = problem.getProblemStore()->getBestAction(currentState);
+			if (QLEARNING_DEBUG)
+				std::cout << "action : " << action << std::endl;
 		}
 
 		// Resolve action
 		float reward = 0.0f;
-		ProblemState* newState = problem.takeAction(currentState, action, reward);
+		ProblemState* newState = problem.takeAction(currentState, action, reward, victory);
+		if (newState == NULL)
+		{
+			std::cout << "ERROR : QValues::QValuesAlgorithm : newState is null" << std::endl;
+		}
 
 		float qValue = problem.getProblemStore()->getQValue(currentState, action);	// Getting qValue for the action taken
 		float maxQValue = problem.getProblemStore()->getQValue(newState,
@@ -111,12 +124,4 @@ bool QValues::checkParameterValues(float* learningRate, float* discountRate, flo
 		return false;
 	}
 	return true;
-}
-
-std::string QValues::getOneOf(std::vector<std::string>* possibleActions)
-{
-	if (possibleActions->empty())
-		return NULL;
-
-	return (*possibleActions)[rand() % possibleActions->size()];
 }

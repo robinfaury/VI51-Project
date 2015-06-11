@@ -61,6 +61,7 @@ public:
     *   Initialises the view
     */
 	void init(int height, int width, std::map<std::pair<int, int>, Cell*>* map);
+	void resize(int height, int width);
 	void clear();
 	sf::RenderWindow* getWindow();
 
@@ -70,6 +71,9 @@ public:
 	void draw();
 
 	void setWorld(World* world);
+
+	//TODO:
+	void setVictory(bool victory);
 
 	~GraphicView(void);
 

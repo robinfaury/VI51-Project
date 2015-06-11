@@ -12,7 +12,7 @@
 #define PARAMETER_RANDOMNESS	0.2f
 #define PARAMETER_WALK			0.1f
 
-#define DEBUG 0
+
 
 class QValues
 {
@@ -26,7 +26,6 @@ public:
 		float discountRate = PARAMETER_DISCOUNT, 
 		float actionRandomness = PARAMETER_RANDOMNESS, 
 		float walkLength = PARAMETER_WALK);
-	static std::string getOneOf(std::vector<std::string>* possibleActions);
 
 private :
 	float nextRandomCoefficient();

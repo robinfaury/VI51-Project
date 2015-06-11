@@ -13,29 +13,38 @@ QLearning::QLearning(World* world) : LearningMethod(world)
 * returns true if the learning finished correctly
 */
 bool QLearning::learn()
-{	
+{
 	int iterations;
-	float alpha = 0.3f, gamma = 0.75f, rho = 0.2f, nu = 0.1f;
+	float alpha = PARAMETER_LEARNING, gamma = PARAMETER_DISCOUNT, rho = PARAMETER_RANDOMNESS, nu = PARAMETER_WALK;
+	float floatChoice;
 	char choice;
 
 	// get number of iterations and alpha, gamma, rho and nu parameters from user input
-	std::cout << "Enter the number of iterations:" << std::endl;
-	std::cin >> iterations;
+    HelperFunctions::safeChoice("Enter the number of iterations :", "Please enter a valid int", iterations);
+
+
 	do
 	{
-		std::cout << "Do you want to choose the parameter values ? (y/n)" << std::endl;
-		std::cin >> choice;
+        HelperFunctions::safeChoice("Do you want to choose the parameter values ? (y/n)", "Please enter 'y' or 'n'", choice);
 	} while (choice != 'y' && choice != 'n');
+
 	if (choice == 'y')
 	{
-		std::cout << "Enter the learning rate (alpha) between 0 and 1:" << std::endl;
-		std::cin >> alpha;
-		std::cout << "Enter the discount rate (gamma) between 0 and 1:" << std::endl;
-		std::cin >> gamma;
-		std::cout << "Enter the randomness of exploration (rho) between 0 and 1:" << std::endl;
-		std::cin >> rho;
-		std::cout << "Enter the lenght of walk (nu) between 0 and 1:" << std::endl;
-		std::cin >> nu;
+        std::string alphaText;
+        alphaText = "Enter the learning rate (alpha) between 0 and 1 (default is " + std::to_string(PARAMETER_LEARNING) + ") :";
+        HelperFunctions::safeChoice(alphaText, "Please enter a valid float number", alpha);
+
+		std::string gammaText;
+        gammaText = "Enter the discount rate (gamma) between 0 and 1 (default is " + std::to_string(PARAMETER_DISCOUNT) + ") :";
+        HelperFunctions::safeChoice(gammaText, "Please enter a valid float number", gamma);
+
+        std::string rhoText;
+        rhoText = "Enter the randomness of exploration (rho) between 0 and 1 (default is " + std::to_string(PARAMETER_RANDOMNESS) + ") :";
+        HelperFunctions::safeChoice(rhoText, "Please enter a valid float number", rho);
+
+        std::string nuText;
+        nuText = "Enter the length of walk (nu) between 0 and 1 (default is " + std::to_string(PARAMETER_WALK) + ") :";
+        HelperFunctions::safeChoice(nuText, "Please enter a valid float number", nu);
 	}
 
 	// init problemStates
@@ -60,6 +69,8 @@ bool QLearning::learn()
 	std::cout << report << std::endl;
 
 	std::cout << "problem qvalues algo done" << std::endl;
+	report = m_problem->getProblemStore()->getQValuesReport();
+	std::cout << report << std::endl;
 
 	m_learningComplete = true;
 	return true;

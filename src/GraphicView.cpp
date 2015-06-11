@@ -37,20 +37,24 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	}
 	iconNN.setTexture(image_iconQL);*/
 
-
-
-
-	this->lemmingSprite.setScale(1.0f, 1.0f);
-	this->terrainSprite.setScale(1.0f, 1.0f);
-	this->tileSizeX = static_cast<float>(this->window->getSize().x) / WIDTH;
-	this->tileSizeY = static_cast<float>(this->window->getSize().y) / HEIGHT;
-	sf::Vector2f scale(this->tileSizeX / TILE_SIZE, this->tileSizeY / TILE_SIZE);
-	this->lemmingSprite.scale(scale);
-	this->terrainSprite.scale(scale);
+	resize(height, width);
 
 	std::cout << "Graphics initialised" << endl;
 
 	initialized = true;
+}
+
+void GraphicView::resize(int height, int width)
+{
+	this->lemmingSprite.setScale(1.0f, 1.0f);
+	this->terrainSprite.setScale(1.0f, 1.0f);
+	std::cout << "MOKAY, lets check : window(" << this->window->getSize().x << "," << this->window->getSize().y << "), worldSize(" << this->world->getSize() << ")" << std::endl;
+	this->tileSizeX = static_cast<float>(this->window->getSize().x) / (float)this->world->getSize();
+	this->tileSizeY = static_cast<float>(this->window->getSize().y) / (float)this->world->getSize();
+	sf::Vector2f scale(this->tileSizeX / TILE_SIZE, this->tileSizeY / TILE_SIZE);
+	std::cout << "Initialized GraphicView with tile sizes " << this->tileSizeX << ", " << this->tileSizeY << std::endl;
+	this->lemmingSprite.scale(scale);
+	this->terrainSprite.scale(scale);
 }
 
 void GraphicView::clear()

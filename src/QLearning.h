@@ -5,12 +5,13 @@
 #include "Problem.h"
 #include "QValues.h"
 #include "AgentQLearning.h"
+#include "HelperFunctions.h"
 
 class QLearning : public LearningMethod
 {
     public:
 		QLearning(World* world);
-		
+
 		//! Performs the actual learning.
 		/**
 		* The learn function will be executed once by the Simulator. If it finished correctly, learningComplete will return true.

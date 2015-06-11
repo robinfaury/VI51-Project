@@ -18,8 +18,7 @@ class PerceptionCircle : public Perception
 private:
 
 public:
-    PerceptionCircle();
-	PerceptionCircle(std::vector<PhysicalObject*> perceivedObjects);
+	PerceptionCircle(int lemmingX, int lemmingY, int exitX, int exitY);
 
 	virtual void setPerceivedObjects(std::vector<PhysicalObject*> perceivedObjects);
 };
