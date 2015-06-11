@@ -62,8 +62,6 @@ bool QLearning::learn()
 	QValues qValues;
 	if (!qValues.QValuesAlgorithm((*m_problem), NULL, iterations, alpha, gamma, rho, nu))
 	{
-		std::string report = m_problem->getProblemStore()->getQValuesReport();
-		std::cout << report << std::endl;
 		return false;
 	}
 
