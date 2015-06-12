@@ -6,6 +6,7 @@ Aimed at QLearning
 */
 
 #define scriptResultsPath "scriptResults/"
+#define SCRIPTMANAGER_DEBUG 0
 
 #include "LearningManager.h"
 #include "World.h"
@@ -16,7 +17,7 @@ public:
 	ScriptManager(LearningManager* learningManager, World* world, std::string& currentLevelPath);
 
 	void launchScript(std::string name);	// the main script. Launch it only when ready. (And be prepared for A LONG RUNTIME)
-	void testingCurrentScriptingState(int triesPerScriptingState, int maxLength, float& percentageOfSuccess, float& averageSuccessLength);	// For the current map, tests the lemming's ability to complete the map
+	void testingCurrentScriptingState(int triesPerScriptingState, int maxLength, float& percentageOfSuccess, float& averageSuccessLength, float& numberOfSuccesses);	// For the current map, tests the lemming's ability to complete the map
 	void resetAgent();
 
 	// Configure parameters
@@ -37,7 +38,7 @@ public:
 	void resetMap(std::string levelPath);
 	
 
-	void serializeCurrentResult(pugi::xml_node* node, float alpha, float gamma, float rho, float nu, int iterations, float percentageOfSuccess, int averageSuccessLength);
+	void serializeCurrentResult(pugi::xml_node* node, float alpha, float gamma, float rho, float nu, int iterations, float percentageOfSuccess, float averageSuccessLength, float numberOfSuccesses);
 
 protected:
 	LearningManager* learningManager;

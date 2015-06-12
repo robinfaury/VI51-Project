@@ -31,32 +31,44 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 	std::cout << "Parameters : " << std::endl;
 	//Tries per learning
 	std::cout << " - numberOfTriesPerLearning : " << this->triesPerLearning << std::endl;
+	std::cout << std::endl;
+
+	// iterations
+	std::cout << " - minIterations			: " << this->minIterations << std::endl;
+	std::cout << " - maxIterations			: " << this->maxIterations << std::endl;
+	std::cout << " - iterationsVariation	: " << this->iterationsVariation << std::endl;
+	std::cout << std::endl;
 
 	// alpha
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
-	std::cout << " - maxAlpha : " << this->maxAlpha << std::endl;
-	std::cout << " - alphaVariation : " << this->alphaVariation << std::endl;
+	std::cout << " - minAlpha		: " << this->minAlpha << std::endl;
+	std::cout << " - maxAlpha		: " << this->maxAlpha << std::endl;
+	std::cout << " - alphaVariation	: " << this->alphaVariation << std::endl;
+	std::cout << std::endl;
 
 	//gamma
-	std::cout << " - minGamma : " << this->minGamma << std::endl;
-	std::cout << " - maxGamma : " << this->maxGamma << std::endl;
-	std::cout << " - gammaVariation : " << this->gammaVariation << std::endl;
+	std::cout << " - minGamma		: " << this->minGamma << std::endl;
+	std::cout << " - maxGamma		: " << this->maxGamma << std::endl;
+	std::cout << " - gammaVariation	: " << this->gammaVariation << std::endl;
+	std::cout << std::endl;
 
 	// rho
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
+	std::cout << " - minRho			: " << this->minRho << std::endl;
+	std::cout << " - maxRho			: " << this->maxRho << std::endl;
+	std::cout << " - rhoVariation	: " << this->rhoVariation << std::endl;
+	std::cout << std::endl;
 
 	// nu
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
-	std::cout << " - minAlpha : " << this->minAlpha << std::endl;
+	std::cout << " - minNu			: " << this->minNu << std::endl;
+	std::cout << " - maxNu			: " << this->maxNu << std::endl;
+	std::cout << " - nuVariation	: " << this->nuVariation << std::endl;
+	std::cout << std::endl;
 
 	// map pool size
 	std::cout << " - mapPool size : " << this->mapPool.size() << std::endl;
 
 	// Variables
+	float numberOfSuccesses = 0;
+	float averageNumberOfSuccesses = 0;
 	float percentageOfSuccess = 0;
 	float totalPercentageOfSuccess = 0;
 	float averageSuccessLength = 0;
@@ -65,6 +77,8 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 	pugi::xml_node resultsNode = scriptNode.append_child("Results");
 	pugi::xml_node tempResultNode;
 
+	std::cout << std::endl << "Beginning script" << std::endl << std::endl;
+
 	// LET THE SCRIPTING BEGIN
 	for (std::vector<std::string>::iterator mapIterator = this->mapPool.begin(); mapIterator != this->mapPool.end(); ++mapIterator)	// Iterating for every map
 	{
@@ -72,32 +86,41 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 		for (int iterations = this->minIterations; iterations <= this->maxIterations;)	// purposely leaving the last section blank : we'll increment i ourselves
 		{
 			// Iterating for every alpha value
-			for (float alpha = this->minAlpha; alpha != this->maxAlpha;)
+			for (float alpha = this->minAlpha; alpha <= this->maxAlpha;)
 			{
 				// Iterating for every gamma value
-				for (float gamma = this->minGamma; gamma != this->maxGamma;)
+				for (float gamma = this->minGamma; gamma <= this->maxGamma;)
 				{
 					// Iterating for every rho value
-					for (float rho = this->minRho; rho != this->maxRho;)
+					for (float rho = this->minRho; rho <= this->maxRho;)
 					{
 						// Iterating for every nu value
-						for (float nu = this->minNu; nu != this->maxNu;)
+						for (float nu = this->minNu; nu <= this->maxNu;)
 						{
 							std::cout << "Learning : map(" << *mapIterator << "), iterations(" << iterations << "), alpha(" << alpha << "), gamma(" << gamma << "), rho(" << rho << "), nu(" << nu << ")" << std::endl;
 
 							// Learning for the map
 							this->resetMap(*mapIterator);
 							this->qLearning->learn(iterations, alpha, gamma, rho, nu);
+							//this->qLearning->generateReport();
 
 							// Doing the tests
 							this->resetMap(this->currentLevelPath);
 							this->resetAgent();
 
-							this->testingCurrentScriptingState(this->triesPerLearning, this->world->getSize()*this->world->getSize(), percentageOfSuccess, averageSuccessLength);
+							this->testingCurrentScriptingState(this->triesPerLearning, this->world->getSize()*this->world->getSize(), percentageOfSuccess, averageSuccessLength, numberOfSuccesses);
+							averageNumberOfSuccesses += numberOfSuccesses;
+							averageNumberOfSuccesses = averageNumberOfSuccesses / 2;
+
+							totalPercentageOfSuccess += percentageOfSuccess;
+							totalPercentageOfSuccess = totalPercentageOfSuccess / 2;
+
+							totalAverageSuccessLength += averageSuccessLength;
+							totalAverageSuccessLength = totalAverageSuccessLength / 2;
 
 							// Serializing current results
 							tempResultNode = resultsNode.append_child("ToBeChanged");
-							this->serializeCurrentResult(&tempResultNode, alpha, gamma, rho, nu, iterations, percentageOfSuccess, averageSuccessLength);
+							this->serializeCurrentResult(&tempResultNode, alpha, gamma, rho, nu, iterations, percentageOfSuccess, averageSuccessLength, numberOfSuccesses);
 
 							// stepping rho
 							if (nu == this->maxNu)
@@ -157,19 +180,26 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 
 	// result
 	std::cout << "Script completed! " << std::endl;
+
+	pugi::xml_node reportNode = scriptNode.append_child("Report");
+	reportNode.append_attribute("averageNumberOfSuccesses").set_value(averageNumberOfSuccesses);
+	reportNode.append_attribute("totalAveragePercentageOfSuccess").set_value(totalPercentageOfSuccess);
+	reportNode.append_attribute("totalAverageSuccessLength").set_value(totalPercentageOfSuccess);
+
 	cout << "Saving result : " << completePath.data() << " : " << doc.save_file(completePath.data()) << endl;
 }
 
 // For the current map, tests the lemming's ability to complete the map
-void ScriptManager::testingCurrentScriptingState(int triesPerScriptingState, int maxLength, float& percentageOfSuccess, float& averageSuccessLength)
+void ScriptManager::testingCurrentScriptingState(int triesPerScriptingState, int maxLength, float& percentageOfSuccess, float& averageSuccessLength, float& numberOfSuccesses)
 {
 	std::vector<int> succesLength;
-	int successes = 0;
+	numberOfSuccesses = 0;
 
 	// Iterating for every try
 	for (int tries = 0; tries < triesPerScriptingState; ++tries)
 	{
 		this->resetMap(this->currentLevelPath);
+		this->resetAgent();
 
 		// Trying the map
 		for (int walkLength = 1; walkLength <= maxLength; ++walkLength)
@@ -182,10 +212,13 @@ void ScriptManager::testingCurrentScriptingState(int triesPerScriptingState, int
 			this->world->collectInfluences();
 			this->world->resolveInfluences();
 
+			if (SCRIPTMANAGER_DEBUG)
+				std::cout << "Current Lemming Pos : " << this->world->getBodies()->at(0)->getPosition().at(0) << "," << this->world->getBodies()->at(0)->getPosition().at(1) << std::endl;
+
 			if (this->world->lemmingSuccess())	// Lemming succeeded
 			{
 				// incrementing successes, and collecting walkLength
-				++successes;
+				++numberOfSuccesses;
 				succesLength.push_back(walkLength);
 				break;
 			}
@@ -193,14 +226,17 @@ void ScriptManager::testingCurrentScriptingState(int triesPerScriptingState, int
 		}
 	}
 
-	percentageOfSuccess = successes / triesPerScriptingState;
+	percentageOfSuccess = (numberOfSuccesses / triesPerScriptingState) * 100;
 	averageSuccessLength = 0;
 
 	for (std::vector<int>::iterator it = succesLength.begin(); it != succesLength.end(); ++it)
 	{
 		averageSuccessLength += *it;
 	}
-	averageSuccessLength = averageSuccessLength / succesLength.size();
+	if (succesLength.empty())
+		averageSuccessLength = 0;
+	else
+		averageSuccessLength = averageSuccessLength / succesLength.size();
 }
 
 void ScriptManager::resetAgent()
@@ -208,7 +244,12 @@ void ScriptManager::resetAgent()
 	if (this->agent == NULL)
 		delete (this->agent);
 
+	
 	this->agent = this->learningManager->getAgent(LEARNING_TYPE::QLEARNING);
+	if (SCRIPTMANAGER_DEBUG && this->agent == NULL)
+		std::cout << "agent is null "<< std::endl;
+	else if (SCRIPTMANAGER_DEBUG )
+		std::cout << "agent isn't null " << std::endl;
 	this->agent->linkBody(this->world->getBodies()->at(0));
 }
 
@@ -298,10 +339,8 @@ void ScriptManager::setTriesPerLearning(int triesPerLearning)
 	this->triesPerLearning = triesPerLearning;
 }
 
-void ScriptManager::serializeCurrentResult(pugi::xml_node* node, float alpha, float gamma, float rho, float nu, int iterations, float percentageOfSuccess, int averageSuccessLength)
+void ScriptManager::serializeCurrentResult(pugi::xml_node* node, float alpha, float gamma, float rho, float nu, int iterations, float percentageOfSuccess, float averageSuccessLength, float numberOfSuccesses)
 {
-	//TODO: that one is important
-
 	if (node == NULL)
 	{
 		std::cout << "ERROR : ScriptManager::serializeCurrentResult : given node is NULL" << std::endl;
@@ -319,6 +358,7 @@ void ScriptManager::serializeCurrentResult(pugi::xml_node* node, float alpha, fl
 	node->append_attribute("iterations").set_value(iterations);
 	node->append_attribute("percentageOfSuccess").set_value(percentageOfSuccess);
 	node->append_attribute("averageSuccessLength").set_value(averageSuccessLength);
+	node->append_attribute("numberOfSuccesses").set_value(numberOfSuccesses);
 }
 
 void ScriptManager::resetMap(std::string levelPath)

@@ -5,6 +5,8 @@
 #include "Problem.h"
 #include "QValues.h"
 
+#define AGENTQLEARNING_DEBUG 0
+
 /** \class AgentQLearning
 *   The AgentQLearning inherits from the Agent class.
 */

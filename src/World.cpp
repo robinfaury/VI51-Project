@@ -143,12 +143,17 @@ void World::generateLevel()
 // finds the exit and sets its position to the two given integers
 void World::findExit(int& exitX, int& exitY)
 {
+	if (WORLD_DEBUG)
+		std::cout << "TRYING TO FIND EXIT"<< std::endl;
+
 	for (std::vector<PhysicalObject*>::iterator it = this->m_objects.begin(); it != this->m_objects.end(); ++it)
 	{
 		if ((*it)->getSemantic() == SEMANTIC::T_EXIT)
 		{
 			exitX = (*it)->getPosition().at(0);
 			exitY = (*it)->getPosition().at(1);
+			if (WORLD_DEBUG)
+				std::cout << "FOUND EXIT : " << exitX << "," << exitY << std::endl;
 			return;
 		}
 	}
@@ -157,13 +162,13 @@ void World::findExit(int& exitX, int& exitY)
 // Checks if at least one lemming managed to get to the exit
 bool World::lemmingSuccess()
 {
-	int x, y, lemmingX, lemmingY;
-	findExit(x, y);
+	int lemmingX, lemmingY;
+	
 
 	for (std::vector<Body*>::iterator it = this->m_bodies.begin(); it != this->m_bodies.end(); ++it)
 	{
 		(*it)->getPosition(lemmingX, lemmingY);
-		if (lemmingX == x && lemmingY == y)
+		if (lemmingX == this->exitX && lemmingY == this->exitY)
 			return true;
 	}
 	return false;
@@ -279,6 +284,8 @@ void World::collectInfluences()
     for (std::vector<Body*>::iterator currentBody = this->m_bodies.begin(); currentBody != this->m_bodies.end(); ++currentBody)
     {
         this->m_influences.push_back((*currentBody)->getInfluence());
+		if (WORLD_DEBUG)
+			std::cout << "Got influence : " << (*currentBody)->getInfluence() << std::endl;
     }
 }
 

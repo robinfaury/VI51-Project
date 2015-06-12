@@ -142,11 +142,15 @@ void Simulator::checkEvents()
 				this->window->close();
 				finishSimulation = true;
 				break;
-				
-				// Launching scripting
-			case sf::Keyboard::N:
-				toggleMode(SIMULATION_MODE::SCRIPT);
+
+				//TODO: remove that
+			case sf::Keyboard::V:
+				if (this->world.lemmingSuccess())
+					std::cout << "LEMMING SUCCESS" << std::endl;
+				else
+					std::cout << "LEMMING fail" << std::endl;
 				break;
+				
 			case sf::Keyboard::S:
 				//Save level
 				path.clear();
@@ -174,11 +178,17 @@ void Simulator::checkEvents()
 
 				this->resetSimulation(this->currentLevelPath);
 				break;
+			
+			case sf::Keyboard::F1:
+				this->toggleMode(SIMULATION_MODE::LEARNING);
+				break;
 			case sf::Keyboard::F2:
 				this->toggleMode(SIMULATION_MODE::SIMULATION);
 				break;
-			case sf::Keyboard::F1:
-				this->toggleMode(SIMULATION_MODE::LEARNING);
+			case sf::Keyboard::F3:
+				this->toggleMode(SIMULATION_MODE::SCRIPT);
+				this->toggleMode(SIMULATION_MODE::SIMULATION);
+
 				break;
 			case  sf::Keyboard::F5:
 				this->currentIAType = LEARNING_TYPE::QLEARNING;
@@ -282,7 +292,7 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 		recreateAgents();
     }
 
-    else if (mode == SIMULATION_MODE::LEARNING && this->currentMode == SIMULATION_MODE::SIMULATION)
+    else if (mode != SIMULATION_MODE::SIMULATION && this->currentMode == SIMULATION_MODE::SIMULATION)
         this->SFMLView.clear();
 
 
@@ -294,16 +304,75 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 		this->scriptManager.clearSpecialIterationNumbers();
 
 		// setting parameters
-		this->scriptManager.setAlpha(0.1, 0.9, 0.1);
+		/*this->scriptManager.setAlpha(0.1, 0.9, 0.1);
 		this->scriptManager.setGamma(0.1, 0.9, 0.05);
-		this->scriptManager.setAlpha(0.1, 0.9, 0.1);
-		this->scriptManager.setAlpha(0.01, 0.2, 0.01);
+		this->scriptManager.setRho(0.1, 0.9, 0.1);
+		this->scriptManager.setNu(0.01, 0.2, 0.01);
 		this->scriptManager.setTriesPerLearning(10);
-		this->scriptManager.setIterations(1000, 10000, 10000);
+		this->scriptManager.setIterations(1000, 10000, 10000);*/
 
+		// Common map pool
+		//10*10
 		this->scriptManager.addMapToPool("10_Easy1");
 		this->scriptManager.addMapToPool("10_Easy2");
 		this->scriptManager.addMapToPool("10_Easy3");
+		this->scriptManager.addMapToPool("10_Medium1");
+		this->scriptManager.addMapToPool("10_Medium2");
+		this->scriptManager.addMapToPool("10_Medium3");
+		this->scriptManager.addMapToPool("10_Hard1");
+		this->scriptManager.addMapToPool("10_Hard2");
+		this->scriptManager.addMapToPool("10_Hard3");
+
+		//15*15
+		this->scriptManager.addMapToPool("15_Easy1");
+		this->scriptManager.addMapToPool("15_Easy2");
+		this->scriptManager.addMapToPool("15_Medium1");
+		this->scriptManager.addMapToPool("15_Medium2");
+		this->scriptManager.addMapToPool("15_Medium3");
+		this->scriptManager.addMapToPool("15_Medium4");
+		this->scriptManager.addMapToPool("15_Hard1");
+		this->scriptManager.addMapToPool("15_Hard2");
+		this->scriptManager.addMapToPool("15_Hard3");
+
+		//20*20
+		this->scriptManager.addMapToPool("20_Easy1");
+		this->scriptManager.addMapToPool("20_Easy2");
+		this->scriptManager.addMapToPool("20_Easy3");
+		this->scriptManager.addMapToPool("20_Medium1");
+		this->scriptManager.addMapToPool("20_Medium2");
+		this->scriptManager.addMapToPool("20_Medium3");
+		this->scriptManager.addMapToPool("20_Hard1");
+		this->scriptManager.addMapToPool("20_Hard2");
+		this->scriptManager.addMapToPool("20_Hard3");
+
+		// parameters
+		this->scriptManager.setAlpha(0.1, 0.5, 0.05);
+		this->scriptManager.setGamma(0.5, 0.9, 0.05);
+		this->scriptManager.setRho(0.1, 0.5, 0.05);
+		this->scriptManager.setNu(0.01, 0.2, 0.01);
+		this->scriptManager.setTriesPerLearning(100);
+
+
+						// TODO : decommentez la partie correspondante, puis lancez l'exécution, puis faites F3. Et après, ne touchez à rien! Vous pouvez vérifier sur la console que c'est bien lancé.
+			// Aiguille
+		/*this->scriptManager.setIterations(10000, 90000, 100000);
+		this->scriptManager.launchScript("MegaTest_Aiguille");*/
+
+			// Amarre notebook
+		/*this->scriptManager.setIterations(20000, 80000, 100000);
+		this->scriptManager.launchScript("MegaTest_AmarreNotebook");*/
+
+			// Golé portable
+		/*this->scriptManager.setIterations(30000, 70000, 100000);
+		this->scriptManager.launchScript("MegaTest_GolePortable");*/
+
+			// Amarre portable
+		/*this->scriptManager.setIterations(50000, 60000, 10000);
+		this->scriptManager.launchScript("MegaTest_AmarrePortable");*/
+
+			// Golé fixe
+		/*this->scriptManager.setIterations(40000, 100000, 60000);
+		this->scriptManager.launchScript("MegaTest_GoleFixe");*/
 
 		break;
 	default:
@@ -311,7 +380,6 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 	}
 
     this->currentMode = mode;
-
 }
 
 

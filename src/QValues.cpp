@@ -18,7 +18,7 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 		return false;
 	}
 
-		std::cout << "parameter values checked" << std::endl;
+	//std::cout << "parameter values checked" << std::endl;
 
 	ProblemState* currentState;
 
@@ -36,7 +36,7 @@ bool QValues::QValuesAlgorithm(Problem& problem, ProblemState* startingState, in
 		currentState = startingState;
 	}
 	
-		std::cout << "starting state set" << std::endl;
+	//std::cout << "starting state set" << std::endl;
 
 	bool victory = false;
 	for (int i = 0; i < iterations; ++i)
