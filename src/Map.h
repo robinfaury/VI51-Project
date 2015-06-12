@@ -24,6 +24,7 @@ class Map
 public:
 	Map(string path = "Map/Default");
 	~Map();
+	void clearMap();
 
 	std::map<std::pair<int, int>, Cell*>* getMap();
 
@@ -33,7 +34,6 @@ public:
 	*/
 
 	//map management
-	void clear();	// Clears the current map, resets to void
 
 	void createCell(int x, int y, PhysicalObject* object);  // Create a cell at given position
 

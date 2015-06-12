@@ -45,6 +45,8 @@ private:
 	std::string currentLevelPath;
 public:
 	Simulator(int numberOfAgents);
+	~Simulator();
+	void clearSimulator();
 
 	World* getWorld();
 

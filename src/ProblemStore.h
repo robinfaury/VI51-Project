@@ -19,6 +19,7 @@ class ProblemStore
 public:
     ProblemStore();
     ~ProblemStore();
+	void clearProblemStore();
 
 	bool initQValues(std::map<int, ProblemState*> problemStates);
 

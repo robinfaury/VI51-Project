@@ -12,6 +12,7 @@ Cell::Cell(PhysicalObject* worldObject)
 
 Cell::~Cell(void)
 {
+	// Objects will be deleted by the world.
 }
 
 void Cell::setWorldObject(PhysicalObject* worldObject)

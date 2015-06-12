@@ -1,8 +1,25 @@
 #include "ScriptManager.h"
 
-ScriptManager::ScriptManager(LearningManager* learningManager, World* world, std::string& currentLevelPath) : learningManager(learningManager), world(world), currentLevelPath(currentLevelPath)
+ScriptManager::ScriptManager(LearningManager* learningManager, World* world, std::string& currentLevelPath) : learningManager(learningManager), world(world), currentLevelPath(currentLevelPath), agent(NULL)
 {
 	
+}
+
+ScriptManager::~ScriptManager()
+{
+	this->clearScriptManager();
+}
+
+void ScriptManager::clearScriptManager()
+{
+	this->clearMapPool();
+	this->clearSpecialIterationNumbers();
+
+	if (this->agent != NULL)
+	{
+		delete(this->agent);
+		this->agent = NULL;
+	}
 }
 
 void ScriptManager::launchScript(std::string name)	// the main script. Launch it only when ready. (And be prepared for A LONG RUNTIME)
@@ -102,13 +119,18 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 							// Learning for the map
 							this->resetMap(*mapIterator);
 							this->qLearning->learn(iterations, alpha, gamma, rho, nu);
-							//this->qLearning->generateReport();
+
+							if (SCRIPTMANAGER_DEBUG)
+								std::cout << "ScriptManager::LaunchScript : Starting tests for current iteration" << std::endl;
 
 							// Doing the tests
 							this->resetMap(this->currentLevelPath);
 							this->resetAgent();
 
 							this->testingCurrentScriptingState(this->triesPerLearning, this->world->getSize()*this->world->getSize(), percentageOfSuccess, averageSuccessLength, numberOfSuccesses);
+
+							if (SCRIPTMANAGER_DEBUG)
+								std::cout << "ScriptManager::LaunchScript : Serializing tests results" << std::endl;
 							averageNumberOfSuccesses += numberOfSuccesses;
 							averageNumberOfSuccesses = averageNumberOfSuccesses / 2;
 
@@ -121,6 +143,9 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 							// Serializing current results
 							tempResultNode = resultsNode.append_child("ToBeChanged");
 							this->serializeCurrentResult(&tempResultNode, alpha, gamma, rho, nu, iterations, percentageOfSuccess, averageSuccessLength, numberOfSuccesses);
+							
+							if (SCRIPTMANAGER_DEBUG)
+								std::cout << "ScriptManager::LaunchScript : Preparing new iteration" << std::endl;
 
 							// stepping rho
 							if (nu == this->maxNu)
@@ -241,8 +266,11 @@ void ScriptManager::testingCurrentScriptingState(int triesPerScriptingState, int
 
 void ScriptManager::resetAgent()
 {
-	if (this->agent == NULL)
+	if (this->agent != NULL)
+	{
 		delete (this->agent);
+	}
+		
 
 	
 	this->agent = this->learningManager->getAgent(LEARNING_TYPE::QLEARNING);

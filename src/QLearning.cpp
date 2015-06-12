@@ -6,6 +6,18 @@ QLearning::QLearning(World* world) : LearningMethod(world)
 	m_problem = new Problem(world);
 }
 
+QLearning::~QLearning()
+{
+	clearQLearning();
+}
+
+void QLearning::clearQLearning()
+{
+	this->m_problem->clearProblem();
+	delete(this->m_problem);
+	this->m_problem = NULL;
+}
+
 //! Performs the actual learning.
 /**
 * The learn function will be executed once by the Simulator. If it finished correctly, learningComplete will return true.

@@ -10,6 +10,25 @@ currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWO
 	this->toggleMode(SIMULATION_MODE::SIMULATION);
 }
 
+Simulator::~Simulator()
+{
+	clearSimulator();
+}
+
+void Simulator::clearSimulator()
+{
+	for (std::vector<Agent*>::iterator it = this->agents.begin(); it != this->agents.end(); ++it)
+	{
+		delete(*it);
+		*it = NULL;
+	}
+	this->agents.clear();
+
+	this->learningManager.clearLearningManager();
+	this->scriptManager.clearScriptManager();
+	this->world.clearWorld();
+}
+
 World* Simulator::getWorld()
 {
 	return &this->world;
@@ -304,16 +323,21 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 		this->scriptManager.clearSpecialIterationNumbers();
 
 		// setting parameters
-		/*this->scriptManager.setAlpha(0.1, 0.9, 0.1);
-		this->scriptManager.setGamma(0.1, 0.9, 0.05);
-		this->scriptManager.setRho(0.1, 0.9, 0.1);
-		this->scriptManager.setNu(0.01, 0.2, 0.01);
+		// Testing the script
+		this->scriptManager.setAlpha(0.2, 0.4, 0.1);
+		this->scriptManager.setGamma(0.7, 0.8, 0.05);
+		this->scriptManager.setRho(0.1, 0.3, 0.1);
+		this->scriptManager.setNu(0.05, 0.15, 0.05);
 		this->scriptManager.setTriesPerLearning(10);
-		this->scriptManager.setIterations(1000, 10000, 10000);*/
+		this->scriptManager.setIterations(100, 300, 100);
+
+		this->scriptManager.addMapToPool("10_Easy1");
+		this->scriptManager.addMapToPool("10_Medium1");
+		this->scriptManager.addMapToPool("10_Hard1");
 
 		// Common map pool
 		//10*10
-		this->scriptManager.addMapToPool("10_Easy1");
+		/*this->scriptManager.addMapToPool("10_Easy1");
 		this->scriptManager.addMapToPool("10_Easy2");
 		this->scriptManager.addMapToPool("10_Easy3");
 		this->scriptManager.addMapToPool("10_Medium1");
@@ -350,7 +374,7 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 		this->scriptManager.setGamma(0.5, 0.9, 0.05);
 		this->scriptManager.setRho(0.1, 0.5, 0.05);
 		this->scriptManager.setNu(0.01, 0.2, 0.01);
-		this->scriptManager.setTriesPerLearning(100);
+		this->scriptManager.setTriesPerLearning(1);*/
 
 
 						// TODO : decommentez la partie correspondante, puis lancez l'exécution, puis faites F3. Et après, ne touchez à rien! Vous pouvez vérifier sur la console que c'est bien lancé.

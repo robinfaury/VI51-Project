@@ -23,9 +23,10 @@ protected:
 	std::vector<LearningMethod*> methods;
 
 
-    public:
+public:
     LearningManager(World* world);
     ~LearningManager();
+	void clearLearningManager();
 
 	void init(World* world);
 	void launchLearning();

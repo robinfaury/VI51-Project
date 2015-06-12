@@ -10,6 +10,17 @@ LearningManager::LearningManager(World* world) : world(world)
 
 LearningManager::~LearningManager()
 {
+	clearLearningManager();
+}
+
+void LearningManager::clearLearningManager()
+{
+	for (std::vector<LearningMethod*>::iterator it = this->methods.begin(); it != this->methods.end(); ++it)
+	{
+		delete (*it);
+		*it = NULL;
+	}
+	this->methods.clear();
 }
 
 void LearningManager::init(World* world)
