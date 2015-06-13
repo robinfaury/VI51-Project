@@ -5,16 +5,14 @@ MapGenerator::MapGenerator(int size) : sizeMap(size)
 {
 }
 
-void MapGenerator::generateWithAutoSeeds()
+void MapGenerator::generateWithAutoSeeds(int nbAgent)
 {
-	generate(1.25f*this->sizeMap, 0.5f*this->sizeMap);
+	generate(1.25*this->sizeMap, 0.5*this->sizeMap, nbAgent);
 }
 
-void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)
+void MapGenerator::generate(int nbSeedDirt, int nbSeedRock, int nbAgent)
 {
 	std::cout << "Generating new map for size : " << this->sizeMap << std::endl;
-	this->world->createBody((int)(this->sizeMap * 2) / 10, (int)(this->sizeMap * 2) / 10);
-	this->world->createObject(this->sizeMap-2, this->sizeMap-2, SEMANTIC::T_EXIT);
 
 	for (int i=0; i<this->sizeMap; ++i)
 	{
@@ -24,16 +22,20 @@ void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)
 		this->world->createObject(i, this->sizeMap-1, SEMANTIC::T_BOUND);
 	}
 
+	this->world->createObject(this->sizeMap-2, this->sizeMap-2, SEMANTIC::T_EXIT);
+	createSeed(SEMANTIC::T_DIRT, this->sizeMap-3, this->sizeMap-2);
+	createSeed(SEMANTIC::T_DIRT, this->sizeMap-2, this->sizeMap-3);
+
 	for (int i=0; i<nbSeedDirt; ++i)
-		createSeed(SEMANTIC::T_DIRT);
+		createSeed(SEMANTIC::T_DIRT, rand()%(this->sizeMap-2) + 1, rand()%(this->sizeMap-2) + 1);
 	for (int i=0; i<nbSeedRock; ++i)
-		createSeed(SEMANTIC::T_ROCK);
+		createSeed(SEMANTIC::T_ROCK, rand()%(this->sizeMap-2) + 1, rand()%(this->sizeMap-2) + 1);
 
 	this->listCell.push_back(this->seedDirt);
 	this->listCell.push_back(this->seedRock);
 
 	//NbFreeCell is the number of free cell. So it's sizeMap*sizeMap - Bound - seeds - lemming and exit
-	int nbFreeCell = this->sizeMap*this->sizeMap - 4*(this->sizeMap-1) - this->seedDirt.size() - this->seedRock.size() - 1 - 1;
+	int nbFreeCell = this->sizeMap*this->sizeMap - 4*(this->sizeMap-1) - this->seedDirt.size() - this->seedRock.size() - 1;
 	int borne, count;
 	SEMANTIC type;
 	while(nbFreeCell)
@@ -59,6 +61,22 @@ void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)
 			}
 		}
 	}
+
+	for (int i=0; i<50; i)
+	{
+		int x = rand()%(this->sizeMap-2)-1;
+		int y = rand()%(this->sizeMap-2)-1;
+		if (this->world->getObject(x, y) != NULL)
+		{
+			if (this->world->getObject(x, y)->getSemantic() == SEMANTIC::T_DIRT)
+			{
+				this->world->removeObject(x, y);
+				this->world->createBody(x, y);
+				++i;
+			}
+		}
+	}
+
 	std::cout << "Generated new map" << std::endl;
 }
 
@@ -77,11 +95,11 @@ bool MapGenerator::createObject(int x, int y, SEMANTIC type)
 	return false;
 }
 
-void MapGenerator::createSeed(SEMANTIC type)
+void MapGenerator::createSeed(SEMANTIC type, int x, int y)
 {
 	std::pair<int, int> seed;
-	seed.first = rand()%(this->sizeMap-2) + 1;
-	seed.second = rand()%(this->sizeMap-2) + 1;
+	seed.first = x;
+	seed.second = y;
 	if (this->world->createObject(seed.first, seed.second, type) != NULL)
 	{
 		if (type == SEMANTIC::T_DIRT)

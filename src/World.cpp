@@ -156,7 +156,9 @@ void World::generateLevel()
 {
 	this->mapGenerator = new MapGenerator(this->size);
 	this->mapGenerator->setWorld(this);
-	this->mapGenerator->generateWithAutoSeeds();
+	int nbAgent;
+	HelperFunctions::safeChoice("Input the number of lemmings : ", "Please enter a valid int", nbAgent);
+	this->mapGenerator->generateWithAutoSeeds(nbAgent);
 
 	delete this->mapGenerator;
 	this->mapGenerator = NULL;
@@ -265,6 +267,19 @@ PhysicalObject* World::createObject(int x, int y, SEMANTIC type)
         std::cout << "ERROR : World::createObject : couldn't insert object in the map" << endl;
         return NULL;
     }
+}
+
+PhysicalObject* World::getObject(int x, int y)
+{
+	if (this->m_map->getCell(std::pair<int, int>(x, y)) != NULL)
+		return this->m_map->getCell(std::pair<int, int>(x, y))->getWorldObject();
+	return NULL;
+}
+
+PhysicalObject* World::forceCreateObject(int x, int y, SEMANTIC type)
+{
+	removeObject(x, y);
+	return createObject(x, y, type);
 }
 
 // Completely removes given object from the map and the object container
@@ -620,7 +635,7 @@ void World::setBodyPerception(Body* body)
 	int xOffset, yOffset;
 	xOffset = 0;
 	yOffset = 0;
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < 9; ++i)
 	{
 		switch (i)
 		{
@@ -655,6 +670,10 @@ void World::setBodyPerception(Body* body)
 		case 7:
 			xOffset = 1;
 			yOffset = 1;
+			break;
+		case 8:
+			xOffset = 0;
+			yOffset = 0;
 			break;
 		}
 

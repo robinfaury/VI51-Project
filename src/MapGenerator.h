@@ -15,14 +15,14 @@ private:
 	std::vector<std::pair<int, int> > seedRock;
 	std::vector<std::vector<std::pair<int, int> > > listCell;
 
-	void createSeed(SEMANTIC type);
+	void createSeed(SEMANTIC type, int x, int y);
 	bool createObject(int x, int y, SEMANTIC type);
 
 public:
 	MapGenerator(int size);
 
-	void generate(int nbSeedDirt, int nbSeedRock);
-	void generateWithAutoSeeds();
+	void generate(int nbSeedDirt, int nbSeedRock, int nbAgent);
+	void generateWithAutoSeeds(int nbAgent);
 
 	void setWorld(World* world);
 	World* getWorld();

@@ -8,6 +8,10 @@ class NeuronalLemming : public Agent
 {
 private:
 	NeuronalNetworkMonocouche* ArtificialInteligence;
+	glm::vec2 lastPos;
+	bool victory;
+
+	void move(int id);
 
 public:
 	NeuronalLemming(Body* body = NULL);

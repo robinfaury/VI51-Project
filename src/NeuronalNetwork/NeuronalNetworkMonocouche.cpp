@@ -26,13 +26,15 @@ bool NeuronalNetworkMonocouche::learn()
 	for (int i=0; i<this->nbNeurones; ++i)
 	{
 		this->neurones.push_back(new Neurone(5));
-		for (int j=0; j<10; ++j)
+		for (int j=0; j<1; ++j)
 		{
 			for (unsigned int k=0; k<this->samples.size(); ++k)
+			{
 				this->neurones[i]->learn(this->samples[k].getData(), (*this->samples[k].getVectorClasse())[i]);
+			}
 		}
 	}
-
+	testing();
 	return true;
 }
 
@@ -47,15 +49,15 @@ void NeuronalNetworkMonocouche::testing()
 std::vector<float> NeuronalNetworkMonocouche::testing(Sample caracteristicVector)
 {
 	std::vector<float> output;
-	std::cout<<std::endl<<"TESTING A VECTOR"<<std::endl;
-	caracteristicVector.to_string_CaracteristicVectorOnly();
+	//std::cout<<std::endl<<"TESTING A VECTOR"<<std::endl;
+	//caracteristicVector.to_string_CaracteristicVectorOnly();
 	for (int i=0; i<this->nbNeurones-1; ++i)
 	{
 		output.push_back(this->neurones[i]->activeNeurone(caracteristicVector.getData()));
-		std::cout<<output[output.size()-1]<<" ; ";
+		//std::cout<<output[output.size()-1]<<" ; ";
 	}
 	output.push_back(this->neurones[this->nbNeurones-1]->activeNeurone(caracteristicVector.getData()));
-	std::cout<<output[output.size()-1]<<"]"<<std::endl;
+	//std::cout<<output[output.size()-1]<<"]"<<std::endl;
 	return output;
 }
 

@@ -33,7 +33,10 @@ void Parser::loadLearningData(std::string filename)
 
 		file >> value;
 		sample.setClassification(static_cast<int>(value));
-		this->samples.push_back(sample);
+		if (value == 3)
+				this->samples.push_back(sample);
+		else
+			this->samples.push_back(sample);
 	}
 }
 

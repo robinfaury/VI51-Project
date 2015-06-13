@@ -42,6 +42,7 @@ void LearningManager::init(World* world)
 void LearningManager::launchLearning()
 {
 	launchLearning(LEARNING_TYPE::QLEARNING);
+	launchLearning(LEARNING_TYPE::NEURALNETWORK);
 }
 
 void LearningManager::launchLearning(LEARNING_TYPE type)
