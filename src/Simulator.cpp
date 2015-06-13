@@ -147,6 +147,7 @@ void Simulator::checkEvents()
 		{
 			std::string path;	// Forward declaration for the std::cin
 			int intChoice;
+			int intChoice2;
 
 			// Keyboard events
 			switch (event.key.code)
@@ -184,6 +185,25 @@ void Simulator::checkEvents()
 					this->play = false;
 					std::cout << "Simulation : pause" << std::endl;
 				}
+				break;
+
+				//Force lemming position
+			case sf::Keyboard::F :
+				std::cout << "Forcing lemming position : " << std::endl;
+				intChoice = -1;
+				intChoice2 = -1;
+				while (intChoice < 1 || intChoice > this->world.getSize() - 1)
+				{
+					HelperFunctions::safeChoice("x : ", "Please enter a valid int", intChoice);
+				}
+				while (intChoice2 < 1 || intChoice2 > this->world.getSize() - 1)
+				{
+					HelperFunctions::safeChoice("y : ", "Please enter a valid int", intChoice2);
+				}
+				this->world.forceLemmingPosition(intChoice, intChoice2);
+
+				intChoice = -1;
+				intChoice2 = -1;
 				break;
 
 				// reset the simulation

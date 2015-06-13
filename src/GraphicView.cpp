@@ -1,7 +1,7 @@
 #include "GraphicView.h"
 
 
-GraphicView::GraphicView(void) : initialized(false), currentIcon(ICON_NONE)
+GraphicView::GraphicView(void) : initialized(false), currentIcon(ICON_NEURALNETWORK)
 {
 }
 

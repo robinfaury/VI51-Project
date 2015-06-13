@@ -11,6 +11,7 @@
 #include "LearningManager.h"
 #include "AgentLemmingDummy.h"
 #include "ScriptManager.h"
+#include "HelperFunctions.h"
 
 enum SIMULATION_MODE
 {
