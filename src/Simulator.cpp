@@ -69,7 +69,7 @@ void Simulator::Run()
 				if (this->world.lemmingSuccess())
 				{
 					this->lemmingVictory = true;
-					play = false;
+					//play = false;
 				}
 					
 			}
