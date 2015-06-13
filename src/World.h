@@ -56,6 +56,7 @@ private:
 public:
 	World(std::string* levelPath);
 	~World(void);
+	void clearWorld();
 
 	// Loading/saving level
 	//TODO: save level

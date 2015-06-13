@@ -12,7 +12,19 @@ Problem::Problem(World* world)
 
 Problem::~Problem()
 {
+	clearProblem();
 	m_world = NULL;
+}
+
+void Problem::clearProblem()
+{
+	for (std::map<int, ProblemState*>::iterator it = this->m_problemStates.begin(); it != this->m_problemStates.end(); ++it)
+	{
+		delete(it->second);
+		it->second = NULL;
+	}
+	this->m_problemStates.clear();
+	this->m_problemStore.clearProblemStore();
 }
 
 World* Problem::getWorld()

@@ -7,7 +7,12 @@ ProblemStore::ProblemStore()
 
 ProblemStore::~ProblemStore()
 {
+	clearProblemStore();
+}
 
+void ProblemStore::clearProblemStore()
+{
+	this->m_QValues.clear();
 }
 
 bool ProblemStore::initQValues(std::map<int, ProblemState*> problemStates)
@@ -16,6 +21,8 @@ bool ProblemStore::initQValues(std::map<int, ProblemState*> problemStates)
 	{
 		return false;
 	}
+
+	this->clearProblemStore();
 
 
 	std::map<std::string, float> actionsQvalues;

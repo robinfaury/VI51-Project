@@ -15,6 +15,8 @@ class ScriptManager
 {
 public:
 	ScriptManager(LearningManager* learningManager, World* world, std::string& currentLevelPath);
+	~ScriptManager();
+	void clearScriptManager();
 
 	void launchScript(std::string name);	// the main script. Launch it only when ready. (And be prepared for A LONG RUNTIME)
 	void testingCurrentScriptingState(int triesPerScriptingState, int maxLength, float& percentageOfSuccess, float& averageSuccessLength, float& numberOfSuccesses);	// For the current map, tests the lemming's ability to complete the map

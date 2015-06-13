@@ -9,6 +9,35 @@ World::World(std::string* currentLevelPath) : currentMap(currentLevelPath), exit
 
 World::~World(void)
 {
+	clearWorld();
+}
+
+void World::clearWorld()
+{
+	for (std::vector<PhysicalObject*>::iterator it = this->m_objects.begin(); it != this->m_objects.end(); ++it)
+	{
+		delete(*it);
+		*it = NULL;
+	}
+	this->m_objects.clear();
+
+	for (std::vector<Body*>::iterator it = this->m_bodies.begin(); it != this->m_bodies.end(); ++it)
+	{
+		delete(*it);
+		*it = NULL;
+	}
+	this->m_bodies.clear();
+
+	this->m_influences.clear();
+
+	// Clearing map and map generator
+	if (this->mapGenerator != NULL)
+	{
+		delete(this->mapGenerator);
+		this->mapGenerator = NULL;
+	}
+
+	this->m_map->clearMap();
 }
 
 // Loading/saving level
@@ -62,10 +91,7 @@ void World::saveLevel(std::string path)
 bool World::loadLevel(std::string path)
 {
 	// Clearing previous objects
-	this->m_map->clear();
-	this->m_bodies.clear();
-	this->m_influences.clear();
-	this->m_objects.clear();
+	this->clearWorld();
 
 	std::string completePath = sourcesPath;
 	completePath = completePath + resPath + mapPath + path + extensionPath;
@@ -125,13 +151,6 @@ void World::resetMap()	// Resets map with current level path
 
 void World::generateLevel()
 {
-	// Clearing previous objects
-	this->m_map->clear();
-	this->m_bodies.clear();
-	this->m_influences.clear();
-	this->m_objects.clear();
-
-
 	this->mapGenerator = new MapGenerator(this->size);
 	this->mapGenerator->setWorld(this);
 	this->mapGenerator->generateWithAutoSeeds();

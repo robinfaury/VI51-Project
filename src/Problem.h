@@ -17,6 +17,7 @@ public:
 	Problem();
 	Problem(World* world);
     ~Problem();
+	void clearProblem();
 
 	bool initProblemStore();
 	bool initProblemStates();

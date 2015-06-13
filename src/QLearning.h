@@ -11,6 +11,8 @@ class QLearning : public LearningMethod
 {
     public:
 		QLearning(World* world);
+		~QLearning();
+		void clearQLearning();
 
 		//! Performs the actual learning.
 		/**

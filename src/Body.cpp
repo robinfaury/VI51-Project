@@ -8,7 +8,7 @@ Body::Body(SEMANTIC type) : PhysicalObject(type)
 
 Body::~Body()
 {
-	delete (this->m_perception);
+	destroy();
 }
 
 void Body::setPerception(Perception* newPerception)
@@ -36,7 +36,8 @@ void Body::setMap(std::map<std::pair<int, int>, Cell*>* pMap)
 
 void Body::destroy()
 {
-	
+	delete (this->m_perception);
+	this->m_perception = NULL;
 }
 
 void Body::serialize(pugi::xml_node * node)
