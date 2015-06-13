@@ -245,6 +245,17 @@ PhysicalObject* World::createObject(int x, int y, SEMANTIC type)
     }
 }
 
+PhysicalObject* World::getObject(int x, int y)
+{
+	return this->m_map->getCell(std::pair<int, int>(x, y))->getWorldObject();
+}
+
+PhysicalObject* World::forceCreateObject(int x, int y, SEMANTIC type)
+{
+	removeObject(x, y);
+	return createObject(x, y, type);
+}
+
 // Completely removes given object from the map and the object container
 void World::removeObject(PhysicalObject* object)
 {
@@ -598,7 +609,7 @@ void World::setBodyPerception(Body* body)
 	int xOffset, yOffset;
 	xOffset = 0;
 	yOffset = 0;
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < 9; ++i)
 	{
 		switch (i)
 		{
@@ -633,6 +644,10 @@ void World::setBodyPerception(Body* body)
 		case 7:
 			xOffset = 1;
 			yOffset = 1;
+			break;
+		case 8:
+			xOffset = 0;
+			yOffset = 0;
 			break;
 		}
 

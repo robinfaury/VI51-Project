@@ -130,6 +130,10 @@ void Map::serializeMap(pugi::xml_node* mapNode)
 
 void Map::clear()	// resets the current map to empty all the way
 {
+	for (std::map<std::pair<int, int>, Cell*>::iterator it = this->m_map.begin(); it != this->m_map.end(); ++it)
+	{
+		delete (*it).second;
+	}
 	m_map.clear();
 }
 

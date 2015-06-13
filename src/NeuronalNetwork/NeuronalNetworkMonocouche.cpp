@@ -26,13 +26,15 @@ bool NeuronalNetworkMonocouche::learn()
 	for (int i=0; i<this->nbNeurones; ++i)
 	{
 		this->neurones.push_back(new Neurone(5));
-		for (int j=0; j<10; ++j)
+		for (int j=0; j<1; ++j)
 		{
 			for (unsigned int k=0; k<this->samples.size(); ++k)
+			{
 				this->neurones[i]->learn(this->samples[k].getData(), (*this->samples[k].getVectorClasse())[i]);
+			}
 		}
 	}
-
+	testing();
 	return true;
 }
 

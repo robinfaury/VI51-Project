@@ -85,6 +85,13 @@ public:
 	*/
 	PhysicalObject* createObject(int x, int y, SEMANTIC type);
 
+	PhysicalObject* getObject(int x, int y);
+
+	/**
+	*   Force to create an object at given position (with given semantic), stores it in the map, and returns a pointer to it
+	*/
+	PhysicalObject* forceCreateObject(int x, int y, SEMANTIC type);
+
 	/**
 	*   Completely removes an object of the simulation
 	*/

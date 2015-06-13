@@ -15,7 +15,7 @@ private:
 	std::vector<std::pair<int, int> > seedRock;
 	std::vector<std::vector<std::pair<int, int> > > listCell;
 
-	void createSeed(SEMANTIC type);
+	void createSeed(SEMANTIC type, int x, int y);
 	bool createObject(int x, int y, SEMANTIC type);
 
 public:

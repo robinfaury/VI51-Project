@@ -371,8 +371,8 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 		this->scriptManager.launchScript("MegaTest_AmarrePortable");*/
 
 			// Golé fixe
-		/*this->scriptManager.setIterations(40000, 100000, 60000);
-		this->scriptManager.launchScript("MegaTest_GoleFixe");*/
+		this->scriptManager.setIterations(40000, 100000, 60000);
+		this->scriptManager.launchScript("MegaTest_GoleFixe");
 
 		break;
 	default:
