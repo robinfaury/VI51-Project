@@ -21,8 +21,8 @@ private:
 public:
 	MapGenerator(int size);
 
-	void generate(int nbSeedDirt, int nbSeedRock);
-	void generateWithAutoSeeds();
+	void generate(int nbSeedDirt, int nbSeedRock, int nbAgent);
+	void generateWithAutoSeeds(int nbAgent);
 
 	void setWorld(World* world);
 	World* getWorld();

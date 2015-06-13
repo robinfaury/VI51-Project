@@ -24,6 +24,7 @@
 #include "PerceptionCross.h"
 #include "Terrain.h"
 #include "MapGenerator.h"
+#include "HelperFunctions.h"
 
 #define sourcesPath "../VI51-Project/"
 #define extensionPath ".xml"

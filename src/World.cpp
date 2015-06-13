@@ -153,7 +153,9 @@ void World::generateLevel()
 {
 	this->mapGenerator = new MapGenerator(this->size);
 	this->mapGenerator->setWorld(this);
-	this->mapGenerator->generateWithAutoSeeds();
+	int nbAgent;
+	HelperFunctions::safeChoice("Input the number of lemmings : ", "Please enter a valid int", nbAgent);
+	this->mapGenerator->generateWithAutoSeeds(nbAgent);
 
 	delete this->mapGenerator;
 	this->mapGenerator = NULL;
@@ -266,7 +268,9 @@ PhysicalObject* World::createObject(int x, int y, SEMANTIC type)
 
 PhysicalObject* World::getObject(int x, int y)
 {
-	return this->m_map->getCell(std::pair<int, int>(x, y))->getWorldObject();
+	if (this->m_map->getCell(std::pair<int, int>(x, y)) != NULL)
+		return this->m_map->getCell(std::pair<int, int>(x, y))->getWorldObject();
+	return NULL;
 }
 
 PhysicalObject* World::forceCreateObject(int x, int y, SEMANTIC type)
