@@ -62,7 +62,7 @@ void MapGenerator::generate(int nbSeedDirt, int nbSeedRock, int nbAgent)
 		}
 	}
 
-	for (int i=0; i<50; i)
+	for (int i=0; i<nbAgent; i)
 	{
 		int x = rand()%(this->sizeMap-2)-1;
 		int y = rand()%(this->sizeMap-2)-1;
