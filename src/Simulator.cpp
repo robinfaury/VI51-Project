@@ -192,7 +192,7 @@ void Simulator::checkEvents()
 				this->play = false;
 
 				//Load level
-				std::cout << "Resetting level";
+				std::cout << "Resetting level" << std::endl;
 
 				this->resetSimulation(this->currentLevelPath);
 				break;
