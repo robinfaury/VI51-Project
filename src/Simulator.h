@@ -22,47 +22,51 @@ enum SIMULATION_MODE
 class Simulator
 {
 private:
-	int numberOfAgents;
-	GraphicView SFMLView;
-	World world;
-	std::vector<Agent*> agents;
+	GraphicView SFMLView;	// Graphics interface
+	World world;	// World
+	std::vector<Agent*> agents;	// Container of agents
 
-	SIMULATION_MODE currentMode;
-	LEARNING_TYPE currentIAType;
+	SIMULATION_MODE currentMode;	// Current simulation mode
+	LEARNING_TYPE currentIAType;	// Currently selected AI
 
-	LearningManager learningManager;
-	ScriptManager scriptManager;
+	LearningManager learningManager;	// Learning Manager
+	ScriptManager scriptManager;		// Script manager
 
-	sf::RenderWindow* window;
+	sf::RenderWindow* window;	// Pointer to the graphics interface's window
 
-	sf::Clock simulationClock;
+	sf::Clock simulationClock;	// Simulation clock
 
 	// Simulation flag
 	bool frameFlag;	// flag used to allow window events while waiting next frame
 	bool play;	// flag used to skip simulation at user command
 	bool finishSimulation;	// flag used to signal the end of the simulation
 
-	std::string currentLevelPath;
+	std::string currentLevelPath;	// Path of the current level
+	bool lemmingVictory;	// is set to true if lemming completed the map
 public:
-	Simulator(int numberOfAgents);
+	Simulator();
 	~Simulator();
 	void clearSimulator();
 
+	// World getter function
 	World* getWorld();
 
+	// main application loop
 	void Run();
+
+	// Checks for user input, and applies it
 	void checkEvents();
+
+	// Resets simulation to given level path. If no path is provided, load default map.
 	void resetSimulation(std::string levelPath = "Islands");
+	// Reset agents with current simulation mode
 	void recreateAgents();
 
+	// Toggle simulation mode
 	void toggleMode(SIMULATION_MODE mode);
 
-	
-
-	// User actions
+	// Apply user action on the world
 	void applyUserAction(USER_ACTIONS action, int tileX = -1, int tileY = -1);
-
-
 };
 
 #endif

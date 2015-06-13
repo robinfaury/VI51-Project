@@ -2,7 +2,9 @@
 #define SCRIPTMANAGER_H_
 
 /*
-Aimed at QLearning
+The script manager is aimed at the QLearning algorithm.
+Its goal is to execute the learning algorithm with a given set of parameters, then test the results on a map.
+Map and parameters can be set to vary by a given variation value between a min and max value.
 */
 
 #define scriptResultsPath "scriptResults/"
@@ -18,11 +20,11 @@ public:
 	~ScriptManager();
 	void clearScriptManager();
 
-	void launchScript(std::string name);	// the main script. Launch it only when ready. (And be prepared for A LONG RUNTIME)
+	void launchScript(std::string name);	// the main script. Parameters need to be set first. (And be prepared for A LONG RUNTIME)
 	void testingCurrentScriptingState(int triesPerScriptingState, int maxLength, float& percentageOfSuccess, float& averageSuccessLength, float& numberOfSuccesses);	// For the current map, tests the lemming's ability to complete the map
-	void resetAgent();
+	void resetAgent();	// Resets the agent attribute
 
-	// Configure parameters
+	// Parameter configuration
 	void addMapToPool(std::string mapName);
 	void clearMapPool();
 
@@ -37,9 +39,10 @@ public:
 
 	void setTriesPerLearning(int triesPerLearning);
 
+	// Resets the map (for a new test)
 	void resetMap(std::string levelPath);
 	
-
+	// Serialize the results of the current test
 	void serializeCurrentResult(pugi::xml_node* node, float alpha, float gamma, float rho, float nu, int iterations, float percentageOfSuccess, float averageSuccessLength, float numberOfSuccesses);
 
 protected:

@@ -3,7 +3,6 @@
 
 Map::Map(string path)
 {
-    //TODO: redo
 }
 
 

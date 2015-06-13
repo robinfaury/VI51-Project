@@ -1,10 +1,9 @@
 #include "Simulator.h"
 
 
-Simulator::Simulator(int numberOfAgents) : currentLevelPath("Islands"), world(&this->currentLevelPath), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), 
-currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK), scriptManager(&this->learningManager, &this->world, currentLevelPath)
+Simulator::Simulator() : currentLevelPath("Islands"), world(&this->currentLevelPath), learningManager(&this->world), frameFlag(true), play(false), finishSimulation(false), 
+currentMode(SIMULATION_MODE::LEARNING), currentIAType(LEARNING_TYPE::NEURALNETWORK), scriptManager(&this->learningManager, &this->world, currentLevelPath), lemmingVictory(false)
 {
-	this->numberOfAgents = numberOfAgents;
 
 	this->SFMLView.setWorld(&this->world);
 	this->toggleMode(SIMULATION_MODE::SIMULATION);
@@ -65,8 +64,14 @@ void Simulator::Run()
 				}
 
 
-				// Updating the world with given influences
+				// Updating the world (collecting and resolving influences)
 				this->world.update();
+				if (this->world.lemmingSuccess())
+				{
+					this->lemmingVictory = true;
+					play = false;
+				}
+					
 			}
 
 			// Drawing
@@ -107,15 +112,17 @@ void Simulator::Run()
 		{
 			checkEvents();	// Checking for user input
 
+			// Calculating elapsed time
 			endTime = this->simulationClock.getElapsedTime();
 			frameTime = endTime - startTime;
 
+			// If simulation is playing, update every 1/5th of a second
 			if (play)
 			{
 				if (frameTime.asMilliseconds() > 200)
 					frameFlag = true;
 			}
-			else
+			else // update every 1/10th of a second
 			{
 				if (frameTime.asMilliseconds() > 100)
 					frameFlag = true;
@@ -130,6 +137,7 @@ void Simulator::checkEvents()
 	sf::Event event;
 	while (this->window->pollEvent(event))
 	{
+		// Window closed
 		if (event.type == sf::Event::Closed)
 		{
 			this->window->close();
@@ -140,13 +148,36 @@ void Simulator::checkEvents()
 			std::string path;	// Forward declaration for the std::cin
 			int intChoice;
 
+			// Keyboard events
 			switch (event.key.code)
 			{
+						// SIMULATION MANAGEMENT
+				// Select QLearning AI type
+			case  sf::Keyboard::F5:
+				this->currentIAType = LEARNING_TYPE::QLEARNING;
+				recreateAgents();
+				this->SFMLView.setIconDisplay(DISPLAY_ICON::ICON_QLEARNING);
+				std::cout << "Currently selected agents : QLearning" << std::endl;
+				break;
+				// Select neural network AI type
+			case sf::Keyboard::F6:
+				this->currentIAType = LEARNING_TYPE::NEURALNETWORK;
+				this->SFMLView.setIconDisplay(DISPLAY_ICON::ICON_NEURALNETWORK);
+				recreateAgents();
+				std::cout << "Currently selected agents : NeuralNetwork" << std::endl;
+				break;
+
+				// Play / pause simulation
 			case sf::Keyboard::P :
 				if (!this->play)
 				{
+					if ((this->lemmingVictory))	// If simulation is paused due to victory, reset it
+					{
+						this->resetSimulation(this->currentLevelPath);
+					}
+					else
+						std::cout << "Simulation : play" << std::endl;
 					this->play = true;
-					std::cout << "Simulation : play" << std::endl;
 				}
 				else
 				{
@@ -154,22 +185,26 @@ void Simulator::checkEvents()
 					std::cout << "Simulation : pause" << std::endl;
 				}
 				break;
-			case sf::Keyboard::C:
-				std::cout << "Current lemming state : " << Problem::convertPerceptionToStateId(this->world.getBodies()->at(0)->getPerception(), this->world.getSize()) << std::endl;
+
+				// reset the simulation
+			case sf::Keyboard::R:
+				// Forcing pause
+				this->play = false;
+
+				//Load level
+				std::cout << "Resetting level" << std::endl;
+
+				this->resetSimulation(this->currentLevelPath);
 				break;
+
+				// Close the window
 			case sf::Keyboard::Escape:
 				this->window->close();
 				finishSimulation = true;
 				break;
 
-				//TODO: remove that
-			case sf::Keyboard::V:
-				if (this->world.lemmingSuccess())
-					std::cout << "LEMMING SUCCESS" << std::endl;
-				else
-					std::cout << "LEMMING fail" << std::endl;
-				break;
-				
+					// MAP MANAGEMENT
+				// Save the current level
 			case sf::Keyboard::S:
 				//Save level
 				path.clear();
@@ -180,6 +215,7 @@ void Simulator::checkEvents()
 
 				this->world.saveLevel(path);
 				break;
+				// Load a level
 			case sf::Keyboard::L:
 				//Load level
 				path.clear();
@@ -188,55 +224,62 @@ void Simulator::checkEvents()
 				this->resetSimulation(path);
 				this->SFMLView.resize(800, 800);
 				break;
-			case sf::Keyboard::R:
-				// Forcing pause
-				this->play = false;
-
-				//Load level
-				std::cout << "Resetting level";
-
-				this->resetSimulation(this->currentLevelPath);
-				break;
-			
-			case sf::Keyboard::F1:
-				this->toggleMode(SIMULATION_MODE::LEARNING);
-				break;
-			case sf::Keyboard::F2:
-				this->toggleMode(SIMULATION_MODE::SIMULATION);
-				break;
-			case sf::Keyboard::F3:
-				this->toggleMode(SIMULATION_MODE::SCRIPT);
-				this->toggleMode(SIMULATION_MODE::SIMULATION);
-
-				break;
-			case  sf::Keyboard::F5:
-				this->currentIAType = LEARNING_TYPE::QLEARNING;
-				recreateAgents();
-				std::cout << "Currently selected agents : QLearning" << std::endl;
-				break;
-			case sf::Keyboard::F6:
-				this->currentIAType = LEARNING_TYPE::NEURALNETWORK;
-				std::cout << "Currently selected agents : NeuralNetwork" << std::endl;
-				recreateAgents();
-				break;
-			case sf::Keyboard::A:
-				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
-				std::cout << "Selected CLEAR tile : click to apply" << std::endl;
-				break;
-			case sf::Keyboard::Z:
-				this->SFMLView.setUserAction(USER_ACTIONS::U_DIRT);
-				std::cout << "Selected DIRT tile : click to apply" << std::endl;
-				break;
-			case sf::Keyboard::E:
-				this->SFMLView.setUserAction(USER_ACTIONS::U_ROCK);
-				std::cout << "Selected ROCK tile : click to apply" << std::endl;
-				break;
-			case sf::Keyboard::M :
-                HelperFunctions::safeChoice("Input new map size : ", "Please enter a valid int", intChoice);
+				// Choose map size
+			case sf::Keyboard::M:
+				HelperFunctions::safeChoice("Input new map size : ", "Please enter a valid int", intChoice);
 
 				this->world.setSize(intChoice);
 				resetSimulation("Generate");
 				this->SFMLView.resize(800, 800);
+				break;
+
+				// Terrain types selection
+			case sf::Keyboard::W:
+				this->SFMLView.setUserAction(USER_ACTIONS::U_CLEAR);
+				std::cout << "Selected EMPTY tile : click to apply" << std::endl;
+				break;
+			case sf::Keyboard::X:
+				this->SFMLView.setUserAction(USER_ACTIONS::U_DIRT);
+				std::cout << "Selected DIRT tile : click to apply" << std::endl;
+				break;
+			case sf::Keyboard::C:
+				this->SFMLView.setUserAction(USER_ACTIONS::U_ROCK);
+				std::cout << "Selected ROCK tile : click to apply" << std::endl;
+				break;
+			case sf::Keyboard::V:
+				this->SFMLView.setUserAction(USER_ACTIONS::U_EXIT);
+				std::cout << "Selected EXIT tile : click to apply" << std::endl;
+				break;
+			case sf::Keyboard::B:
+				this->SFMLView.setUserAction(USER_ACTIONS::U_BOUND);
+				std::cout << "Selected BOUND tile : click to apply" << std::endl;
+				break;
+			case sf::Keyboard::N:
+				this->SFMLView.setUserAction(USER_ACTIONS::U_NONE);
+				std::cout << "Selection deactivated" << std::endl;
+				break;
+
+
+					// SIMULATION MODES
+				// Launch learning mode
+			case sf::Keyboard::F1:
+				this->toggleMode(SIMULATION_MODE::LEARNING);
+				break;
+				// Launch simulation mode
+			case sf::Keyboard::F2:
+				this->toggleMode(SIMULATION_MODE::SIMULATION);
+				break;
+				// Launch script mode
+			case sf::Keyboard::F3:
+				this->toggleMode(SIMULATION_MODE::SCRIPT);
+				this->toggleMode(SIMULATION_MODE::SIMULATION);
+				break;
+
+
+					// QLEARNING MANAGEMENT
+				// Print the corresponding state (QLearning state) the lemming is currently in.
+			case sf::Keyboard::Q:
+				std::cout << "Current lemming state : " << Problem::convertPerceptionToStateId(this->world.getBodies()->at(0)->getPerception(), this->world.getSize()) << std::endl;
 				break;
 			}
 		}
@@ -257,8 +300,6 @@ void Simulator::checkEvents()
 
 void Simulator::resetSimulation(std::string levelPath)
 {
-	//TODO: handle error in world loading
-
 
 	if (!this->world.loadLevel(levelPath))
 	{
@@ -271,6 +312,9 @@ void Simulator::resetSimulation(std::string levelPath)
 		this->currentLevelPath = levelPath;
 	}
 	recreateAgents();
+
+	this->play = false;
+	this->lemmingVictory = false;
 }
 
 void Simulator::recreateAgents()
@@ -285,16 +329,15 @@ void Simulator::recreateAgents()
 	{
 		tempAgent = this->learningManager.getAgent(this->currentIAType);
 		if (tempAgent == NULL)
-			std::cout << "ERROR : Simulator::CheckEvents : couldn't reassign new agents after loading level" << std::endl;
-		else
 		{
 
+		}
+		else
+		{
 			tempAgent->linkBody(*it);
 			this->agents.push_back(tempAgent);
-			std::cout << "Created another agent" << std::endl;
 		}
 	}
-	std::cout << "Agents recreated" << std::endl;
 }
 
 void Simulator::toggleMode(SIMULATION_MODE mode)
@@ -305,7 +348,7 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 
 		int height = TILE_SIZE * this->world.getSize();
 		int width = TILE_SIZE * this->world.getSize();
-        this->SFMLView.init(600, 600, this->world.getMap()->getMap());
+        this->SFMLView.init(600, 600, this->world.getMap()->getMap(), &lemmingVictory);
         this->window = this->SFMLView.getWindow();
 
 		recreateAgents();
@@ -324,85 +367,20 @@ void Simulator::toggleMode(SIMULATION_MODE mode)
 
 		// setting parameters
 		// Testing the script
-		this->scriptManager.setAlpha(0.2, 0.4, 0.1);
-		this->scriptManager.setGamma(0.7, 0.8, 0.05);
-		this->scriptManager.setRho(0.1, 0.3, 0.1);
-		this->scriptManager.setNu(0.05, 0.15, 0.05);
-		this->scriptManager.setTriesPerLearning(10);
-		this->scriptManager.setIterations(100, 300, 100);
+		this->scriptManager.setAlpha(0.3f, 0.3f, 0.1f);
+		this->scriptManager.setGamma(0.75f, 0.75f, 0.75f);
+		this->scriptManager.setRho(0.2f, 0.2f, 0.1f);
+		this->scriptManager.setNu(0.05f, 0.15f, 0.01f);
+		this->scriptManager.setTriesPerLearning(100);
+		this->scriptManager.setIterations(5000, 50000, 5000);
 
-		this->scriptManager.addMapToPool("10_Easy1");
-		this->scriptManager.addMapToPool("10_Medium1");
-		this->scriptManager.addMapToPool("10_Hard1");
-
-		// Common map pool
-		//10*10
-		/*this->scriptManager.addMapToPool("10_Easy1");
-		this->scriptManager.addMapToPool("10_Easy2");
-		this->scriptManager.addMapToPool("10_Easy3");
-		this->scriptManager.addMapToPool("10_Medium1");
-		this->scriptManager.addMapToPool("10_Medium2");
-		this->scriptManager.addMapToPool("10_Medium3");
-		this->scriptManager.addMapToPool("10_Hard1");
-		this->scriptManager.addMapToPool("10_Hard2");
-		this->scriptManager.addMapToPool("10_Hard3");
-
-		//15*15
-		this->scriptManager.addMapToPool("15_Easy1");
-		this->scriptManager.addMapToPool("15_Easy2");
-		this->scriptManager.addMapToPool("15_Medium1");
-		this->scriptManager.addMapToPool("15_Medium2");
-		this->scriptManager.addMapToPool("15_Medium3");
-		this->scriptManager.addMapToPool("15_Medium4");
-		this->scriptManager.addMapToPool("15_Hard1");
-		this->scriptManager.addMapToPool("15_Hard2");
-		this->scriptManager.addMapToPool("15_Hard3");
-
-		//20*20
-		this->scriptManager.addMapToPool("20_Easy1");
-		this->scriptManager.addMapToPool("20_Easy2");
-		this->scriptManager.addMapToPool("20_Easy3");
-		this->scriptManager.addMapToPool("20_Medium1");
-		this->scriptManager.addMapToPool("20_Medium2");
-		this->scriptManager.addMapToPool("20_Medium3");
-		this->scriptManager.addMapToPool("20_Hard1");
-		this->scriptManager.addMapToPool("20_Hard2");
-		this->scriptManager.addMapToPool("20_Hard3");
-
-		// parameters
-		this->scriptManager.setAlpha(0.1, 0.5, 0.05);
-		this->scriptManager.setGamma(0.5, 0.9, 0.05);
-		this->scriptManager.setRho(0.1, 0.5, 0.05);
-		this->scriptManager.setNu(0.01, 0.2, 0.01);
-		this->scriptManager.setTriesPerLearning(1);*/
-
-
-						// TODO : decommentez la partie correspondante, puis lancez l'exécution, puis faites F3. Et après, ne touchez à rien! Vous pouvez vérifier sur la console que c'est bien lancé.
-			// Aiguille
-		/*this->scriptManager.setIterations(10000, 90000, 100000);
-		this->scriptManager.launchScript("MegaTest_Aiguille");*/
-
-			// Amarre notebook
-		/*this->scriptManager.setIterations(20000, 80000, 100000);
-		this->scriptManager.launchScript("MegaTest_AmarreNotebook");*/
-
-			// Golé portable
-		/*this->scriptManager.setIterations(30000, 70000, 100000);
-		this->scriptManager.launchScript("MegaTest_GolePortable");*/
-
-			// Amarre portable
-		/*this->scriptManager.setIterations(50000, 60000, 10000);
-		this->scriptManager.launchScript("MegaTest_AmarrePortable");*/
-
-			// Golé fixe
-		this->scriptManager.setIterations(40000, 100000, 60000);
-		this->scriptManager.launchScript("MegaTest_GoleFixe");
+		this->scriptManager.addMapToPool("15_Hard5");
+		this->scriptManager.launchScript("Test_nu_15Hard4");
 
 		break;
 	default:
 		break;
 	}
-
     this->currentMode = mode;
 }
 
@@ -423,6 +401,14 @@ void Simulator::applyUserAction(USER_ACTIONS action, int tileX, int tileY)
 	case USER_ACTIONS::U_ROCK:
 		this->world.removeObject(tileX, tileY);
 		this->world.createObject(tileX, tileY, SEMANTIC::T_ROCK);
+		break;
+	case USER_ACTIONS::U_EXIT:
+		this->world.removeObject(tileX, tileY);
+		this->world.createObject(tileX, tileY, SEMANTIC::T_EXIT);
+		break;
+	case USER_ACTIONS::U_BOUND:
+		this->world.removeObject(tileX, tileY);
+		this->world.createObject(tileX, tileY, SEMANTIC::T_BOUND);
 		break;
 	}
 }
