@@ -98,6 +98,7 @@ bool QLearning::learn(int iterations, float alpha, float gamma, float rho, float
 		return false;
 	}
 	m_learningComplete = true;
+	return true;
 }
 
 //! Returns true if the learning has finished correctly.
