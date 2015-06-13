@@ -71,6 +71,7 @@ public:
 	bool loadLevel(std::string path = "Generate");
 	void resetMap();	// Resets map with current level path
 	void generateLevel();	// Generates a procedural map
+	void generateLemmings(int nbAgents);
 	void findExit(int& exitX, int& exitY);	// finds the exit and sets its position to the two given integers
 
 	// Checks if at least one lemming managed to get to the exit

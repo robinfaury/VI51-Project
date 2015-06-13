@@ -158,10 +158,30 @@ void World::generateLevel()
 	this->mapGenerator->setWorld(this);
 	int nbAgent;
 	HelperFunctions::safeChoice("Input the number of lemmings : ", "Please enter a valid int", nbAgent);
-	this->mapGenerator->generateWithAutoSeeds(nbAgent);
+	this->mapGenerator->generateWithAutoSeeds();
+
+	generateLemmings(nbAgent);
 
 	delete this->mapGenerator;
 	this->mapGenerator = NULL;
+}
+
+void World::generateLemmings(int nbAgents)
+{
+	for (int i=0; i<nbAgents; i)
+	{
+		int x = rand()%(this->size-2)-1;
+		int y = rand()%(this->size-2)-1;
+		if (this->getObject(x, y) != NULL)
+		{
+			if (this->getObject(x, y)->getSemantic() == SEMANTIC::T_DIRT)
+			{
+				this->removeObject(x, y);
+				this->createBody(x, y);
+				++i;
+			}
+		}
+	}
 }
 
 // finds the exit and sets its position to the two given integers

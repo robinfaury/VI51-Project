@@ -5,12 +5,12 @@ MapGenerator::MapGenerator(int size) : sizeMap(size)
 {
 }
 
-void MapGenerator::generateWithAutoSeeds(int nbAgent)
+void MapGenerator::generateWithAutoSeeds()
 {
-	generate(1.25*this->sizeMap, 0.5*this->sizeMap, nbAgent);
+	generate(1.25*this->sizeMap, 0.5*this->sizeMap);
 }
 
-void MapGenerator::generate(int nbSeedDirt, int nbSeedRock, int nbAgent)
+void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)
 {
 	std::cout << "Generating new map for size : " << this->sizeMap << std::endl;
 
@@ -58,21 +58,6 @@ void MapGenerator::generate(int nbSeedDirt, int nbSeedRock, int nbAgent)
 					--borne;
 					--j;
 				}
-			}
-		}
-	}
-
-	for (int i=0; i<nbAgent; i)
-	{
-		int x = rand()%(this->sizeMap-2)-1;
-		int y = rand()%(this->sizeMap-2)-1;
-		if (this->world->getObject(x, y) != NULL)
-		{
-			if (this->world->getObject(x, y)->getSemantic() == SEMANTIC::T_DIRT)
-			{
-				this->world->removeObject(x, y);
-				this->world->createBody(x, y);
-				++i;
 			}
 		}
 	}
