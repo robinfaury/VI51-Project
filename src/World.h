@@ -36,7 +36,7 @@ class World
 {
 private:
     Map* m_map; // current map
-	MapGenerator* mapGenerator;
+	MapGenerator* mapGenerator;	// The procedural map generator
 
 	int size;
 
@@ -47,10 +47,13 @@ private:
 	bool isDiggable(SEMANTIC semantic);		// For a given semantic, returns true if the lemming can dig it
     void setBodyPerception(Body* body);		// Sets the perception of given body
 
-	std::string* currentMap;
+	std::string* currentMap;	// Pointer to the current level path
+	
+	// Coordinates of the exit
 	int exitX;
 	int exitY;
 
+	// From a given xml node, create the corresponding object  (used for map loading)
 	PhysicalObject* deserializeObject(pugi::xml_node* objectNode);
 
 public:
@@ -59,7 +62,6 @@ public:
 	void clearWorld();
 
 	// Loading/saving level
-	//TODO: save level
 	/**
 	*   This function saves the level in the given filepath, under xml format
 	*/
@@ -67,14 +69,15 @@ public:
 
 	bool loadLevel(std::string path = "Generate");
 	void resetMap();	// Resets map with current level path
-	void generateLevel();
+	void generateLevel();	// Generates a procedural map
 	void findExit(int& exitX, int& exitY);	// finds the exit and sets its position to the two given integers
 
 	// Checks if at least one lemming managed to get to the exit
 	bool lemmingSuccess();
 
+	// map size getter/setter (size is in square cells : 10*10 map -> size 10)
 	int getSize();
-	void setSize(int size);	// Sets the size of the map (in number of cells square)
+	void setSize(int size);
 
     /**
     *   Creates a body at given positon, stores it in the map, and returns a pointer to it
@@ -124,7 +127,6 @@ public:
 	*/
 	void setPerceptions();
 
-	//TODO: Milan do this
 	/**
 	*   Called by the LearningMethods. This function returns what would a body percieve if it was standing at this position
 	*/

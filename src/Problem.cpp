@@ -88,7 +88,6 @@ ProblemState* Problem::getState(int stateId)
 
 ProblemState* Problem::getRandomState()
 {
-	// TODO : getMapSize instead of TEMPORARY_MAP_SIZE
 	int randomX, randomY;
 	do
 	{
@@ -155,7 +154,7 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		int lemmingX = body->getPosition().at(0);
 		int lemmingY = body->getPosition().at(1);*/
 
-		float exitDistance = std::abs(body->getPerception()->getExitX() - body->getPerception()->getLemmingX()) + std::abs(body->getPerception()->getExitY() - body->getPerception()->getLemmingY());
+		int exitDistance = std::abs(body->getPerception()->getExitX() - body->getPerception()->getLemmingX()) + std::abs(body->getPerception()->getExitY() - body->getPerception()->getLemmingY());
 		if (QLEARNING_DEBUG)
 			std::cout << "Problem::takeAction : exitDistance : " << exitDistance << std::endl;
 
@@ -183,7 +182,7 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		// If both distance are the same : then the action had no effect. Give negative reward
 		if (exitDistance == newExitDistance)
 		{
-			//reward = -(BASE_REWARD/8);
+			reward = -(BASE_REWARD/300);
 		}
 		else if (newExitDistance == 0)	// Victory
 		{
@@ -192,8 +191,8 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 		}
 		else // calculate and set reward using manhattan distance
 		{
-			//reward = (exitDistance - newExitDistance) * BASE_REWARD/4;
-			reward = 0.0f;
+			reward = (exitDistance - newExitDistance) * BASE_REWARD/100;
+			//reward = 0.0f;
 		}
 
 		if (QLEARNING_DEBUG)
@@ -201,9 +200,6 @@ ProblemState* Problem::takeAction(ProblemState* pOriginalState, std::string pAct
 			std::cout << "position : " << xPos << ", " << yPos << std::endl;
 			std::cout << "reward : " << reward << std::endl;
 		}
-
-
-
 		return newState;
 	}
 	return NULL;
@@ -247,22 +243,6 @@ int Problem::convertPerceptionToStateId(Perception* perception, int worldSize)
 	}
 	int worldPartPoss = 4; // total number of possible values for the world part
 
-	// process goal direction
-	/*DIRECTION goalDir;
-	if (actualPosX > goalPosX)
-	{
-		goalDir = DIRECTION::LEFT;
-	}
-	else if (actualPosX < goalPosX)
-	{
-		goalDir = DIRECTION::RIGHT;
-	}
-	else
-	{
-		goalDir = DIRECTION::DOWN;
-	}
-	int goalPoss = 3;  // total number of possible values for the goal direction*/
-
 	// process tile on the left
 	TILE_TYPE leftTile;
 	if (objects->at(3) == NULL)
@@ -272,7 +252,6 @@ int Problem::convertPerceptionToStateId(Perception* perception, int worldSize)
 		switch (objects->at(3)->getSemantic())
 		{
 		case SEMANTIC::T_ROCK:
-		case SEMANTIC::B_LEMMING:
 		case SEMANTIC::T_BOUND:
 			leftTile = TILE_TYPE::UNDIGGABLE;
 			break;
@@ -293,7 +272,6 @@ int Problem::convertPerceptionToStateId(Perception* perception, int worldSize)
 		switch (objects->at(4)->getSemantic())
 		{
 		case SEMANTIC::T_ROCK:
-		case SEMANTIC::B_LEMMING:
 		case SEMANTIC::T_BOUND:
 			rightTile = TILE_TYPE::UNDIGGABLE;
 			break;
@@ -314,7 +292,6 @@ int Problem::convertPerceptionToStateId(Perception* perception, int worldSize)
 		switch (objects->at(6)->getSemantic())
 		{
 		case SEMANTIC::T_ROCK:
-		case SEMANTIC::B_LEMMING:
 		case SEMANTIC::T_BOUND:
 			bottomTile = TILE_TYPE::UNDIGGABLE;
 			break;
@@ -343,6 +320,7 @@ ProblemState* Problem::convertPerceptionToState(Perception* perception, bool cre
 	{
 		std::cout << "ERROR : Creating new state" << std::endl;
 		std::cout << "ERROR : error position " << perception->getLemmingX() << ", " << perception->getLemmingY() <<   std::endl;
+		perception->display();
 		ProblemState* state = new ProblemState(stateId);
 		m_problemStates[stateId] = state;
 	}

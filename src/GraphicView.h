@@ -7,8 +7,6 @@
 #define TILE_SIZE 32
 #define LEMMINGTEX_PATH "res/lemming.png"
 #define TERRAINTEX_PATH "res/terrain.png"
-#define ICONNNTEX_PATH "res/icons/iconNN.png"
-#define ICONQLTEX_PATH "res/icons/iconQL.png"
 
 #include "World.h"
 
@@ -17,6 +15,16 @@ enum USER_ACTIONS
 	U_CLEAR,
 	U_DIRT,
 	U_ROCK,
+	U_EXIT,
+	U_BOUND,
+	U_NONE
+};
+
+enum DISPLAY_ICON
+{
+	ICON_NEURALNETWORK,
+	ICON_QLEARNING,
+	ICON_NONE
 };
 
 /** \class GraphicView
@@ -45,6 +53,10 @@ private:
 	sf::Sprite terrainSprite;
 	sf::Sprite lemmingSprite;
 
+	// Victory
+	sf::Texture victoryTexture;
+	sf::Sprite victorySprite;
+
 
 	std::map<std::pair<int, int>, Cell*>* currentMap;
 
@@ -54,14 +66,18 @@ private:
 
 	bool initialized;
 
+	
+	bool* lemmingVictory;	// Reference to the lemmingVictory bool in Simulator
+	DISPLAY_ICON currentIcon;
+
 public:
 	GraphicView(void);
 
     /**
     *   Initialises the view
     */
-	void init(int height, int width, std::map<std::pair<int, int>, Cell*>* map);
-	void resize(int height, int width);
+	void init(int width, int height, std::map<std::pair<int, int>, Cell*>* map, bool* lemmingVictory);
+	void resize(int width, int height);
 	void clear();
 	sf::RenderWindow* getWindow();
 
@@ -69,11 +85,9 @@ public:
 	*   Draw the world
 	*/
 	void draw();
+	void setIconDisplay(DISPLAY_ICON icon);
 
 	void setWorld(World* world);
-
-	//TODO:
-	void setVictory(bool victory);
 
 	~GraphicView(void);
 

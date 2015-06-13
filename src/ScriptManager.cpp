@@ -129,6 +129,7 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 
 							this->testingCurrentScriptingState(this->triesPerLearning, this->world->getSize()*this->world->getSize(), percentageOfSuccess, averageSuccessLength, numberOfSuccesses);
 
+							// Computing results
 							if (SCRIPTMANAGER_DEBUG)
 								std::cout << "ScriptManager::LaunchScript : Serializing tests results" << std::endl;
 							averageNumberOfSuccesses += numberOfSuccesses;
@@ -198,12 +199,11 @@ void ScriptManager::launchScript(std::string name)	// the main script. Launch it
 					iterations = this->maxIterations;
 			}
 		}
-		//TODO: save current progress
 		std::cout << "Finished iterating for map " << *mapIterator << std::endl;
 		cout << "Saving result : " << completePath.data() << " : " << doc.save_file(completePath.data()) << endl;
 	}
 
-	// result
+	// Saving final results
 	std::cout << "Script completed! " << std::endl;
 
 	pugi::xml_node reportNode = scriptNode.append_child("Report");

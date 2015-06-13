@@ -7,7 +7,7 @@ MapGenerator::MapGenerator(int size) : sizeMap(size)
 
 void MapGenerator::generateWithAutoSeeds()
 {
-	generate(1.25*this->sizeMap, 0.5*this->sizeMap);
+	generate(1.25f*this->sizeMap, 0.5f*this->sizeMap);
 }
 
 void MapGenerator::generate(int nbSeedDirt, int nbSeedRock)

@@ -65,7 +65,7 @@ bool QLearning::learn()
 		return false;
 	}
 
-	std::string report = m_problem->getProblemStore()->getQValuesReport();
+	//std::string report = m_problem->getProblemStore()->getQValuesReport();
 
 	std::cout << "problem store init done" << std::endl;
 	std::cout << report << std::endl;

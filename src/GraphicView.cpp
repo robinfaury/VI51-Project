@@ -1,12 +1,14 @@
 #include "GraphicView.h"
 
 
-GraphicView::GraphicView(void) : initialized(false)
+GraphicView::GraphicView(void) : initialized(false), currentIcon(ICON_NONE)
 {
 }
 
-void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell*>* map)
+void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell*>* map, bool* lemmingVictory)
 {
+	this->lemmingVictory = lemmingVictory;
+
 	this->currentMap = map;
 	this->window = new sf::RenderWindow(sf::VideoMode(height, width), "VI51 - Lemmings");
 	this->window->setVerticalSyncEnabled(true);
@@ -28,18 +30,43 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	}
 	terrainSprite.setTexture(terrainTexture);
 
-	/*// Icon images
-	if (!this->image_iconNN.loadFromFile(ICONNNTEX_PATH))
+	// Icon images
+	std::string iconNnTexturePath = sourcesPath;
+	iconNnTexturePath += "res/icons/icon_NN.png";
+	if (!this->image_iconNN.loadFromFile(iconNnTexturePath))
 	{
-		std::cout << "ERROR : couldn't load iconNN texture from " << ICONNNTEX_PATH << endl;
+		std::cout << "ERROR : couldn't load iconNN texture from " << iconNnTexturePath << endl;
 	}
 	iconNN.setTexture(image_iconNN);
 
-	if (!this->image_iconQL.loadFromFile(ICONQLTEX_PATH))
+	std::string iconQlTexturePath = sourcesPath;
+	iconQlTexturePath += "res/icons/icon_QL.png";
+	if (!this->image_iconQL.loadFromFile(iconQlTexturePath))
 	{
-		std::cout << "ERROR : couldn't load iconNN texture from " << ICONQLTEX_PATH << endl;
+		std::cout << "ERROR : couldn't load iconNN texture from " << iconQlTexturePath << endl;
 	}
-	iconNN.setTexture(image_iconQL);*/
+	iconQL.setTexture(image_iconQL);
+
+	//Victory image
+	std::string victoryTexturePath = sourcesPath;
+	victoryTexturePath += "res/icons/victory.png";
+	if (!this->victoryTexture.loadFromFile(victoryTexturePath))
+	{
+		std::cout << "ERROR : couldn't load victory texture from " << victoryTexturePath << endl;
+	}
+	victorySprite.setTexture(victoryTexture);
+	
+	this->iconNN.setScale(1.0f, 1.0f);
+	this->iconNN.setScale(0.5f, 0.5f);
+	this->iconNN.setPosition(width - 64, 0.0f);
+
+	this->iconQL.setScale(1.0f, 1.0f);
+	this->iconQL.setScale(0.5f, 0.5f);
+	this->iconQL.setPosition(width - 64, 0.0f);
+
+	
+	this->victorySprite.setScale(0.25f, 0.25f);
+	this->victorySprite.setPosition((float)width / 2 - 64, (float)height / 2 - 64);
 
 	resize(height, width);
 
@@ -48,17 +75,17 @@ void GraphicView::init(int height, int width, std::map<std::pair<int, int>, Cell
 	initialized = true;
 }
 
-void GraphicView::resize(int height, int width)
+void GraphicView::resize(int width, int height)
 {
 	this->lemmingSprite.setScale(1.0f, 1.0f);
 	this->terrainSprite.setScale(1.0f, 1.0f);
-	std::cout << "MOKAY, lets check : window(" << this->window->getSize().x << "," << this->window->getSize().y << "), worldSize(" << this->world->getSize() << ")" << std::endl;
 	this->tileSizeX = static_cast<float>(this->window->getSize().x) / (float)this->world->getSize();
 	this->tileSizeY = static_cast<float>(this->window->getSize().y) / (float)this->world->getSize();
 	sf::Vector2f scale(this->tileSizeX / TILE_SIZE, this->tileSizeY / TILE_SIZE);
-	std::cout << "Initialized GraphicView with tile sizes " << this->tileSizeX << ", " << this->tileSizeY << std::endl;
 	this->lemmingSprite.scale(scale);
 	this->terrainSprite.scale(scale);
+
+	
 }
 
 void GraphicView::clear()
@@ -107,7 +134,28 @@ void GraphicView::draw()
             }
         }
 	}
+
+	// AI icon
+	switch (this->currentIcon)
+	{
+	case DISPLAY_ICON::ICON_NEURALNETWORK :
+		window->draw(this->iconNN);
+		break;
+	case DISPLAY_ICON::ICON_QLEARNING:
+		window->draw(this->iconQL);
+		break;
+	}
+
+	//Victory icon
+	if ((*this->lemmingVictory) == true)
+		window->draw(victorySprite);
+
 	window->display();
+}
+
+void GraphicView::setIconDisplay(DISPLAY_ICON icon)
+{
+	this->currentIcon = icon;
 }
 
 void GraphicView::setWorld(World* world)
@@ -133,8 +181,8 @@ USER_ACTIONS GraphicView::getUserAction()
 
 void GraphicView::convertCoordinates_worldToTiles(int px, int py, int& wx, int& wy)
 {
-	wx = px / tileSizeX;
-	wy = py / tileSizeY;
+	wx = (int)(px / tileSizeX);
+	wy = (int)(py / tileSizeY);
 }
 
 //Private functions

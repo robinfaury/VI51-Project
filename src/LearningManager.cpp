@@ -75,7 +75,6 @@ World* LearningManager::getWorld()  // gets current world
 
 LearningMethod* LearningManager::getMethod(LEARNING_TYPE type)    // Returns a pointer to current learning method
 {
-    //TODO: check casting
     return this->methods.at(type);
 }
 

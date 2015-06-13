@@ -41,7 +41,6 @@ void World::clearWorld()
 }
 
 // Loading/saving level
-//TODO: save level
 /**
 *   This function saves the level in the given filepath, under xml format
 */
@@ -51,13 +50,16 @@ void World::saveLevel(std::string path)
     pugi::xml_node levelNode = doc.append_child("Level");
 
     //Serializing map
-    cout << "Map : serializeMap : begin" << endl;
+	if (WORLD_DEBUG)
+		cout << "World::serializeMap : begin" << endl;
 
-    cout << "Map : serializeMap : mapInfo" << endl;
+	if (WORLD_DEBUG)
+		cout << "World::serializeMap : mapInfo" << endl;
     levelNode.append_attribute("size").set_value(this->size);
 
     // saving tiles
-    cout << "Map : serializeMap : Cells" << endl;
+	if (WORLD_DEBUG)
+		cout << "World::serializeMap : Cells" << endl;
     pugi::xml_node cells = levelNode.append_child("Cells");
     pugi::xml_node tempCell;
     pugi::xml_node tempCellObject;
@@ -81,7 +83,8 @@ void World::saveLevel(std::string path)
         }
 
     }
-    cout << "Map : serializeMap : Done" << endl;
+	if (WORLD_DEBUG)
+		cout << "Map : serializeMap : Done" << endl;
 	std::string completePath = sourcesPath;
 	completePath = completePath + resPath + mapPath + path + extensionPath;
 	//cout << "Saving result : " << completePath.data() << " : " << doc.save_file("test") << endl;
